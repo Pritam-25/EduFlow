@@ -1,8 +1,21 @@
 import { GalleryVerticalEnd } from "lucide-react";
 
-import { LoginForm } from "@/components/ui/login-form";
+import { LoginForm } from "@/app/(auth)/login/_components/login-form";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 
-export default function LoginPage() {
+export default async function LoginPage() {
+  //* get user session
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  //* if user have session, redirect to home page
+  if (session) {
+    return redirect("/");
+  }
+
   return (
     <div className="bg-muted flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
       <div className="flex w-full max-w-sm flex-col gap-6">
