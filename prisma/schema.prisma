@@ -35,7 +35,6 @@ model User {
 enum Role {
   USER
   ADMIN
-  INSTRUCTOR
 }
 
 model Session {

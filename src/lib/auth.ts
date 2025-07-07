@@ -23,7 +23,7 @@ export const auth = betterAuth({
     user: {
         additionalFields: {
             role: {
-                type: [Role.USER, Role.ADMIN, Role.INSTRUCTOR],
+                type: [Role.USER, Role.ADMIN],
             }
         }
     },
