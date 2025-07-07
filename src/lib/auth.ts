@@ -4,6 +4,7 @@ import { prisma } from "./db"
 import { env } from "@/env";
 import { emailOTP } from "better-auth/plugins"
 import { resend } from "./resend";
+import { Role } from "@/generated/prisma";
 
 export const auth = betterAuth({
     database: prismaAdapter(prisma, {
@@ -19,7 +20,13 @@ export const auth = betterAuth({
             clientSecret: ""
         }
     },
-
+    user: {
+        additionalFields: {
+            role: {
+                type: [Role.USER, Role.ADMIN, Role.INSTRUCTOR],
+            }
+        }
+    },
     plugins: [
         emailOTP({
             async sendVerificationOTP({ email, otp }) {

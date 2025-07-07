@@ -1,7 +1,38 @@
+import { buttonVariants } from "@/components/ui/button";
+import {
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
+
 export default function CourseCreatePage() {
-    return (
-        <div>
-            <h1>Create Course</h1>
-        </div>
-    );
+  return (
+    <>
+      <div className="flex items-center gap-4">
+        <Link
+          className={buttonVariants({
+            variant: "outline",
+            size: "icon",
+          })}
+          href="/admin/courses"
+        >
+          <ArrowLeft className="size-4" />
+        </Link>
+
+        <h1 className="text-2xl font-bold">Create Courses</h1>
+      </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Basic Information</CardTitle>
+          <CardDescription>
+            Provide basic information about the course
+          </CardDescription>
+        </CardHeader>
+      </Card>
+    </>
+  );
 }
