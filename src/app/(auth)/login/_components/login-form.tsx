@@ -12,8 +12,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { authClient } from "@/lib/auth-client";
-import { useTransition } from "react";
+import React, { useTransition } from "react";
 import { Loader } from "lucide-react";
+import { set } from "zod";
 
 export function LoginForm({
   className,
@@ -22,6 +23,7 @@ export function LoginForm({
   //* login with github
   // useTransition hook for managing login states
   const [githubPending, startGithubTransition] = useTransition();
+  const [email, setEmail] = React.useState("");
 
   async function signInWithGithub() {
     startGithubTransition(async () => {
@@ -102,12 +104,14 @@ export function LoginForm({
                 </span>
               </div>
               <div className="grid gap-3">
-                <div className="grid gap-3">
+                <div className="grid gap-2">
                   <Label htmlFor="email">Email</Label>
                   <Input
                     id="email"
                     type="email"
                     placeholder="m@example.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     required
                   />
                 </div>
