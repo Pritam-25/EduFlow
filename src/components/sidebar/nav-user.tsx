@@ -49,7 +49,7 @@ export function NavUser() {
       : session.user.email.split("@")[0];
 
   return (
-    <SidebarMenu>
+    <SidebarMenu className="bg-muted-foreground/10 rounded-lg">
       <SidebarMenuItem>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

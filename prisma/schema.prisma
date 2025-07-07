@@ -15,11 +15,14 @@ datasource db {
 }
 
 model User {
-  id            String    @id
+  id            String       @id
   name          String
   email         String
   emailVerified Boolean
   image         String?
+  role          Role         @default(USER)
+  courses       Courses[]    @relation("CourseAuthor") //created courses
+  enrollments   Enrollment[] // one user can enroll in many courses
   createdAt     DateTime
   updatedAt     DateTime
   sessions      Session[]
@@ -27,6 +30,12 @@ model User {
 
   @@unique([email])
   @@map("user")
+}
+
+enum Role {
+  USER
+  ADMIN
+  INSTRUCTOR
 }
 
 model Session {
@@ -72,4 +81,56 @@ model Verification {
   updatedAt  DateTime?
 
   @@map("verification")
+}
+
+model Courses {
+  id               String       @id @unique
+  title            String
+  description      String
+  fileKey          String
+  price            Int
+  duration         Int
+  level            CourseLevel  @default(BEGINNER)
+  category         category     @default(OTHER)
+  smallDescription String
+  slug             String       @unique
+  states           States       @default(DRAFT)
+  authorId         String
+  author           User         @relation("CourseAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+  enrollments      Enrollment[]
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+}
+
+model Enrollment {
+  id         String   @id @default(cuid())
+  userId     String
+  courseId   String
+  enrolledAt DateTime @default(now())
+
+  user   User    @relation(fields: [userId], references: [id])
+  course Courses @relation(fields: [courseId], references: [id])
+
+  @@unique([userId, courseId]) // prevent duplicate enrollments
+}
+
+enum CourseLevel {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+}
+
+enum States {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum category {
+  PROGRAMMING
+  DESIGN
+  MARKETING
+  BUSINESS
+  PERSONAL_DEVELOPMENT
+  OTHER
 }

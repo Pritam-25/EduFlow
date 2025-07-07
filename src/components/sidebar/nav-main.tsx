@@ -31,7 +31,7 @@ export function NavMain({
               className="bg-primary text-primary-foreground hover:bg-primary/90 active:bg-primary/90 min-w-8 duration-200 ease-linear gap-2"
               asChild
             >
-              <Link href="/admin/create/course">
+              <Link href="/admin/courses/create">
                 <IconCirclePlusFilled className="size-4" />
                 <span>Quick Create</span>
               </Link>
