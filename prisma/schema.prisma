@@ -90,10 +90,10 @@ model Courses {
   price            Int
   duration         Int
   level            CourseLevel  @default(BEGINNER)
-  category         category     @default(OTHER)
+  category         Category[]     @default([OTHER])
   smallDescription String
   slug             String       @unique
-  states           CourseStates       @default(DRAFT)
+  states           CourseStates @default(DRAFT)
   authorId         String
   author           User         @relation("CourseAuthor", fields: [authorId], references: [id], onDelete: Cascade)
   enrollments      Enrollment[]
@@ -125,11 +125,17 @@ enum CourseStates {
   ARCHIVED
 }
 
-enum category {
+enum Category {
   PROGRAMMING
   DESIGN
   MARKETING
   BUSINESS
   PERSONAL_DEVELOPMENT
+  FINANCE
+  HEALTH_AND_FITNESS
+  ACADEMICS
+  DEVELOPMENT
+  MUSIC
+  OFFICE_PRODUCTIVITY
   OTHER
 }
