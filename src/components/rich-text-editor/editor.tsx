@@ -13,9 +13,7 @@ const Tiptap = ({ field }: { field: any }) => {
       TextAlign.configure({
         types: ["heading", "paragraph"],
       }),
-      Highlight.configure({
-        multicolor: true,
-      }),
+      Highlight.configure(),
     ],
     editorProps: {
       attributes: {
@@ -23,9 +21,11 @@ const Tiptap = ({ field }: { field: any }) => {
           "min-h-[300px] px-4 py-2 focus:outline-none prose dark:prose-invert max-w-none text-base leading-normal prose-p:my-2 prose-h1:my-4 prose-h2:my-3 prose-h3:my-2 prose-ul:my-2 prose-li:my-1",
       },
     },
+    immediatelyRender: false,
+    
     content: field.value
       ? JSON.parse(field.value)
-      : `<strong>🚀 Enter your course description here...</strong>
+      : `<p>🚀 Enter your course description here...</p>
 `,
     onUpdate: ({ editor }) => {
       field.onChange(JSON.stringify(editor.getJSON()));

@@ -60,7 +60,10 @@ export default function Navbar() {
             <>
               <UserDropdown
                 email={session.user.email}
-                image={session.user.image || ""}
+                image={
+                  session.user.image ??
+                  `https://avatar.vercel.sh/${session.user.email}`
+                }
                 name={session.user.name}
               />
             </>

@@ -60,7 +60,7 @@ export default function UserDropdown({ email, image, name }: iAppProps) {
           />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="max-w-64">
+      <DropdownMenuContent className="min-w-48" align="end">
         <DropdownMenuLabel className="flex min-w-0 flex-col">
           <span className="text-foreground truncate text-sm font-medium">
             {name}
