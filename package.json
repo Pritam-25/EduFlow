@@ -33,6 +33,7 @@
     "@t3-oss/env-core": "^0.13.8",
     "@tabler/icons-react": "^3.34.0",
     "@tanstack/react-table": "^8.21.3",
+    "@tiptap/extension-highlight": "^2.25.0",
     "@tiptap/extension-placeholder": "^2.25.0",
     "@tiptap/extension-text-align": "^2.25.0",
     "@tiptap/pm": "^2.25.0",

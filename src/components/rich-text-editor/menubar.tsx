@@ -21,6 +21,7 @@ import {
   Undo,
   Redo,
   Italic,
+  Highlighter,
 } from "lucide-react";
 
 interface MenubarProps {
@@ -89,6 +90,25 @@ export function Menubar({ editor }: MenubarProps) {
               </Toggle>
             </TooltipTrigger>
             <TooltipContent>Strike</TooltipContent>
+          </Tooltip>
+
+          {/* Highlight */}
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Toggle
+                size="sm"
+                pressed={editor.isActive("highlight")}
+                onPressedChange={() =>
+                  editor.chain().focus().toggleHighlight().run()
+                }
+                className={cn(
+                  editor.isActive("highlight") && "bg-yellow-200 text-black"
+                )}
+              >
+                <Highlighter />
+              </Toggle>
+            </TooltipTrigger>
+            <TooltipContent>Highlight</TooltipContent>
           </Tooltip>
 
           {/* Headings */}
@@ -164,7 +184,7 @@ export function Menubar({ editor }: MenubarProps) {
 
         {/* Text Alignment */}
         <div className="flex flex-wrap gap-1">
-          {[
+          {[ 
             { align: "left", icon: <AlignLeft />, label: "Left Align" },
             { align: "center", icon: <AlignCenter />, label: "Center Align" },
             { align: "right", icon: <AlignRight />, label: "Right Align" },
@@ -227,3 +247,4 @@ export function Menubar({ editor }: MenubarProps) {
     </div>
   );
 }
+export default Menubar;

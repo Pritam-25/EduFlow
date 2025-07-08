@@ -3,8 +3,8 @@
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import TextAlign from "@tiptap/extension-text-align";
-import Placeholder from "@tiptap/extension-placeholder";
 import { Menubar } from "./menubar";
+import Highlight from "@tiptap/extension-highlight";
 
 const Tiptap = ({ field }: { field: any }) => {
   const editor = useEditor({
@@ -12,6 +12,9 @@ const Tiptap = ({ field }: { field: any }) => {
       StarterKit,
       TextAlign.configure({
         types: ["heading", "paragraph"],
+      }),
+      Highlight.configure({
+        multicolor: true,
       }),
     ],
     editorProps: {

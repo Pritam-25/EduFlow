@@ -80,6 +80,9 @@ importers:
       '@tanstack/react-table':
         specifier: ^8.21.3
         version: 8.21.3(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      '@tiptap/extension-highlight':
+        specifier: ^2.25.0
+        version: 2.25.0(@tiptap/core@2.25.0(@tiptap/pm@2.25.0))
       '@tiptap/extension-placeholder':
         specifier: ^2.25.0
         version: 2.25.0(@tiptap/core@2.25.0(@tiptap/pm@2.25.0))(@tiptap/pm@2.25.0)
@@ -1306,6 +1309,11 @@ packages:
 
   '@tiptap/extension-heading@2.25.0':
     resolution: {integrity: sha512-IrRKRRr7Bhpnq5aue1v5/e5N/eNdVV/THsgqqpLZO48pgN8Wv+TweOZe1Ntg/v8L4QSBC8iGMxxhiJZT8AzSkA==}
+    peerDependencies:
+      '@tiptap/core': ^2.7.0
+
+  '@tiptap/extension-highlight@2.25.0':
+    resolution: {integrity: sha512-YuDZUFTil06wmuIMod1z2zbLGIwDwcoRV21f2wZBl3SryzppX/B1S1fGgLdnOo4M8ryykSKxWdpjMSOYCAdsjA==}
     peerDependencies:
       '@tiptap/core': ^2.7.0
 
@@ -4269,6 +4277,10 @@ snapshots:
       '@tiptap/core': 2.25.0(@tiptap/pm@2.25.0)
 
   '@tiptap/extension-heading@2.25.0(@tiptap/core@2.25.0(@tiptap/pm@2.25.0))':
+    dependencies:
+      '@tiptap/core': 2.25.0(@tiptap/pm@2.25.0)
+
+  '@tiptap/extension-highlight@2.25.0(@tiptap/core@2.25.0(@tiptap/pm@2.25.0))':
     dependencies:
       '@tiptap/core': 2.25.0(@tiptap/pm@2.25.0)
 
