@@ -41,6 +41,7 @@ import {
   MultiSelectorList,
   MultiSelectorTrigger,
 } from "@/components/multi-select";
+import Tiptap from "@/components/rich-text-editor/editor";
 
 export default function CourseCreatePage() {
   //* 1. Define your form.
@@ -173,11 +174,12 @@ export default function CourseCreatePage() {
                   <FormItem>
                     <FormLabel>Description</FormLabel>
                     <FormControl>
-                      <Textarea
+                      {/* <Textarea
                         placeholder="Description"
                         className="min-h-[120px]"
                         {...field}
-                      />
+                      /> */}
+                      <Tiptap field={field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -229,8 +231,8 @@ export default function CourseCreatePage() {
                   </FormItem>
                 )}
               />
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 space-y-4">
-                <FormField
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <FormField    
                   control={form.control}
                   name="level"
                   render={({ field }) => (
@@ -285,7 +287,9 @@ export default function CourseCreatePage() {
                     </FormItem>
                   )}
                 />
+              </div>
 
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <FormField
                   control={form.control}
                   name="price"
