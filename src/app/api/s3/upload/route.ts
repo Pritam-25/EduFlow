@@ -8,12 +8,9 @@ import { s3Client } from "@/lib/s3-client";
 
 export const uploadSchema = z.object({
     fileName: z.string().min(1, "File name is required"),
-    file: z.instanceof(File).refine(file => file.size <= 10 * 1024 * 1024, {
-        message: "File size must be less than 10MB",
-    }),
+    size: z.number().max(5 * 1024 * 1024, "File size must be less than 5MB"),
     contentType: z.string().min(1, "Content type is required"),
     isImage: z.boolean().optional(),
-    isVideo: z.boolean().optional(),
 });
 
 export async function POST(request: Request) {
@@ -28,7 +25,7 @@ export async function POST(request: Request) {
             }, { status: 400 });
         }
 
-        const { fileName, file, contentType, isImage, isVideo } = validatedData.data;
+        const { fileName, contentType, isImage, } = validatedData.data;
 
         const uniqueFileKey = `${Date.now()}-${uuidv4()}-${fileName}`;
         const command = new PutObjectCommand({
@@ -44,9 +41,8 @@ export async function POST(request: Request) {
         );
 
         const responseData = {
-            url: presignedUrl,
+            presignedUrl,
             key: uniqueFileKey,
-            fileName: fileName,
         };
 
         return NextResponse.json(responseData);

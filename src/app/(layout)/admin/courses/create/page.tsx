@@ -42,6 +42,7 @@ import {
   MultiSelectorTrigger,
 } from "@/components/multi-select";
 import Tiptap from "@/components/rich-text-editor/editor";
+import { FileUploader } from "@/components/file-uploader/uploader";
 
 export default function CourseCreatePage() {
   //* 1. Define your form.
@@ -194,7 +195,7 @@ export default function CourseCreatePage() {
                   <FormItem>
                     <FormLabel>Thumbnail image</FormLabel>
                     <FormControl>
-                      <Input placeholder="Thumbnail url" {...field} />
+                      <FileUploader />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
