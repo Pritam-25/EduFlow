@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { CloudAlert, CloudUpload, Delete, DeleteIcon, ImageUpIcon, Loader2, Trash2, Upload } from "lucide-react";
+import { CloudAlert, CloudUpload, ImageUpIcon, Loader2, Trash2, Upload } from "lucide-react";
 import { Button } from "../ui/button";
 import Image from "next/image";
 
@@ -75,6 +75,7 @@ export function RenderSuccessState({ previewUrl, isDeleting, handleDeleteFile }:
       <Image
         src={previewUrl}
         alt="Uploaded file preview"
+        fill
         className="object-contain w-auto h-full"
       />
 
@@ -95,16 +96,27 @@ export function RenderSuccessState({ previewUrl, isDeleting, handleDeleteFile }:
 }
 
 
+
 export function RenderUploadingState({ progress }: { progress: number }) {
   return (
-    <div className="flex flex-col items-center justify-center text-center gap-3">
+    <div className="flex flex-col items-center justify-center text-center gap-4 w-full max-w-xs mx-auto">
+      {/* Upload Icon */}
       <div className="flex items-center justify-center size-14 rounded-full bg-secondary">
         <ImageUpIcon className="size-icon text-muted-foreground" />
       </div>
 
+      {/* Upload Text */}
       <p className="text-sm text-muted-foreground font-medium">
         Uploading... {progress}%
       </p>
+
+      {/* Progress Bar Container */}
+      <div className="w-full bg-muted-foreground/20 rounded-full h-2 overflow-hidden">
+        <div
+          className="h-full bg-primary transition-all duration-300 ease-in-out"
+          style={{ width: `${progress}%` }}
+        />
+      </div>
     </div>
   );
 }

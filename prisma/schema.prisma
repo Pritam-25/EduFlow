@@ -21,7 +21,7 @@ model User {
   emailVerified Boolean
   image         String?
   role          Role         @default(USER)
-  courses       Courses[]    @relation("CourseAuthor") //created courses
+  courses       Course[]    @relation("CourseAuthor") //created courses
   enrollments   Enrollment[] // one user can enroll in many courses
   createdAt     DateTime
   updatedAt     DateTime
@@ -82,8 +82,8 @@ model Verification {
   @@map("verification")
 }
 
-model Courses {
-  id               String       @id @unique
+model Course {
+  id String @id @default(cuid())
   title            String
   description      String
   fileKey          String
@@ -108,7 +108,7 @@ model Enrollment {
   enrolledAt DateTime @default(now())
 
   user   User    @relation(fields: [userId], references: [id])
-  course Courses @relation(fields: [courseId], references: [id])
+  course Course @relation(fields: [courseId], references: [id])
 
   @@unique([userId, courseId]) // prevent duplicate enrollments
 }

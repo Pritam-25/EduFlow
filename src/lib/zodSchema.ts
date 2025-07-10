@@ -14,7 +14,7 @@ export const CourseSchema = z.object({
   smallDescription: z.string().min(10, "Small description is required").max(200),
   slug: z.string().min(1, "Slug is required").max(100),
   states: z.nativeEnum(CourseStates),
-  authorId: z.string().min(1, "Author ID is required"), // Include this only if coming from frontend
+  authorId: z.string().optional(),
 });
 
 

@@ -7,7 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { ArrowLeft, SparkleIcon } from "lucide-react";
+import { ArrowLeft, Loader2, SparkleIcon } from "lucide-react";
 import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -43,8 +43,18 @@ import {
 } from "@/components/multi-select";
 import Tiptap from "@/components/rich-text-editor/editor";
 import { FileUploader } from "@/components/file-uploader/uploader";
+import { useTransition } from "react";
+import { tryCatch } from "@/hooks/try-catch";
+import { createCourseAction } from "./action";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { IconCirclePlusFilled } from "@tabler/icons-react";
 
 export default function CourseCreatePage() {
+
+  const [isPending, startTransition] = useTransition();
+  const router = useRouter();
+
   //* 1. Define your form.
   const form = useForm<CourseSchemaType>({
     resolver: zodResolver(CourseSchema),
@@ -59,14 +69,36 @@ export default function CourseCreatePage() {
       smallDescription: "",
       slug: "",
       states: CourseStates.DRAFT,
-      authorId: "",
     },
   });
 
   // 2. Define a submit handler.
-  function onSubmit(values: CourseSchemaType) {
+  async function onSubmit(values: CourseSchemaType) {
+    console.log("🎯 Submit handler called with:", values); // check if called
     // Do something with the form values.
-    // ✅ This will be type-safe and validated.
+    startTransition(async () => {
+      const { data: result, error } = await tryCatch(createCourseAction(values));
+
+      if (error) {
+        toast.error("An unexpected error occurred. Please try again.");
+        console.error("Error creating course:", error);
+        return;
+      }
+
+      if (result.status === "error") {
+        toast.error(result.message);
+        return;
+      }
+
+      if (result.status === "success") {
+        toast.success(result.message);
+        form.reset();
+        // Redirect to the courses page after successful creation
+        router.push("/admin/courses");
+        return;
+      }
+    });
+
     console.log(values);
   }
 
@@ -195,7 +227,7 @@ export default function CourseCreatePage() {
                   <FormItem>
                     <FormLabel>Thumbnail image</FormLabel>
                     <FormControl>
-                      <FileUploader />
+                      <FileUploader onChange={field.onChange} value={field.value} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -320,7 +352,22 @@ export default function CourseCreatePage() {
                 />
               </div>
 
-              <Button type="submit">Submit</Button>
+              <Button
+                type="submit"
+                disabled={isPending}
+                aria-disabled={isPending}
+              >
+                {isPending ? (
+                  <>
+                    Creating...
+                    <Loader2 className="animate-spin ml-2" />
+                  </>
+                ) : (
+                  <>
+                    Create Course <IconCirclePlusFilled className="inline-block ml-2" />
+                  </>
+                )}
+              </Button>
             </form>
           </Form>
         </CardContent>

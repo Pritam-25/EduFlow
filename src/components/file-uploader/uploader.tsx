@@ -20,7 +20,12 @@ interface UploaderState {
   fileType: "image";
 }
 
-export function FileUploader() {
+interface FileUploaderProps {
+  value?: string;
+  onChange?: (value: string) => void;
+}
+
+export function FileUploader({ value, onChange }: FileUploaderProps) {
   const [error, setError] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
 
@@ -32,6 +37,7 @@ export function FileUploader() {
     error: false,
     isDeleting: false,
     fileType: "image",
+    key: value,  // Initialize with value if provided
   });
 
   // ☁️ 🔗 Upload file to S3 using presigned URL
@@ -73,6 +79,11 @@ export function FileUploader() {
         key,
       }));
 
+      // 🔑 Pass the file key to the form
+      if (onChange) {
+        onChange(key);
+      }
+
       toast.success("File uploaded successfully!");
     } catch (error) {
       toast.error("Upload failed");
@@ -104,7 +115,14 @@ export function FileUploader() {
         objectUrl: undefined,
         file: null,
         id: null,
+        key: undefined,
+        uploading: false,
       }));
+
+      // 🔑 Clear the file key from the form
+      if (onChange) {
+        onChange("");
+      }
 
       toast.success("File deleted successfully!");
     } catch (error) {
@@ -238,8 +256,10 @@ export function FileUploader() {
     <div
       {...getRootProps()}
       className={cn(
-        "w-full h-64 rounded-xl border border-dashed transition-colors  hover:bg-primary/5 hover:border-primary",
-        isDragActive && "border-primary bg-primary/10",
+        "w-full h-64 rounded-xl border transition-colors hover:bg-primary/5 hover:border-primary",
+        isDragActive
+          ? "border-primary border-solid bg-primary/10"
+          : "border-dashed",
         !isDragActive && "border-muted-foreground/30",
         fileState.uploading || fileState.isDeleting
           ? "cursor-not-allowed opacity-50 "
