@@ -28,7 +28,7 @@ export default function WelcomeCard({ name = "Andrew" }) {
                 What do you want to learn today with your partner?
               </h2>
 
-              <p className="text-xs sm:text-sm md:text-base text-muted-foreground">
+              <p className="text-xs sm:text-sm  text-muted-foreground">
                 Discover courses, track progress, and achieve your learning
                 goals seamlessly.
               </p>

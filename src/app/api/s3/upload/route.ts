@@ -5,6 +5,10 @@ import { z } from "zod";
 
 import { v4 as uuidv4 } from 'uuid';
 import { s3Client } from "@/lib/s3-client";
+import { aj, detectBot, fixedWindow } from "@/lib/arcjet";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
+import { User } from "lucide-react";
 
 export const uploadSchema = z.object({
     fileName: z.string().min(1, "File name is required"),
@@ -13,8 +17,36 @@ export const uploadSchema = z.object({
     isImage: z.boolean().optional(),
 });
 
+// implement arcjet for upload protection
+const arcjet = aj.withRule(
+    detectBot({
+        mode: "LIVE",
+        allow: [], // no bots allowed for uploads
+    })
+).withRule(
+    fixedWindow({
+        mode: "LIVE",
+        window: "1m", // 1 minute window
+        max: 10, // max 10 uploads per window
+    })
+);
+
 export async function POST(request: Request) {
+
+    const session = await auth.api.getSession({ headers: await headers() });
+
     try {
+
+        const decision = await arcjet.protect(request, {
+            fingerprint: session?.user.id as string || "anonymous",
+        });
+
+        if(decision.isDenied()){
+            return NextResponse.json({
+                error: "Upload limit exceeded or bot detected",
+            }, { status: 429 });
+        }
+
         const body = await request.json();
 
         const validatedData = uploadSchema.safeParse(body);
