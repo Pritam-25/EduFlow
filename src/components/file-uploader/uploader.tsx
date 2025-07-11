@@ -2,7 +2,7 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useDropzone, FileRejection } from "react-dropzone";
 import { Card, CardContent } from "../ui/card";
-import { cn } from "@/lib/utils";
+import { cn, extractErrorMessage } from "@/lib/utils";
 import RenderEmptyState, { RenderErrorState, RenderSuccessState, RenderUploadingState } from "./renderStates";
 import { toast } from "sonner";
 import { v4 as uuidv4 } from 'uuid';
@@ -19,6 +19,7 @@ interface UploaderState {
   objectUrl?: string;
   fileType: "image";
 }
+
 
 interface FileUploaderProps {
   value?: string;
@@ -86,193 +87,201 @@ export function FileUploader({ value, onChange }: FileUploaderProps) {
 
       toast.success("File uploaded successfully!");
     } catch (error) {
-      toast.error("Upload failed");
+      console.error("Upload error:", error);
+      toast.error(extractErrorMessage(error, "Failed to upload file"));
       setFileState((prev) => ({ ...prev, uploading: false, error: true }));
-    }
-  };
-
-  // ❌ Delete uploaded file from S3 and clear preview
-  async function deleteFile() {
-    if (fileState.isDeleting || !fileState.objectUrl || !fileState.key) return;
-
-    setFileState((prev) => ({ ...prev, isDeleting: true }));
-
-    try {
-      await axios.delete("/api/s3/delete", {
-        data: { key: fileState.key },
-        headers: { "Content-Type": "application/json" },
-      });
-
-      // 🧹 Revoke blob memory
-      if (fileState.objectUrl && !fileState.objectUrl.startsWith("http")) {
-        URL.revokeObjectURL(fileState.objectUrl);
-      }
-
-      // 🧼 Clear state
-      setFileState((prev) => ({
-        ...prev,
-        isDeleting: false,
-        objectUrl: undefined,
-        file: null,
-        id: null,
-        key: undefined,
-        uploading: false,
-      }));
-
-      // 🔑 Clear the file key from the form
-      if (onChange) {
-        onChange("");
-      }
-
-      toast.success("File deleted successfully!");
-    } catch (error) {
-      toast.error("Failed to delete file. Please try again.");
-      console.error("Delete file error:", error);
-      setFileState((prev) => ({ ...prev, isDeleting: false }));
-    }
-  }
-
-  // 📥 When file is dropped
-  const onDrop = useCallback((acceptedFiles: File[]) => {
-    setError(null);
-    if (acceptedFiles.length > 0) {
-      const file = acceptedFiles[0];
-      const id = uuidv4();
-      const objectUrl = URL.createObjectURL(file);
-
-      // 🧹 Revoke old blob
-      if (fileState.objectUrl && !fileState.objectUrl.startsWith("http")) {
-        URL.revokeObjectURL(fileState.objectUrl);
-      }
-
-      // 🧾 Save file metadata to state
-      setFileState({
-        id,
-        file,
-        uploading: true,
-        progress: 0,
-        error: false,
-        isDeleting: false,
-        fileType: "image",
-        objectUrl,
-      });
-
-      uploadFile(file); // 🚀 Start upload
-    }
-  }, [fileState.objectUrl, uploadFile]);
-
-  // ❌ On rejected file
-  const onDropRejected = useCallback((fileRejections: FileRejection[]) => {
-
-    const fileTypeMismatch = fileRejections.some(rej =>
-      rej.errors.some(err => err.code === "file-invalid-type")
-    );
-    if (fileTypeMismatch) {
-      setError("Invalid file type, only images allowed");
-      toast.error("Invalid file type, only images allowed.");
-      return;
-    }
-
-    const tooManyFiles = fileRejections.some(rej =>
-      rej.errors.some(err => err.code === "too-many-files")
-    );
-    if (tooManyFiles) {
-      setError("Too many files selected, max is 1");
-      toast.error("Only one image can be uploaded.");
-      return;
-    }
-
-    const fileTooLarge = fileRejections.some(rej =>
-      rej.errors.some(err => err.code === "file-too-large")
-    );
-    if (fileTooLarge) {
-      setError("File size exceeds limit. Max 5MB allowed.");
-      toast.error("File size exceeds limit. Max 5MB allowed.");
-      return;
-    }
-
-    // Default
-    setError("Error in uploading file. Please try again.");
-    toast.error("Error in uploading file. Please try again.");
-  }, []);
-
-  // 📦 Dropzone config
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop,
-    onDropRejected,
-    accept: { "image/*": [] },
-    maxFiles: 1,
-    multiple: false,
-    maxSize: 5 * 1024 * 1024,
-    disabled: fileState.uploading || fileState.isDeleting || !!fileState.objectUrl,
-  });
-
-  // 🖼️ Render UI content based on file state
-  const renderDropzoneContent = () => {
-    if (fileState.uploading) {
-      return <RenderUploadingState progress={fileState.progress} />;
-    }
-
-    if (fileState.error) {
-      console.error("File upload error:", fileState);
-      return (
-        <RenderErrorState
-          error="Upload failed. Please try again."
-          onRetry={() => {
-            setError(null);
-            setFileState((prev) => ({ ...prev, error: false }));
-            inputRef.current?.click();
-          }}
-        />
-      );
-    }
-
-    if (fileState.objectUrl) {
-      return (
-        <RenderSuccessState
-          previewUrl={fileState.objectUrl}
-          isDeleting={fileState.isDeleting}
-          handleDeleteFile={() => {
-            if (fileState.isDeleting) return;
-            deleteFile();
-          }}
-        />
-      );
-    }
-
-    return <RenderEmptyState isDragActive={isDragActive} />;
-  };
-
-  // ♻️ Cleanup blob URL on component unmount
-  useEffect(() => {
-    return () => {
-      if (fileState.objectUrl && !fileState.objectUrl.startsWith("http")) {
-        URL.revokeObjectURL(fileState.objectUrl);
-      }
     };
-  }, [fileState.objectUrl]);
 
-  return (
-    <div
-      {...getRootProps()}
-      className={cn(
-        "w-full h-64 rounded-xl border transition-colors hover:bg-primary/5 hover:border-primary",
-        isDragActive
-          ? "border-primary border-solid bg-primary/10"
-          : "border-dashed",
-        !isDragActive && "border-muted-foreground/30",
-        fileState.uploading || fileState.isDeleting
-          ? "cursor-not-allowed opacity-50 "
-          : "cursor-pointer",
-        fileState.objectUrl && "hover:bg-transparent hover:border-muted-foreground/30"
-      )}
-    >
-      <Card className="w-full h-full bg-transparent shadow-none border-none p-2">
-        <CardContent className="flex items-center justify-center h-full w-full px-2">
-          <input ref={inputRef} {...getInputProps()} />
-          {renderDropzoneContent()}
-        </CardContent>
-      </Card>
-    </div>
-  );
+    // ❌ Delete uploaded file from S3 and clear preview
+    async function deleteFile() {
+      if (fileState.isDeleting || !fileState.objectUrl || !fileState.key) return;
+
+      setFileState((prev) => ({ ...prev, isDeleting: true }));
+
+      try {
+        await axios.delete("/api/s3/delete", {
+          data: { key: fileState.key },
+          headers: { "Content-Type": "application/json" },
+        });
+
+        // 🧹 Revoke blob memory
+        if (fileState.objectUrl && !fileState.objectUrl.startsWith("http")) {
+          URL.revokeObjectURL(fileState.objectUrl);
+        }
+
+        // 🧼 Clear state
+        setFileState((prev) => ({
+          ...prev,
+          isDeleting: false,
+          objectUrl: undefined,
+          file: null,
+          id: null,
+          key: undefined,
+          uploading: false,
+        }));
+
+        // 🔑 Clear the file key from the form
+        if (onChange) {
+          onChange("");
+        }
+
+        toast.success("File deleted successfully!");
+      } catch (error) {
+        console.error("Delete error:", error);
+        toast.error(extractErrorMessage(error, "Failed to delete file"));
+        setFileState((prev) => ({ ...prev, isDeleting: false }));
+      }
+    }
+
+    // Ref to always have latest fileState inside callbacks
+    const fileStateRef = useRef(fileState);
+
+    // Keep the ref updated on every fileState change
+    useEffect(() => {
+      fileStateRef.current = fileState;
+    }, [fileState]);
+
+    // 📥 When file is dropped
+    const onDrop = useCallback((acceptedFiles: File[]) => {
+      setError(null);
+
+      if (acceptedFiles.length > 0) {
+        const file = acceptedFiles[0];
+        const id = uuidv4();
+        const objectUrl = URL.createObjectURL(file);
+
+        // 🧹 Revoke old blob safely using latest value from ref
+        const previousObjectUrl = fileStateRef.current.objectUrl;
+        if (previousObjectUrl && !previousObjectUrl.startsWith("http")) {
+          URL.revokeObjectURL(previousObjectUrl);
+        }
+
+        // 🧾 Save file metadata to state
+        setFileState({
+          id,
+          file,
+          uploading: true,
+          progress: 0,
+          error: false,
+          isDeleting: false,
+          fileType: "image",
+          objectUrl,
+        });
+
+        // 🚀 Start upload
+        uploadFile(file);
+      }
+    }, [uploadFile]);
+
+
+    //! ❌ On rejected file
+    //onDropRejected is used before any API call happens. It’s triggered by react-dropzone when a user drops an invalid file (e.g. wrong file type or too large)
+    const onDropRejected = useCallback((fileRejections: FileRejection[]) => {
+      let errorMessage = "Error in uploading file. Please try again.";
+
+      const fileTypeMismatch = fileRejections.some(rej =>
+        rej.errors.some(err => err.code === "file-invalid-type")
+      );
+      if (fileTypeMismatch) {
+        errorMessage = "Invalid file type, only images allowed.";
+      }
+
+      const tooManyFiles = fileRejections.some(rej =>
+        rej.errors.some(err => err.code === "too-many-files")
+      );
+      if (tooManyFiles) {
+        errorMessage = "Too many files selected, max is 1.";
+      }
+
+      const fileTooLarge = fileRejections.some(rej =>
+        rej.errors.some(err => err.code === "file-too-large")
+      );
+      if (fileTooLarge) {
+        errorMessage = "File size exceeds limit. Max 5MB allowed.";
+      }
+
+      setError(errorMessage);
+      toast.error(errorMessage);
+    }, []);
+
+    // 📦 Dropzone config
+    const { getRootProps, getInputProps, isDragActive } = useDropzone({
+      onDrop,
+      onDropRejected,
+      accept: { "image/*": [] },
+      maxFiles: 1,
+      multiple: false,
+      maxSize: 5 * 1024 * 1024,
+      disabled: fileState.uploading || fileState.isDeleting || !!fileState.objectUrl,
+    });
+
+    // 🖼️ Render UI content based on file state
+    const renderDropzoneContent = () => {
+      if (fileState.uploading) {
+        return <RenderUploadingState progress={fileState.progress} />;
+      }
+
+      if (fileState.error) {
+        console.error("File upload error:", fileState);
+        return (
+          <RenderErrorState
+            error="Upload failed. Please try again."
+            onRetry={() => {
+              setError(null);
+              setFileState((prev) => ({ ...prev, error: false }));
+              inputRef.current?.click();
+            }}
+          />
+        );
+      }
+
+      if (fileState.objectUrl) {
+        return (
+          <RenderSuccessState
+            previewUrl={fileState.objectUrl}
+            isDeleting={fileState.isDeleting}
+            handleDeleteFile={() => {
+              if (fileState.isDeleting) return;
+              deleteFile();
+            }}
+          />
+        );
+      }
+
+      return <RenderEmptyState isDragActive={isDragActive} />;
+    };
+
+    // ♻️ Cleanup blob URL on component unmount
+    useEffect(() => {
+      return () => {
+        if (fileState.objectUrl && !fileState.objectUrl.startsWith("http")) {
+          URL.revokeObjectURL(fileState.objectUrl);
+        }
+      };
+    }, [fileState.objectUrl]);
+
+    return (
+      <div
+        {...getRootProps()}
+        className={cn(
+          "w-full h-64 rounded-xl border transition-colors hover:bg-primary/5 hover:border-primary",
+          isDragActive
+            ? "border-primary border-solid bg-primary/10"
+            : "border-dashed",
+          !isDragActive && "border-muted-foreground/30",
+          fileState.uploading || fileState.isDeleting
+            ? "cursor-not-allowed opacity-50 "
+            : "cursor-pointer",
+          fileState.objectUrl && "hover:bg-transparent hover:border-muted-foreground/30"
+        )}
+      >
+        <Card className="w-full h-full bg-transparent shadow-none border-none p-2">
+          <CardContent className="flex items-center justify-center h-full w-full px-2">
+            <input ref={inputRef} {...getInputProps()} />
+            {renderDropzoneContent()}
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 }

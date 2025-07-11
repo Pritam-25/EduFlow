@@ -27,7 +27,7 @@ const arcjet = aj.withRule(
     fixedWindow({
         mode: "LIVE",
         window: "1m", // 1 minute window
-        max: 10, // max 10 uploads per window
+        max: 2, // max 10 uploads per window
     })
 );
 
