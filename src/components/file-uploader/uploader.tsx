@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useDropzone, FileRejection } from "react-dropzone";
 import { Card, CardContent } from "../ui/card";
@@ -15,11 +16,11 @@ interface UploaderState {
   progress: number;
   key?: string;
   error: boolean;
+  errorMessage?: string;
   isDeleting: boolean;
   objectUrl?: string;
   fileType: "image";
 }
-
 
 interface FileUploaderProps {
   value?: string;
@@ -27,7 +28,6 @@ interface FileUploaderProps {
 }
 
 export function FileUploader({ value, onChange }: FileUploaderProps) {
-  const [error, setError] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   const [fileState, setFileState] = useState<UploaderState>({
@@ -38,30 +38,31 @@ export function FileUploader({ value, onChange }: FileUploaderProps) {
     error: false,
     isDeleting: false,
     fileType: "image",
-    key: value,  // Initialize with value if provided
+    key: value,
   });
 
-  // ☁️ 🔗 Upload file to S3 using presigned URL
+  // ✅ Always hold the latest fileState for use in callbacks
+  const fileStateRef = useRef(fileState);
+  useEffect(() => {
+    fileStateRef.current = fileState;
+  }, [fileState]);
+
+  // ✅ Upload file
   const uploadFile = async (file: File) => {
     if (!file) return;
 
-    // Set uploading state
     setFileState((prev) => ({ ...prev, uploading: true, progress: 0, error: false }));
 
     try {
-      // 🔶 Step 1: Get presigned URL from your API
       const presignedResponse = await axios.post("/api/s3/upload", {
         fileName: file.name,
         contentType: file.type,
         size: file.size,
         isImage: true,
-      }, {
-        headers: { "Content-Type": "application/json" },
       });
 
       const { presignedUrl, key } = presignedResponse.data;
 
-      // 🔷 Step 2: Upload file directly to S3
       await axios.put(presignedUrl, file, {
         headers: { "Content-Type": file.type },
         onUploadProgress: (progressEvent) => {
@@ -71,7 +72,6 @@ export function FileUploader({ value, onChange }: FileUploaderProps) {
         },
       });
 
-      // ✅ Step 3: Mark upload as done
       setFileState((prev) => ({
         ...prev,
         uploading: false,
@@ -80,208 +80,191 @@ export function FileUploader({ value, onChange }: FileUploaderProps) {
         key,
       }));
 
-      // 🔑 Pass the file key to the form
-      if (onChange) {
-        onChange(key);
-      }
-
+      onChange?.(key);
       toast.success("File uploaded successfully!");
     } catch (error) {
       console.error("Upload error:", error);
-      toast.error(extractErrorMessage(error, "Failed to upload file"));
-      setFileState((prev) => ({ ...prev, uploading: false, error: true }));
-    };
+      const extracted = extractErrorMessage(error, "Failed to upload file");
+      toast.error(extracted);
 
-    // ❌ Delete uploaded file from S3 and clear preview
-    async function deleteFile() {
-      if (fileState.isDeleting || !fileState.objectUrl || !fileState.key) return;
+      setFileState((prev) => ({
+        ...prev,
+        uploading: false,
+        error: true,
+        errorMessage: extracted,
+      }));
+    }
+  };
 
-      setFileState((prev) => ({ ...prev, isDeleting: true }));
+  // ✅ Delete file
+  const deleteFile = async () => {
+    if (fileState.isDeleting || !fileState.objectUrl || !fileState.key) return;
 
-      try {
-        await axios.delete("/api/s3/delete", {
-          data: { key: fileState.key },
-          headers: { "Content-Type": "application/json" },
-        });
+    setFileState((prev) => ({ ...prev, isDeleting: true }));
 
-        // 🧹 Revoke blob memory
-        if (fileState.objectUrl && !fileState.objectUrl.startsWith("http")) {
-          URL.revokeObjectURL(fileState.objectUrl);
-        }
+    try {
+      await axios.delete("/api/s3/delete", {
+        data: { key: fileState.key },
+      });
 
-        // 🧼 Clear state
-        setFileState((prev) => ({
-          ...prev,
-          isDeleting: false,
-          objectUrl: undefined,
-          file: null,
-          id: null,
-          key: undefined,
-          uploading: false,
-        }));
-
-        // 🔑 Clear the file key from the form
-        if (onChange) {
-          onChange("");
-        }
-
-        toast.success("File deleted successfully!");
-      } catch (error) {
-        console.error("Delete error:", error);
-        toast.error(extractErrorMessage(error, "Failed to delete file"));
-        setFileState((prev) => ({ ...prev, isDeleting: false }));
+      if (fileState.objectUrl && !fileState.objectUrl.startsWith("http")) {
+        URL.revokeObjectURL(fileState.objectUrl);
       }
+
+      setFileState({
+        id: null,
+        file: null,
+        uploading: false,
+        progress: 0,
+        error: false,
+        isDeleting: false,
+        fileType: "image",
+        key: undefined,
+        objectUrl: undefined,
+      });
+
+      onChange?.("");
+      toast.success("File deleted successfully!");
+    } catch (error) {
+      console.error("Delete error:", error);
+      const extracted = extractErrorMessage(error, "Failed to delete file");
+      toast.error(extracted);
+      setFileState((prev) => ({ ...prev, isDeleting: false, error: true, errorMessage: extracted }));
+    }
+  };
+
+  // ✅ Drop handler
+  const onDrop = useCallback((acceptedFiles: File[]) => {
+    if (acceptedFiles.length === 0) return;
+
+    const file = acceptedFiles[0];
+    const id = uuidv4();
+    const objectUrl = URL.createObjectURL(file);
+
+    const prevUrl = fileStateRef.current.objectUrl;
+    if (prevUrl && !prevUrl.startsWith("http")) {
+      URL.revokeObjectURL(prevUrl);
     }
 
-    // Ref to always have latest fileState inside callbacks
-    const fileStateRef = useRef(fileState);
-
-    // Keep the ref updated on every fileState change
-    useEffect(() => {
-      fileStateRef.current = fileState;
-    }, [fileState]);
-
-    // 📥 When file is dropped
-    const onDrop = useCallback((acceptedFiles: File[]) => {
-      setError(null);
-
-      if (acceptedFiles.length > 0) {
-        const file = acceptedFiles[0];
-        const id = uuidv4();
-        const objectUrl = URL.createObjectURL(file);
-
-        // 🧹 Revoke old blob safely using latest value from ref
-        const previousObjectUrl = fileStateRef.current.objectUrl;
-        if (previousObjectUrl && !previousObjectUrl.startsWith("http")) {
-          URL.revokeObjectURL(previousObjectUrl);
-        }
-
-        // 🧾 Save file metadata to state
-        setFileState({
-          id,
-          file,
-          uploading: true,
-          progress: 0,
-          error: false,
-          isDeleting: false,
-          fileType: "image",
-          objectUrl,
-        });
-
-        // 🚀 Start upload
-        uploadFile(file);
-      }
-    }, [uploadFile]);
-
-
-    //! ❌ On rejected file
-    //onDropRejected is used before any API call happens. It’s triggered by react-dropzone when a user drops an invalid file (e.g. wrong file type or too large)
-    const onDropRejected = useCallback((fileRejections: FileRejection[]) => {
-      let errorMessage = "Error in uploading file. Please try again.";
-
-      const fileTypeMismatch = fileRejections.some(rej =>
-        rej.errors.some(err => err.code === "file-invalid-type")
-      );
-      if (fileTypeMismatch) {
-        errorMessage = "Invalid file type, only images allowed.";
-      }
-
-      const tooManyFiles = fileRejections.some(rej =>
-        rej.errors.some(err => err.code === "too-many-files")
-      );
-      if (tooManyFiles) {
-        errorMessage = "Too many files selected, max is 1.";
-      }
-
-      const fileTooLarge = fileRejections.some(rej =>
-        rej.errors.some(err => err.code === "file-too-large")
-      );
-      if (fileTooLarge) {
-        errorMessage = "File size exceeds limit. Max 5MB allowed.";
-      }
-
-      setError(errorMessage);
-      toast.error(errorMessage);
-    }, []);
-
-    // 📦 Dropzone config
-    const { getRootProps, getInputProps, isDragActive } = useDropzone({
-      onDrop,
-      onDropRejected,
-      accept: { "image/*": [] },
-      maxFiles: 1,
-      multiple: false,
-      maxSize: 5 * 1024 * 1024,
-      disabled: fileState.uploading || fileState.isDeleting || !!fileState.objectUrl,
+    setFileState({
+      id,
+      file,
+      uploading: true,
+      progress: 0,
+      error: false,
+      isDeleting: false,
+      fileType: "image",
+      objectUrl,
     });
 
-    // 🖼️ Render UI content based on file state
-    const renderDropzoneContent = () => {
-      if (fileState.uploading) {
-        return <RenderUploadingState progress={fileState.progress} />;
-      }
+    uploadFile(file);
+  }, [uploadFile]);
 
-      if (fileState.error) {
-        console.error("File upload error:", fileState);
-        return (
-          <RenderErrorState
-            error="Upload failed. Please try again."
-            onRetry={() => {
-              setError(null);
-              setFileState((prev) => ({ ...prev, error: false }));
+  // ❌ Drop rejection
+  const onDropRejected = useCallback((fileRejections: FileRejection[]) => {
+    let errorMessage = "Error in uploading file. Please try again.";
+
+    if (fileRejections.some(r => r.errors.some(e => e.code === "file-invalid-type")))
+      errorMessage = "Invalid file type, only images allowed.";
+    else if (fileRejections.some(r => r.errors.some(e => e.code === "too-many-files")))
+      errorMessage = "Too many files selected, max is 1.";
+    else if (fileRejections.some(r => r.errors.some(e => e.code === "file-too-large")))
+      errorMessage = "File size exceeds limit. Max 5MB allowed.";
+
+    setFileState((prev) => ({
+      ...prev,
+      file: null, // ⛔ Ensure no retry happens
+      error: true,
+      errorMessage: errorMessage,
+    }));
+    toast.error(errorMessage);
+  }, []);
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    onDropRejected,
+    accept: { "image/*": [] },
+    maxFiles: 1,
+    multiple: false,
+    maxSize: 5 * 1024 * 1024,
+    disabled: fileState.uploading || fileState.isDeleting || !!fileState.objectUrl,
+  });
+
+  // ✅ Render state
+  const renderDropzoneContent = () => {
+    if (fileState.uploading) return <RenderUploadingState progress={fileState.progress} />;
+
+    if (fileState.error) {
+      return (
+        <RenderErrorState
+          error={fileState.errorMessage || "An error occurred while uploading."}
+          onRetry={() => {
+
+            const fileToRetry = fileStateRef.current.file;
+
+            setFileState((prev) => ({
+              ...prev,
+              error: false,
+              uploading: false,
+              errorMessage: undefined,
+            }));
+
+            if (fileToRetry) uploadFile(fileToRetry);
+
+            requestAnimationFrame(() => {
               inputRef.current?.click();
-            }}
-          />
-        );
-      }
+            });
+          }}
 
-      if (fileState.objectUrl) {
-        return (
-          <RenderSuccessState
-            previewUrl={fileState.objectUrl}
-            isDeleting={fileState.isDeleting}
-            handleDeleteFile={() => {
-              if (fileState.isDeleting) return;
-              deleteFile();
-            }}
-          />
-        );
-      }
+        />
+      );
+    }
 
-      return <RenderEmptyState isDragActive={isDragActive} />;
+    if (fileState.objectUrl) {
+      return (
+        <RenderSuccessState
+          previewUrl={fileState.objectUrl}
+          isDeleting={fileState.isDeleting}
+          handleDeleteFile={() => {
+            if (!fileState.isDeleting) deleteFile();
+          }}
+        />
+      );
+    }
+
+    return <RenderEmptyState isDragActive={isDragActive} />;
+  };
+
+  // ♻️ Cleanup URL on unmount
+  useEffect(() => {
+    return () => {
+      if (fileState.objectUrl && !fileState.objectUrl.startsWith("http")) {
+        URL.revokeObjectURL(fileState.objectUrl);
+      }
     };
+  }, [fileState.objectUrl]);
 
-    // ♻️ Cleanup blob URL on component unmount
-    useEffect(() => {
-      return () => {
-        if (fileState.objectUrl && !fileState.objectUrl.startsWith("http")) {
-          URL.revokeObjectURL(fileState.objectUrl);
-        }
-      };
-    }, [fileState.objectUrl]);
-
-    return (
-      <div
-        {...getRootProps()}
-        className={cn(
-          "w-full h-64 rounded-xl border transition-colors hover:bg-primary/5 hover:border-primary",
-          isDragActive
-            ? "border-primary border-solid bg-primary/10"
-            : "border-dashed",
-          !isDragActive && "border-muted-foreground/30",
-          fileState.uploading || fileState.isDeleting
-            ? "cursor-not-allowed opacity-50 "
-            : "cursor-pointer",
-          fileState.objectUrl && "hover:bg-transparent hover:border-muted-foreground/30"
-        )}
-      >
-        <Card className="w-full h-full bg-transparent shadow-none border-none p-2">
-          <CardContent className="flex items-center justify-center h-full w-full px-2">
-            <input ref={inputRef} {...getInputProps()} />
-            {renderDropzoneContent()}
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
+  return (
+    <div
+      {...getRootProps()}
+      className={cn(
+        "w-full h-64 rounded-xl border transition-colors",
+        isDragActive && !fileState.error
+          ? "hover:bg-primary/5 hover:border-primary border-primary border-solid bg-primary/10"
+          : "border-dashed",
+        !isDragActive && "border-muted-foreground/30",
+        fileState.uploading || fileState.isDeleting
+          ? "cursor-not-allowed opacity-50"
+          : "cursor-pointer",
+        (fileState.objectUrl || fileState.error) && "hover:bg-transparent hover:border-muted-foreground/30"
+      )}
+    >
+      <Card className="w-full h-full bg-transparent shadow-none border-none p-2">
+        <CardContent className="flex items-center justify-center h-full w-full px-2">
+          <input ref={inputRef} {...getInputProps()} />
+          {renderDropzoneContent()}
+        </CardContent>
+      </Card>
+    </div>
+  );
 }
