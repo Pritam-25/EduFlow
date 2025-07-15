@@ -7,12 +7,12 @@ export default function RenderEmptyState({ isDragActive }: { isDragActive: boole
   return (
     <div className="flex flex-col items-center justify-center text-center gap-3">
       <div className={cn(
-        "flex items-center justify-center size-14 rounded-full bg-secondary transition-all",
+        "flex items-center justify-center size-14 rounded-full bg-accent transition-all",
         isDragActive && "bg-primary/20"
       )}>
         <CloudUpload
           className={cn(
-            "size-icon text-muted-foreground transition-transform",
+            "size-icon  transition-transform",
             isDragActive && "animate-bounce text-primary"
           )}
         />

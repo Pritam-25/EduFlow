@@ -17,7 +17,6 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -45,10 +44,10 @@ import Tiptap from "@/components/rich-text-editor/editor";
 import { FileUploader } from "@/components/file-uploader/uploader";
 import { useTransition } from "react";
 import { tryCatch } from "@/hooks/try-catch";
-import { createCourseAction } from "./action";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { IconCirclePlusFilled } from "@tabler/icons-react";
+import { adminCreateCourse } from "../../actions/createCourse";
 
 export default function CourseCreatePage() {
 
@@ -77,7 +76,7 @@ export default function CourseCreatePage() {
     console.log("🎯 Submit handler called with:", values); // check if called
     // Do something with the form values.
     startTransition(async () => {
-      const { data: result, error } = await tryCatch(createCourseAction(values));
+      const { data: result, error } = await tryCatch(adminCreateCourse(values));
 
       if (error) {
         toast.error("An unexpected error occurred. Please try again.");

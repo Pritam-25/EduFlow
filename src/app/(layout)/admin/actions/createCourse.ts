@@ -6,7 +6,7 @@ import { ApiResponse } from "@/lib/types";
 import { CourseSchema, CourseSchemaType } from "@/lib/zodSchema"
 import { headers } from "next/headers";
 
-export async function createCourseAction(FormData: CourseSchemaType): Promise<ApiResponse> {
+export async function adminCreateCourse(FormData: CourseSchemaType): Promise<ApiResponse> {
     try {
 
         // get the userId from the session or context

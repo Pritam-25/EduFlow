@@ -8,6 +8,7 @@ import RenderEmptyState, { RenderErrorState, RenderSuccessState, RenderUploading
 import { toast } from "sonner";
 import { v4 as uuidv4 } from 'uuid';
 import axios from "axios";
+import { useConstructUrl } from "@/hooks/use-construct-url";
 
 interface UploaderState {
   id: string | null;
@@ -30,6 +31,8 @@ interface FileUploaderProps {
 export function FileUploader({ value, onChange }: FileUploaderProps) {
   const inputRef = useRef<HTMLInputElement | null>(null);
 
+  const objectUrl = useConstructUrl(value || "");
+
   const [fileState, setFileState] = useState<UploaderState>({
     id: null,
     file: null,
@@ -39,6 +42,7 @@ export function FileUploader({ value, onChange }: FileUploaderProps) {
     isDeleting: false,
     fileType: "image",
     key: value,
+    objectUrl: objectUrl,
   });
 
   // ✅ Always hold the latest fileState for use in callbacks
@@ -248,9 +252,9 @@ export function FileUploader({ value, onChange }: FileUploaderProps) {
     <div
       {...getRootProps()}
       className={cn(
-        "w-full h-64 rounded-xl border transition-colors",
+        "w-full h-64 rounded-xl border transition-colors hover:bg-primary/5 hover:border-primary hover:border-dashed",
         isDragActive && !fileState.error
-          ? "hover:bg-primary/5 hover:border-primary border-primary border-solid bg-primary/10"
+          ? "border-primary border-solid bg-primary/10"
           : "border-dashed",
         !isDragActive && "border-muted-foreground/30",
         fileState.uploading || fileState.isDeleting
