@@ -1,17 +1,25 @@
 "use server"
 
+import { ajProtect } from "@/lib/arcjet-protect";
+
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { ApiResponse } from "@/lib/types";
 import { CourseSchema, CourseSchemaType } from "@/lib/zodSchema"
+import { request } from "@arcjet/next";
 import { headers } from "next/headers";
 
-export async function adminCreateCourse(FormData: CourseSchemaType): Promise<ApiResponse> {
-    try {
 
-        // get the userId from the session or context
-        const session = await auth.api.getSession({
-            headers: await headers(),
+
+export async function adminCreateCourse(FormData: CourseSchemaType): Promise<ApiResponse> {
+
+    const session = await auth.api.getSession({
+        headers: await headers(),
+    });
+    try {
+        const req = await request();
+        const decision = await ajProtect.protect(req, {
+            fingerprint: session?.user?.id || "anonymous",
         });
 
         if (!session || !session.user?.id) {
@@ -19,6 +27,21 @@ export async function adminCreateCourse(FormData: CourseSchemaType): Promise<Api
                 status: "error",
                 message: "User must be authenticated to create a course",
             };
+        }
+
+        if (decision.isDenied()) {
+            if (decision.reason.isRateLimit()) {
+                return {
+                    status: "error",
+                    message: "You have blocked due to rate limiting. Please try again later.",
+                };
+            }
+            else {
+                return {
+                    status: "error",
+                    message: "Too many requests, please try again later.(Your are a bot!)",
+                };
+            }
         }
 
         // Validate the form data using Zod schema
@@ -34,7 +57,7 @@ export async function adminCreateCourse(FormData: CourseSchemaType): Promise<Api
         const courseData = await prisma.course.create({
             data: {
                 ...validation.data,
-                authorId: session?.user.id, 
+                authorId: session?.user.id,
             }
         })
 

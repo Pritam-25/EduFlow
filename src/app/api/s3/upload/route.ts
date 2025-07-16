@@ -8,7 +8,6 @@ import { s3Client } from "@/lib/s3-client";
 import { aj, detectBot, fixedWindow } from "@/lib/arcjet";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
-import { User } from "lucide-react";
 
 export const uploadSchema = z.object({
     fileName: z.string().min(1, "File name is required"),

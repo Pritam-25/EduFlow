@@ -27,34 +27,6 @@ export const env = createEnv({
     }
 });
 
-// Debug code to add temporarily to your env.ts file
-console.log("ENV DEBUG:", {
-    // Auth
-    hasAuthSecret: !!process.env.BETTER_AUTH_SECRET,
-    hasAuthUrl: !!process.env.BETTER_AUTH_URL,
 
-    // Database
-    hasDB: !!process.env.DATABASE_URL,
-
-    // GitHub OAuth
-    hasGithubId: !!process.env.AUTH_GITHUB_CLIENT_ID,
-    hasGithubSecret: !!process.env.AUTH_GITHUB_SECRET,
-
-    // Email
-    hasResendKey: !!process.env.RESEND_API_KEY,
-
-    // AWS S3
-    hasAwsAccessKey: !!process.env.AWS_ACCESS_KEY_ID,
-    hasAwsSecretKey: !!process.env.AWS_SECRET_ACCESS_KEY,
-    hasAwsS3Endpoint: !!process.env.AWS_ENDPOINT_URL_S3,
-    hasAwsIamEndpoint: !!process.env.AWS_ENDPOINT_URL_IAM,
-    hasAwsRegion: !!process.env.AWS_REGION,
-
-    // Public variables
-    hasBucket: !!process.env.NEXT_PUBLIC_S3_BUCKET_NAME,
-
-    // Security
-    hasArcjetKey: !!process.env.ARCJET_KEY,
-});
 
 

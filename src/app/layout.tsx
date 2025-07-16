@@ -21,7 +21,7 @@ export default function RootLayout({
       className="dark"
       style={{ colorScheme: "dark" }}
     >
-      <body>
+      <body suppressHydrationWarning>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

@@ -19,6 +19,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Edit } from "lucide-react";
 import EditCourseForm from "./_comonents/editCourseForm";
+import CourseStructure from "@/app/(layout)/admin/courses/[courseId]/edit/_comonents/courseStructure";
 
 // get the courseId from the URL parameters
 type Params = Promise<{ courseId: string }>;
@@ -64,7 +65,7 @@ export default async function Page({ params }: { params: Params }) {
               </CardDescription>
             </CardHeader>
             <CardContent className="grid gap-6">
-              <EditCourseForm course={course} />
+              <CourseStructure/>
             </CardContent>
           </Card>
         </TabsContent>

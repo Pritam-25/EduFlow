@@ -21,7 +21,7 @@ model User {
   emailVerified Boolean
   image         String?
   role          Role         @default(USER)
-  courses       Course[]    @relation("CourseAuthor") //created courses
+  courses       Course[]     @relation("CourseAuthor") // created courses
   enrollments   Enrollment[] // one user can enroll in many courses
   createdAt     DateTime
   updatedAt     DateTime
@@ -83,14 +83,14 @@ model Verification {
 }
 
 model Course {
-  id String @id @default(cuid())
+  id               String       @id @default(cuid())
   title            String
   description      String
   fileKey          String
   price            Int
   duration         Int
   level            CourseLevel  @default(BEGINNER)
-  category         Category[]     @default([OTHER])
+  category         Category[]   @default([OTHER])
   smallDescription String
   slug             String       @unique
   states           CourseStates @default(DRAFT)
@@ -99,6 +99,7 @@ model Course {
   enrollments      Enrollment[]
   createdAt        DateTime     @default(now())
   updatedAt        DateTime     @updatedAt
+  chapters         Chapter[]
 }
 
 model Enrollment {
@@ -107,7 +108,7 @@ model Enrollment {
   courseId   String
   enrolledAt DateTime @default(now())
 
-  user   User    @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id])
   course Course @relation(fields: [courseId], references: [id])
 
   @@unique([userId, courseId]) // prevent duplicate enrollments
@@ -138,4 +139,32 @@ enum Category {
   MUSIC
   OFFICE_PRODUCTIVITY
   OTHER
+}
+
+model Chapter {
+  id String @id @default(cuid())
+
+  title     String
+  position  Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Course    Course?  @relation(fields: [courseId], references: [id])
+  courseId  String?
+  lessons   Lesson[]
+}
+
+model Lesson {
+  id String @id @default(cuid())
+
+  title       String
+  description String?
+  position    Int
+
+  thumbnailkey String? // S3 key for the lesson file
+  videokey     String? // S3 key for the video file
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  chapterId String
+  chapter   Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
 }
