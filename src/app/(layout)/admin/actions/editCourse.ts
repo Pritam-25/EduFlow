@@ -95,3 +95,47 @@ export async function reorderLessons(
 }
 
 
+export async function reorderChapters(
+    courseId: string,
+    chapters: { id: string; position: number }[]
+): Promise<ApiResponse> {
+    try {
+        if (!courseId) {
+            return {
+                status: "error",
+                message: "Course ID is required for reordering.",
+            };
+        }
+
+        if (!chapters || chapters.length === 0) {
+            return {
+                status: "error",
+                message: "No chapters provided for reordering.",
+            };
+        }
+
+        // Update chapters
+        const chapterUpdates = chapters.map((chapter) =>
+            prisma.chapter.update({
+                where: { id: chapter.id, courseId: courseId },
+                data: { position: chapter.position },
+            })
+        );
+
+        await prisma.$transaction(chapterUpdates);
+
+        // revalidate the course structure to update the UI after database changes
+        revalidatePath(`/admin/courses/${courseId}/edit`);
+
+        return {
+            status: "success",
+            message: "Chapters reordered successfully",
+        };
+    } catch (error) {
+        console.error("Error reordering chapters:", error);
+        return {
+            status: "error",
+            message: "Failed to reorder chapters",
+        };
+    }
+}

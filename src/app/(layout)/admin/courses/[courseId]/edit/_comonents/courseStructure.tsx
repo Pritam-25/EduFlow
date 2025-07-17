@@ -9,6 +9,7 @@ import {
   useSensor,
   useSensors,
   DraggableSyntheticListeners,
+  DragEndEvent,
 } from "@dnd-kit/core";
 import {
   arrayMove,
@@ -38,7 +39,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { it } from "node:test";
 import { toast } from "sonner";
-import { reorderLessons } from "@/app/(layout)/admin/actions/editCourse";
+import { reorderChapters, reorderLessons } from "@/app/(layout)/admin/actions/editCourse";
 import { error } from "console";
 import { th } from "zod/v4/locales";
 
@@ -113,7 +114,7 @@ export default function CourseStructure({ data }: CourseStructureProps) {
     );
   }
 
-  function handleDragEnd(event: any) {
+  function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event;
 
     if (!over || active.id === over.id) {
@@ -158,6 +159,30 @@ export default function CourseStructure({ data }: CourseStructureProps) {
       const previousChapters = [...items];
 
       setItems(updatedChaptersForStates);
+
+      if (courseId) {
+        const chapterToUpdate = updatedChaptersForStates.map((chapter, index) => ({
+          id: chapter.id,
+          position: chapter.position,
+        }));
+
+        // Call API to update chapters
+        const reorderChaptersPromise = () => reorderChapters(courseId, chapterToUpdate);
+
+        toast.promise(reorderChaptersPromise(), {
+          loading: "Reordering chapters...",
+          success: (result) => {
+            if (result.status === "success") {
+              return result.message;
+            }
+            throw new Error(result.message);
+          },
+          error: () => {
+            setItems(previousChapters);
+            return "Failed to reorder chapters";
+          },
+        });
+      }
     }
 
     // lesson reordering logic
