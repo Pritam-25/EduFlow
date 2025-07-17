@@ -17,7 +17,7 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { AdminGetCourseType } from "@/app/(layout)/admin/actions/getCourse";
@@ -84,6 +84,26 @@ export default function CourseStructure({ data }: CourseStructureProps) {
     })) || [];
 
   console.log("initialChapters:", initialChapters);
+
+  useEffect(() => {
+    setItems((prevItems) => {
+      const updatedItems = data.chapters.map((chapter) => ({
+        id: chapter.id,
+        title: chapter.title,
+        position: chapter.position,
+        isOpen: prevItems.find((item) => item.id === chapter.id)?.isOpen || false, // default chapter to open
+        lessons: chapter.lessons?.map((lesson) => ({
+          id: lesson.id,
+          title: lesson.title,
+          position: lesson.position,
+          thumbnailkey: lesson.thumbnailkey,
+          videokey: lesson.videokey,
+          description: lesson.description,
+        })) || [],
+      }));
+      return updatedItems;
+    });
+  }, [data]);
 
   const [items, setItems] = useState(initialChapters);
 
@@ -246,7 +266,7 @@ export default function CourseStructure({ data }: CourseStructureProps) {
         toast.promise(reorderLessonsPromise(), {
           loading: "Reordering lessons...",
           success: (result) => {
-            if(result.status === "success") {
+            if (result.status === "success") {
               return result.message;
             }
             throw new Error(result.message);
