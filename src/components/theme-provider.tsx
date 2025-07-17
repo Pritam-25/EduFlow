@@ -25,6 +25,8 @@ function ThemedToaster() {
     <Toaster
       theme={theme === "dark" ? "dark" : "light"} // Set the theme dynamically
       richColors // Enable rich colors
+      closeButton
+      position="bottom-center"
     />
   );
 }

@@ -38,6 +38,9 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { it } from "node:test";
 import { toast } from "sonner";
+import { reorderLessons } from "@/app/(layout)/admin/actions/editCourse";
+import { error } from "console";
+import { th } from "zod/v4/locales";
 
 interface CourseStructureProps {
   data: AdminGetCourseType;
@@ -209,7 +212,28 @@ export default function CourseStructure({ data }: CourseStructureProps) {
         }));
 
         // Call API to update lessons
+        const reorderLessonsPromise = () => reorderLessons(
+          courseId,
+          chapterToUpdate.id,
+          lessonToUpdate
+        );
+
+        toast.promise(reorderLessonsPromise(), {
+          loading: "Reordering lessons...",
+          success: (result) => {
+            if(result.status === "success") {
+              return result.message;
+            }
+            throw new Error(result.message);
+          },
+          error: () => {
+            setItems(previousItems);
+            return "Failed to reorder lessons";
+          }
+        });
       }
+
+      return; // Exit early after handling lesson reordering
     }
   }
 
