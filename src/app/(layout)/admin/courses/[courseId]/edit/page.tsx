@@ -65,7 +65,7 @@ export default async function Page({ params }: { params: Params }) {
               </CardDescription>
             </CardHeader>
             <CardContent className="grid gap-6">
-              <CourseStructure/>
+              <CourseStructure data={course} />
             </CardContent>
           </Card>
         </TabsContent>

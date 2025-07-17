@@ -30,7 +30,7 @@ export default function Navbar() {
   const { data: session, isPending } = authClient.useSession();
 
   return (
-    <div className="sticky top-0 w-full bg-white/5 backdrop-blur-lg z-50 border-b border-border shadow-lg">
+    <div className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
       <nav className="px-4 md:px-6 lg:px-8 min-h-16 container mx-auto flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2 mr-4 space-x-2">
           <div className="bg-primary text-primary-foreground flex size-8 items-center justify-center rounded-md">

@@ -1,9 +1,9 @@
 import { cn } from "@/lib/utils";
-import { CloudAlert, CloudUpload, ImageUpIcon, Loader2, Trash2, Upload } from "lucide-react";
+import { CloudAlert, CloudUpload, ImageUpIcon, Loader2, Trash2, Upload, UploadIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import Image from "next/image";
 
-export default function RenderEmptyState({ isDragActive }: { isDragActive: boolean }) {
+export default function RenderEmptyState({ isDragActive, maxSizeMB = 5 }: { isDragActive: boolean; maxSizeMB?: number }) {
   return (
     <div className="flex flex-col items-center justify-center text-center gap-3">
       <div className={cn(
@@ -18,10 +18,13 @@ export default function RenderEmptyState({ isDragActive }: { isDragActive: boole
         />
       </div>
 
-      <div className="space-y-4">
-        <p className="text-sm text-muted-foreground font-medium">
+      <div >
+        <p className="text-base font-medium mb-1.5">
           Drag & drop files here or <span className="text-primary font-semibold">click to upload</span>
         </p>
+         <p className="text-muted-foreground text-xs">
+            SVG, PNG, JPG or GIF (max. {maxSizeMB}MB)
+          </p>
       </div>
     </div>
   );

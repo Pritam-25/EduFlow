@@ -17,7 +17,10 @@ import { CSS } from '@dnd-kit/utilities';
 import { AdminGetCourseType } from "@/app/(layout)/admin/actions/getCourse";
 import { cn } from "@/lib/utils";
 import { Collapsible } from "@/components/ui/collapsible";
-import { GripVertical } from "lucide-react";
+import { ChevronDown, ChevronRight, FileText, GripVertical, Trash2 } from "lucide-react";
+import { CollapsibleContent, CollapsibleTrigger } from "@radix-ui/react-collapsible";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 
 interface CourseStructureProps { data: AdminGetCourseType }
@@ -41,13 +44,13 @@ export default function CourseStructure({ data }: CourseStructureProps) {
     });
 
     // Add null check and provide a default empty array
-    const initialChapters = data?.chapters?.map(chapter => (
+    const initialChapters = data?.chapters?.map((chapter) => (
         {
             id: chapter.id,
             title: chapter.title,
             position: chapter.position,
             isOpen: true, // default chapter to open
-            lessons: chapter.lessons?.map(lesson => ({
+            lessons: chapter.lessons?.map((lesson) => ({
                 id: lesson.id,
                 title: lesson.title,
                 position: lesson.position,
@@ -141,10 +144,63 @@ export default function CourseStructure({ data }: CourseStructureProps) {
                                         <Collapsible open={item.isOpen} onOpenChange={() => handleChapterToggle(item.id)}>
                                             <div className="flex items-center justify-between p-4 border-b border-border">
                                                 <div className="flex items-center gap-2">
-                                                    <button className="cursor-grab opacity-60 hover:opacity-100" {...listeners}>
+                                                    <Button variant="ghost" size="icon" {...listeners}>
                                                         <GripVertical className="size-4" />
-                                                    </button>
+                                                    </Button>
+                                                    <CollapsibleTrigger asChild>
+                                                        <Button size="icon" className=" flex items-center gap-2" variant="ghost">
+                                                            {item.isOpen ? (
+                                                                <ChevronDown className="size-4" />
+                                                            ) : (
+                                                                <ChevronRight className="size-4" />
+                                                            )}
+                                                        </Button>
+                                                    </CollapsibleTrigger>
+
+                                                    <p className="cursor-pointer hover:text-primary pl-2">{item.title}</p>
+                                                    <Button variant="ghost" size="icon">
+                                                        <Trash2 className="size-4" />
+                                                    </Button>
                                                 </div>
+
+                                                <CollapsibleContent>
+                                                    <div className="p-1">
+                                                        <SortableContext
+                                                            items={item.lessons.map((lesson) => lesson.id)}
+                                                            strategy={verticalListSortingStrategy}
+                                                        >
+                                                            {item.lessons.map((lesson) => (
+                                                                <SortableItem
+                                                                    key={lesson.id}
+                                                                    id={lesson.id}
+                                                                    data={{ type: 'lesson', chapterId: item.id }}
+                                                                    className="p-2 border-b border-border"
+                                                                >
+                                                                    {listeners => (
+                                                                        <div className="flex items-center justify-between p-2 hover:bg-accent rounded-md">
+                                                                            <div className="flex items-center gap-2">
+                                                                                <Button variant="ghost" size="icon" {...listeners}>
+                                                                                    <GripVertical className="size-4" />
+                                                                                </Button>
+                                                                                <FileText className="size-4" />
+                                                                                <Link
+                                                                                    href={`/admin/courses/${data.id}/${item.id}/${lesson.id}`}
+                                                                                    className="cursor-pointer hover:text-primary pl-2"
+                                                                                >
+                                                                                    {lesson.title}
+                                                                                </Link>
+                                                                            </div>
+                                                                            <Button variant="ghost" size="icon">
+                                                                                <Trash2 className="size-4" />
+                                                                            </Button>
+                                                                        </div>
+                                                                    )}
+                                                                </SortableItem>
+                                                            ))}
+
+                                                        </SortableContext>
+                                                    </div>
+                                                </CollapsibleContent>
                                             </div>
                                         </Collapsible>
                                     </Card>
