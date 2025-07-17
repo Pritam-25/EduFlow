@@ -27,6 +27,7 @@ import {
   ChevronRight,
   FileText,
   GripVertical,
+  Target,
   Trash2,
 } from "lucide-react";
 import {
@@ -35,6 +36,8 @@ import {
 } from "@radix-ui/react-collapsible";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { it } from "node:test";
+import { toast } from "sonner";
 
 interface CourseStructureProps {
   data: AdminGetCourseType;
@@ -110,13 +113,103 @@ export default function CourseStructure({ data }: CourseStructureProps) {
   function handleDragEnd(event: any) {
     const { active, over } = event;
 
-    if (active.id !== over.id) {
-      setItems((items) => {
-        const oldIndex = items.indexOf(active.id);
-        const newIndex = items.indexOf(over.id);
+    if (!over || active.id === over.id) {
+      return;
+    }
+    // Ensure active and over are defined
+    const activeId = active.id;
+    const overId = over?.id;
+    const activeType = active.data.current?.type as "chapter" | "lesson";
+    const overType = over?.data.current?.type as "chapter" | "lesson";
+    const courseId = data.id;
 
-        return arrayMove(items, oldIndex, newIndex);
-      });
+    // chapter reordering logic
+    if (activeType === "chapter") {
+      let targetChapterId = null;
+
+      if (overType === "chapter") {
+        targetChapterId = overId;
+      } else if (overType === "lesson") {
+        targetChapterId = over.data.current?.chapterId ?? null;
+      }
+      if (!targetChapterId) {
+        console.error("Could not determine target chapter for reordering");
+        return;
+      }
+
+      const oldIndex = items.findIndex((chapter) => chapter.id === activeId);
+      const newIndex = items.findIndex((chapter) => chapter.id === targetChapterId);
+
+      if (oldIndex === -1 || newIndex === -1) {
+        console.error("Invalid indices for reordering chapters");
+        return;
+      }
+
+      const reorderedLocalChapters = arrayMove(items, oldIndex, newIndex);
+
+      const updatedChaptersForStates = reorderedLocalChapters.map((chapter, index) => ({
+        ...chapter,
+        position: index + 1, // Update position based on new order
+      }));
+
+      const previousChapters = [...items];
+
+      setItems(updatedChaptersForStates);
+    }
+
+    // lesson reordering logic
+    if (activeType === "lesson" && overType === "lesson") {
+      const activeChapterId = active.data.current?.chapterId;
+      const overChapterId = over.data.current?.chapterId;
+
+      if (!activeChapterId || activeChapterId !== overChapterId) {
+        toast.error("Cannot reorder lessons across different chapters");
+        return;
+      }
+
+      const chapterIndex = items.findIndex((chapter) => chapter.id === activeChapterId);
+      if (chapterIndex === -1) {
+        console.error("Invalid chapter index for reordering lessons");
+        return;
+      }
+
+      const chapterToUpdate = items[chapterIndex];
+      const lessonItems = chapterToUpdate.lessons;
+
+      const oldIndex = lessonItems.findIndex((lesson) => lesson.id === active.id);
+      const newIndex = lessonItems.findIndex((lesson) => lesson.id === over.id);
+
+      if (oldIndex === -1 || newIndex === -1) {
+        console.error("Invalid indices for reordering lessons");
+        return;
+      }
+
+      const reorderedLocalLessons = arrayMove(lessonItems, oldIndex, newIndex);
+
+      const updatedLessonsForStates = reorderedLocalLessons.map((lesson, index) => ({
+        ...lesson,
+        position: index + 1, // Update position based on new order
+      }));
+
+
+      const newItems = [...items];
+      newItems[chapterIndex] = {
+        ...chapterToUpdate,
+        lessons: updatedLessonsForStates,
+      };
+      const previousItems = [...items];
+
+      setItems(newItems);
+
+      if (courseId) {
+        const lessonToUpdate = updatedLessonsForStates.map((lesson, index) => ({
+          id: lesson.id,
+          position: lesson.position,
+          chapterId: chapterToUpdate.id,
+        }));
+
+        // Call API to update lessons
+      }
     }
   }
 
