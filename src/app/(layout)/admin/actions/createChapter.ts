@@ -40,7 +40,7 @@ export async function createChapter(data: ChapterSchemaType): Promise<ApiRespons
       console.log("Created chapter:", chapter);
     });
 
-    revalidatePath(`/admin/courses/${validatedData.courseId}`);
+    revalidatePath(`/admin/courses/${validatedData.courseId}/edit`);
 
     // Here you would typically call your database or API to create the chapter
     console.log("Creating chapter with data:", validatedData);

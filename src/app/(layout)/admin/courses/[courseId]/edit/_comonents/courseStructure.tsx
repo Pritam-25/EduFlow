@@ -42,6 +42,8 @@ import { reorderChapters, reorderLessons } from "@/app/(layout)/admin/actions/ed
 
 import NewChapterModal from "./newChapterModal";
 import NewLessonModal from "./newLessonModel";
+import { DeleteLessonDialog } from "./DeleteLessonDialog";
+import { DeleteChapterDialog } from "./DeleteChapterDialog";
 
 interface CourseStructureProps {
   data: AdminGetCourseType;
@@ -336,9 +338,7 @@ export default function CourseStructure({ data }: CourseStructureProps) {
                             {item.title}
                           </p>
                         </div>
-                        <Button variant="ghost" size="icon">
-                          <Trash2 className="size-4" />
-                        </Button>
+                        <DeleteChapterDialog courseId={data.id} chapterId={item.id} />
                       </div>
 
                       <CollapsibleContent>
@@ -356,7 +356,7 @@ export default function CourseStructure({ data }: CourseStructureProps) {
                                 data={{ type: "lesson", chapterId: item.id }}
                               >
                                 {(listeners) => (
-                                  <div className="flex items-center justify-between p-2 bg-secondary rounded-md mb-1">
+                                  <div className="flex items-center justify-between p-2 hover:bg-accent dark:hover:bg-secondary/70 bg-secondary rounded-md mb-1">
                                     <div className="flex items-center gap-2">
                                       <Button
                                         variant="ghost"
@@ -373,9 +373,7 @@ export default function CourseStructure({ data }: CourseStructureProps) {
                                         {lesson.title}
                                       </Link>
                                     </div>
-                                    <Button variant="ghost" size="icon">
-                                      <Trash2 className="size-4" />
-                                    </Button>
+                                    <DeleteLessonDialog lessonId={lesson.id} chapterId={item.id} courseId={data.id} />
                                   </div>
                                 )}
                               </SortableItem>

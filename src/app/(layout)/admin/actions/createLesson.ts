@@ -43,7 +43,7 @@ export async function CreateLesson(data: LessonSchemaType): Promise<ApiResponse>
       console.log("Created lesson:", lesson);
     });
 
-    revalidatePath(`/admin/courses/${validatedData.courseId}`);
+    revalidatePath(`/admin/courses/${validatedData.courseId}/edit`);
 
     // Here you would typically call your database or API to create the lesson
     console.log("Creating lesson with data:", validatedData);
@@ -55,7 +55,6 @@ export async function CreateLesson(data: LessonSchemaType): Promise<ApiResponse>
       // Handle validation errors
       return { status: "error", message: error.errors.map(e => e.message).join(", ") };
     }
-    console.error("Lesson creation error:", error.message);
 
     // Handle other errors
     return { status: "error", message: "An unexpected error occurred while creating the lesson" };

@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger, DialogContent, DialogTitle, DialogDescription, DialogFooter, DialogHeader } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { ChapterSchema, ChapterSchemaType } from "@/lib/zodSchema";
 import { Plus } from "lucide-react";
 import { useState, useTransition } from "react";
@@ -76,7 +75,7 @@ export default function NewChapterModal({ courseId }: { courseId: string }) {
         <DialogHeader>
           <DialogTitle>Create New Chapter</DialogTitle>
           <DialogDescription>
-            Add a title and description for your new chapter.
+            What would you like to name your new chapter?
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -94,9 +93,6 @@ export default function NewChapterModal({ courseId }: { courseId: string }) {
                   <FormControl>
                     <Input placeholder="Chapter Title" {...field} />
                   </FormControl>
-                  <FormDescription>
-                    This is the title of your chapter.
-                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}

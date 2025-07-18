@@ -79,12 +79,11 @@ export default function NewLessonModal({ courseId, chapterId }: { courseId: stri
         <DialogHeader>
           <DialogTitle>Create New Lesson</DialogTitle>
           <DialogDescription>
-            Add a title and description for your new Lesson.
+            What would you like to name your new lesson?
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={(e) => {
-            console.log("✅ Submit button clicked");
             form.handleSubmit(onSubmit)(e);
           }} className="space-y-8">
             <FormField
@@ -96,9 +95,6 @@ export default function NewLessonModal({ courseId, chapterId }: { courseId: stri
                   <FormControl>
                     <Input placeholder="Lesson Title" {...field} />
                   </FormControl>
-                  <FormDescription>
-                    This is the title of your Lesson.
-                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
