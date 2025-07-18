@@ -37,11 +37,11 @@ import {
 } from "@radix-ui/react-collapsible";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { it } from "node:test";
 import { toast } from "sonner";
 import { reorderChapters, reorderLessons } from "@/app/(layout)/admin/actions/editCourse";
-import { error } from "console";
-import { th } from "zod/v4/locales";
+
+import NewChapterModal from "./newChapterModal";
+import NewLessonModal from "./newLessonModel";
 
 interface CourseStructureProps {
   data: AdminGetCourseType;
@@ -58,12 +58,6 @@ interface SortableItemProps {
 }
 
 export default function CourseStructure({ data }: CourseStructureProps) {
-  console.log("CourseStructure data:", {
-    dataExists: !!data,
-    data: data,
-    chaptersExists: !!data?.chapters,
-    chaptersLength: data?.chapters?.length || 0,
-  });
 
   // Add null check and provide a default empty array
   const initialChapters =
@@ -83,7 +77,7 @@ export default function CourseStructure({ data }: CourseStructureProps) {
         })) || [],
     })) || [];
 
-  console.log("initialChapters:", initialChapters);
+  // console.log("initialChapters:", initialChapters);
 
   useEffect(() => {
     setItems((prevItems) => {
@@ -304,6 +298,7 @@ export default function CourseStructure({ data }: CourseStructureProps) {
       <Card>
         <CardHeader className="flex flex-row items-center justify-between border-b border-border">
           <CardTitle>Chapters</CardTitle>
+          <NewChapterModal courseId={data.id} />
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
           <SortableContext items={items} strategy={verticalListSortingStrategy}>
@@ -361,7 +356,7 @@ export default function CourseStructure({ data }: CourseStructureProps) {
                                 data={{ type: "lesson", chapterId: item.id }}
                               >
                                 {(listeners) => (
-                                  <div className="flex items-center justify-between p-2 hover:bg-secondary rounded-md mb-1">
+                                  <div className="flex items-center justify-between p-2 bg-secondary rounded-md mb-1">
                                     <div className="flex items-center gap-2">
                                       <Button
                                         variant="ghost"
@@ -388,11 +383,7 @@ export default function CourseStructure({ data }: CourseStructureProps) {
                           </SortableContext>
                           {/* create new lesson button */}
                           <div className="w-full mt-4">
-                            {" "}
-                            {/* Added margin-top for spacing */}
-                            <Button variant="outline" className="w-full">
-                              Create New Lesson
-                            </Button>
+                            <NewLessonModal courseId={data.id} chapterId={item.id} />
                           </div>
                         </div>
                       </CollapsibleContent>

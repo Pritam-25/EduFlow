@@ -44,8 +44,6 @@ export default async function adminGetCourse(id: string) {
         return notFound()
     }
 
-        // ✅ Debug log — see full structure of fetched course
-    console.log("🔍 [adminGetCourse] Course fetched:\n", JSON.stringify(course, null, 2));
 
     return course;
 }

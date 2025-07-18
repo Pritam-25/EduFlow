@@ -17,5 +17,20 @@ export const CourseSchema = z.object({
   authorId: z.string().optional(),
 });
 
+export const ChapterSchema = z.object({
+  title: z.string().min(3, "Title is required").max(100),
+  courseId: z.string().min(1, "Invalid course ID"),
+});
+
+export const LessonSchema = z.object({
+  title: z.string().min(3, "Title is required").max(100),
+  description: z.string().min(10, "Description is required").max(2000).optional(),
+  thumbnailKey: z.string().min(1, "Thumbnail key is required").optional(),
+  videoKey: z.string().min(1, "Video key is required").optional(),
+  courseId: z.string().min(1, "Invalid course ID"),
+  chapterId: z.string().min(1, "Invalid chapter ID"),
+});
 
 export type CourseSchemaType = z.infer<typeof CourseSchema>;
+export type ChapterSchemaType = z.infer<typeof ChapterSchema>;
+export type LessonSchemaType = z.infer<typeof LessonSchema>;
