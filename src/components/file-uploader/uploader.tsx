@@ -20,15 +20,16 @@ interface UploaderState {
   errorMessage?: string;
   isDeleting: boolean;
   objectUrl?: string;
-  fileType: "image";
+  fileType: "image" | "video" | "pdf";
 }
 
 interface FileUploaderProps {
   value?: string;
   onChange?: (value: string) => void;
+  fileTypeAccepted?: "image" | "video" | "pdf";
 }
 
-export function FileUploader({ value, onChange }: FileUploaderProps) {
+export function FileUploader({ value, onChange, fileTypeAccepted }: FileUploaderProps) {
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   const objectUrl = useConstructUrl(value || "");
@@ -40,9 +41,9 @@ export function FileUploader({ value, onChange }: FileUploaderProps) {
     progress: 0,
     error: false,
     isDeleting: false,
-    fileType: "image",
+    fileType: fileTypeAccepted || "image",
     key: value,
-    objectUrl: objectUrl,
+    objectUrl: value ? objectUrl : undefined,
   });
 
   // ✅ Always hold the latest fileState for use in callbacks
@@ -62,7 +63,7 @@ export function FileUploader({ value, onChange }: FileUploaderProps) {
         fileName: file.name,
         contentType: file.type,
         size: file.size,
-        isImage: true,
+        isImage: fileTypeAccepted === "image",
       });
 
       const { presignedUrl, key } = presignedResponse.data;
@@ -87,9 +88,13 @@ export function FileUploader({ value, onChange }: FileUploaderProps) {
       onChange?.(key);
       toast.success("File uploaded successfully!");
     } catch (error) {
-      console.error("Upload error:", error);
-      const extracted = extractErrorMessage(error, "Failed to upload file");
-      toast.error(extracted);
+      const extracted = extractErrorMessage(error, "Something went wrong, please try again.");
+      if (axios.isAxiosError(error) && !error.response) {
+        // No response = network issue
+        toast.error("Network unavailable. Please check your connection.");
+      } else {
+        toast.error(extracted);
+      }
 
       setFileState((prev) => ({
         ...prev,
@@ -157,7 +162,7 @@ export function FileUploader({ value, onChange }: FileUploaderProps) {
       progress: 0,
       error: false,
       isDeleting: false,
-      fileType: "image",
+      fileType: fileTypeAccepted || "image",
       objectUrl,
     });
 
@@ -187,7 +192,9 @@ export function FileUploader({ value, onChange }: FileUploaderProps) {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     onDropRejected,
-    accept: { "image/*": [] },
+    accept: fileTypeAccepted === "video" ? { "video/*": [] } :
+      fileTypeAccepted === "image" ? { "image/*": [] } :
+        fileTypeAccepted === "pdf" ? { "application/pdf": [".pdf"] } : undefined,
     maxFiles: 1,
     multiple: false,
     maxSize: 5 * 1024 * 1024,
@@ -196,7 +203,7 @@ export function FileUploader({ value, onChange }: FileUploaderProps) {
 
   // ✅ Render state
   const renderDropzoneContent = () => {
-    if (fileState.uploading) return <RenderUploadingState progress={fileState.progress} />;
+    if (fileState.uploading) return <RenderUploadingState fileName={fileState.file?.name || ""} filePreview={fileState.objectUrl || ""} progress={fileState.progress} fileType={fileState.fileType} />;
 
     if (fileState.error) {
       return (
@@ -232,11 +239,12 @@ export function FileUploader({ value, onChange }: FileUploaderProps) {
           handleDeleteFile={() => {
             if (!fileState.isDeleting) deleteFile();
           }}
+          fileType={fileState.fileType}
         />
       );
     }
 
-    return <RenderEmptyState isDragActive={isDragActive} />;
+    return <RenderEmptyState isDragActive={isDragActive} fileType={fileState.fileType} />;
   };
 
   // ♻️ Cleanup URL on unmount
@@ -258,7 +266,7 @@ export function FileUploader({ value, onChange }: FileUploaderProps) {
           : "border-dashed",
         !isDragActive && "border-muted-foreground/30",
         fileState.uploading || fileState.isDeleting
-          ? "cursor-not-allowed opacity-50"
+          ? "cursor-not-allowed"
           : "cursor-pointer",
         (fileState.objectUrl || fileState.error) && "hover:bg-transparent hover:border-muted-foreground/30"
       )}

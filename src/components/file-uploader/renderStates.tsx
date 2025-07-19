@@ -1,9 +1,30 @@
 import { cn } from "@/lib/utils";
-import { CloudAlert, CloudUpload, ImageUpIcon, Loader2, Trash2, Upload, UploadIcon } from "lucide-react";
+import { CloudAlert, CloudUpload, FileTextIcon, ImageUpIcon, Loader2, Trash2, Upload, UploadIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import Image from "next/image";
+import { Card, CardContent } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
 
-export default function RenderEmptyState({ isDragActive, maxSizeMB = 5 }: { isDragActive: boolean; maxSizeMB?: number }) {
+const FileTypeHints: Record<string, string> = {
+  image: "SVG, PNG, JPG or GIF",
+  video: "MP4, MOV or AVI",
+  pdf: "PDF only",
+};
+
+type Props = {
+  isDragActive: boolean;
+  maxSizeMB?: number;
+  fileType?: "image" | "pdf" | "video";
+};
+
+export default function RenderEmptyState({
+  isDragActive,
+  maxSizeMB = 5,
+  fileType = "image",
+}: Props) {
+
+  const fileHint = FileTypeHints[fileType] || "all file types";
+
   return (
     <div className="flex flex-col items-center justify-center text-center gap-3">
       <div className={cn(
@@ -22,9 +43,9 @@ export default function RenderEmptyState({ isDragActive, maxSizeMB = 5 }: { isDr
         <p className="text-base font-medium mb-1.5">
           Drag & drop files here or <span className="text-primary font-semibold">click to upload</span>
         </p>
-         <p className="text-muted-foreground text-xs">
-            SVG, PNG, JPG or GIF (max. {maxSizeMB}MB)
-          </p>
+        <p className="text-muted-foreground text-xs">
+          {fileHint} (max. {maxSizeMB}MB)
+        </p>
       </div>
     </div>
   );
@@ -56,7 +77,7 @@ export function RenderErrorState({
       <div className="flex flex-col sm:flex-row gap-3 w-full max-w-xs">
         <Button
           variant="default"
-          className="cursor-pointer font-medium bg-red-500 hover:bg-red-600 dark:bg-red-700 dark:hover:bg-red-800 text-white shadow-lg hover:shadow-xl transition-all duration-200 flex-1"
+          className="cursor-pointer font-medium bg-red-500 hover:bg-red-600 dark:bg-red-700 dark:hover:bg-red-800 text-white shadow-lg hover:shadow-xl transition-all duration-200 min-w-64"
           onClick={onRetry}
         >
           <Upload className="mr-2 size-4" />
@@ -68,30 +89,52 @@ export function RenderErrorState({
 }
 
 
-export function RenderSuccessState({ previewUrl, isDeleting, handleDeleteFile }: {
+export function RenderSuccessState({
+  previewUrl,
+  isDeleting,
+  handleDeleteFile,
+  fileType,
+}: {
   previewUrl: string;
   isDeleting: boolean;
   handleDeleteFile: () => void;
+  fileType: "image" | "video" | "pdf";
 }) {
   return (
-    <div className="relative w-full h-full flex items-center justify-center">
-      <Image
-        src={previewUrl}
-        alt="Uploaded file preview"
-        fill
-        className="object-contain w-auto h-full"
-      />
+    <div className="relative w-full h-full flex items-center justify-center overflow-hidden ">
+      {/* File Preview Logic */}
+      {fileType === "video" ? (
+        <video
+          src={previewUrl}
+          controls
+          className="w-auto h-full object-contain"
+        />
+      ) : fileType === "pdf" ? (
+        <iframe
+          src={previewUrl}
+          title="PDF Preview"
+          className="w-full h-full object-contain"
+        />
+      ) : (
+        <Image
+          src={previewUrl}
+          alt="Uploaded file preview"
+          fill
+          className="object-contain w-auto h-full"
+        />
+      )}
 
+      {/* Delete Button */}
       <Button
         variant="default"
         onClick={handleDeleteFile}
         disabled={isDeleting}
-        className="absolute top-2 right-0 bg-red-500 hover:bg-red-600 dark:bg-red-700 dark:hover:bg-red-800 text-white shadow-sm hover:shadow-md transition-all duration-200 "
+        className="absolute top-2 right-0 bg-red-500 hover:bg-red-600 dark:bg-red-700 dark:hover:bg-red-800 text-white shadow-sm hover:shadow-md transition-all duration-200"
       >
         {isDeleting ? (
-          <Loader2 className="animate-spin" />
+          <Loader2 className="animate-spin size-4" />
         ) : (
-          <Trash2 className=" text-white" />
+          <Trash2 className="size-4 text-white" />
         )}
       </Button>
     </div>
@@ -100,26 +143,60 @@ export function RenderSuccessState({ previewUrl, isDeleting, handleDeleteFile }:
 
 
 
-export function RenderUploadingState({ progress }: { progress: number }) {
+export function RenderUploadingState({
+  fileName,
+  filePreview,
+  progress,
+  fileType,
+}: {
+  fileName: string;
+  filePreview: string;
+  progress: number;
+  fileType: "image" | "video" | "pdf";
+}) {
   return (
-    <div className="flex flex-col items-center justify-center text-center gap-4 w-full max-w-xs mx-auto">
-      {/* Upload Icon */}
-      <div className="flex items-center justify-center size-14 rounded-full bg-secondary">
-        <ImageUpIcon className="size-icon text-muted-foreground" />
-      </div>
+    <Card className="min-w-full sm:min-w-xl">
+      <CardContent className="flex items-center gap-4 h-full px-4 pr-8 py-2">
+        {/* File Preview */}
+        <div className="relative w-20 h-20 shrink-0 rounded-md overflow-hidden border bg-accent/10">
+          {fileType === "video" ? (
+            <video
+              src={filePreview}
+              className="w-full h-full object-cover"
+              muted
+              autoPlay
+              loop
+            />
+          ) : fileType === "image" ? (
+            <Image
+              src={filePreview}
+              alt="File preview"
+              fill
+              className="object-cover"
+            />
+          ) : (
+            <div className="flex items-center justify-center w-full h-full bg-background text-muted-foreground">
+              <FileTextIcon className="size-6" />
+            </div>
+          )}
+          <UploadIcon className="absolute top-2 right-2 text-muted-foreground size-4" />
+        </div>
 
-      {/* Upload Text */}
-      <p className="text-sm text-muted-foreground font-medium">
-        Uploading... {progress}%
-      </p>
+        {/* File Info and Progress */}
+        <div className="flex flex-col justify-center flex-1 gap-1">
+          <div className="flex items-center justify-between">
+            <p className="text-base font-medium truncate max-w-[80%]">
+              {fileName}
+            </p>
+          </div>
 
-      {/* Progress Bar Container */}
-      <div className="w-full bg-muted-foreground/20 rounded-full h-2 overflow-hidden">
-        <div
-          className="h-full bg-primary transition-all duration-300 ease-in-out"
-          style={{ width: `${progress}%` }}
-        />
-      </div>
-    </div>
+          <p className="text-sm text-muted-foreground">
+            Uploading... {progress}%
+          </p>
+
+          <Progress value={progress} className="h-2 bg-muted rounded-full" />
+        </div>
+      </CardContent>
+    </Card>
   );
 }
