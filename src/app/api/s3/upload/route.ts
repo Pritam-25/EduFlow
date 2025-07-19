@@ -26,7 +26,7 @@ const arcjet = aj.withRule(
     fixedWindow({
         mode: "LIVE",
         window: "1m", // 1 minute window
-        max: 2, // max 10 uploads per window
+        max: 10, // max 10 uploads per window
     })
 );
 
@@ -42,7 +42,7 @@ export async function POST(request: Request) {
 
         if(decision.isDenied()){
             return NextResponse.json({
-                error: "Upload limit exceeded or bot detected",
+                error: "Upload limit exceeded or bot detected, try again later.",
             }, { status: 429 });
         }
 

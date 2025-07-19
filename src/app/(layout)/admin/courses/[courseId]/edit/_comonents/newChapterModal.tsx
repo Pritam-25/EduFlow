@@ -60,6 +60,9 @@ export default function NewChapterModal({ courseId }: { courseId: string }) {
   }
 
   function handleOpenChange(open: boolean) {
+     if(!open){
+      form.reset(); // Reset the form when the modal is closed
+    }
     setIsOpen(open);
   }
 

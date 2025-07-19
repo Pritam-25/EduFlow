@@ -64,6 +64,9 @@ export default function NewLessonModal({ courseId, chapterId }: { courseId: stri
   }
 
   function handleOpenChange(open: boolean) {
+    if(!open){
+      form.reset(); // Reset the form when the modal is closed
+    }
     setIsOpen(open);
   }
 
