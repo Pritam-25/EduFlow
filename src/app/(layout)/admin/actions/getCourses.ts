@@ -1,8 +1,7 @@
 import { prisma } from "@/lib/db";
 
 
-
-export async function adminGetCourses(params: { userId: string }) {
+export async function adminGetCourses() {
     // Implementation here
     const courses = await prisma.course.findMany({
         orderBy: {

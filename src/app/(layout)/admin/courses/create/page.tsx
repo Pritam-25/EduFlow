@@ -39,7 +39,7 @@ import {
   MultiSelectorItem,
   MultiSelectorList,
   MultiSelectorTrigger,
-} from "@/components/multi-select";
+} from "@/components/general/multi-select";
 import Tiptap from "@/components/rich-text-editor/editor";
 import { FileUploader } from "@/components/file-uploader/uploader";
 import { useTransition } from "react";
@@ -48,11 +48,13 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { IconCirclePlusFilled } from "@tabler/icons-react";
 import { adminCreateCourse } from "../../actions/createCourse";
+import { useConfetti } from "@/hooks/use-confetti";
 
 export default function CourseCreatePage() {
 
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
+  const { triggerConfetti } = useConfetti();
 
   //* 1. Define your form.
   const form = useForm<CourseSchemaType>({
@@ -91,6 +93,7 @@ export default function CourseCreatePage() {
 
       if (result.status === "success") {
         toast.success(result.message);
+        triggerConfetti();
         form.reset();
         // Redirect to the courses page after successful creation
         router.push("/admin/courses");

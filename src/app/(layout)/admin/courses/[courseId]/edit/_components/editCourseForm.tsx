@@ -32,7 +32,7 @@ import {
     MultiSelectorItem,
     MultiSelectorList,
     MultiSelectorTrigger,
-} from "@/components/multi-select";
+} from "@/components/general/multi-select";
 import Tiptap from "@/components/rich-text-editor/editor";
 import { FileUploader } from "@/components/file-uploader/uploader";
 import { useTransition } from "react";
@@ -49,7 +49,7 @@ interface EditCourseFormProps {
     course: AdminGetCourseType;
 }
 
-export default function EditCourseForm({course}: EditCourseFormProps) {
+export default function EditCourseForm({ course }: EditCourseFormProps) {
 
     const [isPending, startTransition] = useTransition();
     const router = useRouter();
@@ -200,7 +200,7 @@ export default function EditCourseForm({course}: EditCourseFormProps) {
                             <FormItem>
                                 <FormLabel>Thumbnail image</FormLabel>
                                 <FormControl>
-                                    <FileUploader onChange={field.onChange} value={field.value} fileTypeAccepted="image"/>
+                                    <FileUploader onChange={field.onChange} value={field.value} fileTypeAccepted="image" />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
