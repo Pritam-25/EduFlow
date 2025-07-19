@@ -1,27 +1,33 @@
 "use client";
 
 import { LessonType } from "@/app/(layout)/admin/actions/getLesson";
+import { updateLesson } from "@/app/(layout)/admin/actions/updateLesson";
 import { FileUploader } from "@/components/file-uploader/uploader";
 import Tiptap from "@/components/rich-text-editor/editor";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { tryCatch } from "@/hooks/try-catch";
 import { LessonSchemaType, LessonSchema } from "@/lib/zodSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowLeft } from "lucide-react";
+import { log } from "console";
+import { ArrowLeft, Loader2, Router } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 interface LessonFormProps {
   lesson: LessonType
   courseId: string;
-  chapterId: string; 
+  chapterId: string;
 }
 
 export default function LessonForm({ lesson, courseId, chapterId }: LessonFormProps) {
   const [pending, startTransition] = useTransition()
+  const router = useRouter();
 
   //* 1. Define your form.
   const form = useForm<LessonSchemaType>({
@@ -36,10 +42,33 @@ export default function LessonForm({ lesson, courseId, chapterId }: LessonFormPr
     },
   });
 
+  //* 2. Handle form submission.
+  const onSubmit = async (values: LessonSchemaType) => {
+    startTransition(async () => {
+      const { data: result, error } = await tryCatch(updateLesson(values, lesson.id));
+
+      if (error) {
+        console.log("Error updating lesson:", error);
+        toast.error("An error occurred. Please try again.");
+        return;
+      }
+
+      if (result.status === "error") {
+        toast.error(result.message);
+        return;
+      }
+      if (result.status === "success") {
+        toast.success(result.message);
+        form.reset();
+        router.push(`/admin/courses/${courseId}/edit`);
+      }
+    });
+  }
+
   return (
     <div>
-      <Link href={`/admin/courses/${courseId}/edit`} className={buttonVariants({ variant: "outline" , className: "mb-6" })}>
-      <ArrowLeft className="size-4"/>
+      <Link href={`/admin/courses/${courseId}/edit`} className={buttonVariants({ variant: "outline", className: "mb-6" })}>
+        <ArrowLeft className="size-4" />
         <span>Go Back</span>
       </Link>
 
@@ -49,77 +78,80 @@ export default function LessonForm({ lesson, courseId, chapterId }: LessonFormPr
           <CardDescription>Configure the video and description for this lesson.</CardDescription>
         </CardHeader>
         <CardContent>
-           <Form {...form} >
-              <form onSubmit={form.handleSubmit(()=>{})} className="space-y-8">
+          <Form {...form} >
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
 
-                {/* Title */}
-                <FormField  
-                  control={form.control}
-                  name="title"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Lesson Title</FormLabel>
-                      <FormControl>
-                        <Input {...field} placeholder="Lesson xyz" />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-
-{/* description */}
-                <FormField
-                  control={form.control}
-                  name="description"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Description</FormLabel>
-                      <FormControl>
-                        <Tiptap field={field} {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-{/* Thumbnail Image */}
-                <FormField
-                  control={form.control}
-                  name="thumbnailKey"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Thumbnail Image</FormLabel>
-                      <FormControl>
-                        <FileUploader onChange={field.onChange} value={field.value} fileTypeAccepted="image"/>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+              {/* Title */}
+              <FormField
+                control={form.control}
+                name="title"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Lesson Title</FormLabel>
+                    <FormControl>
+                      <Input {...field} placeholder="Lesson xyz" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
 
-{/* Video */}
-                <FormField
-                  control={form.control}
-                  name="videoKey"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Lesson Video</FormLabel>
-                      <FormControl>
-                        <FileUploader onChange={field.onChange} value={field.value} fileTypeAccepted="video"/>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+              {/* description */}
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Description</FormLabel>
+                    <FormControl>
+                      <Tiptap field={field} {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-                {/* Submit Button */}
-                <Button type="submit" disabled={pending}>
-                  {pending ? "Saving..." : "Save Lesson"}
-                </Button>
-              </form>
-           </Form>
+              {/* Thumbnail Image */}
+              <FormField
+                control={form.control}
+                name="thumbnailKey"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Thumbnail Image</FormLabel>
+                    <FormControl>
+                      <FileUploader onChange={field.onChange} value={field.value} fileTypeAccepted="image" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+
+              {/* Video */}
+              <FormField
+                control={form.control}
+                name="videoKey"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Lesson Video</FormLabel>
+                    <FormControl>
+                      <FileUploader onChange={field.onChange} value={field.value} fileTypeAccepted="video" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* Submit Button */}
+              <Button type="submit" disabled={pending}>
+                {pending ? <>
+                <Loader2 className="animate-spin" /> 
+                Saving...
+                </> : "Save Lesson"}
+              </Button>
+            </form>
+          </Form>
         </CardContent>
       </Card>
     </div>

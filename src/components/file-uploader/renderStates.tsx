@@ -11,48 +11,55 @@ const FileTypeHints: Record<string, string> = {
   pdf: "PDF only",
 };
 
+const FileTypeMaxSize: Record<"image" | "video" | "pdf", number> = {
+  image: 5,
+  pdf: 5,
+  video: 500,
+};
+
 type Props = {
   isDragActive: boolean;
-  maxSizeMB?: number;
   fileType?: "image" | "pdf" | "video";
 };
 
+// RenderEmptyState component
 export default function RenderEmptyState({
   isDragActive,
-  maxSizeMB = 5,
   fileType = "image",
 }: Props) {
-
   const fileHint = FileTypeHints[fileType] || "all file types";
+  const maxSize = FileTypeMaxSize[fileType];
 
   return (
     <div className="flex flex-col items-center justify-center text-center gap-3">
-      <div className={cn(
-        "flex items-center justify-center size-14 rounded-full bg-accent transition-all",
-        isDragActive && "bg-primary/20"
-      )}>
+      <div
+        className={cn(
+          "flex items-center justify-center size-14 rounded-full bg-accent transition-all",
+          isDragActive && "bg-primary/20"
+        )}
+      >
         <CloudUpload
           className={cn(
-            "size-icon  transition-transform",
+            "size-icon transition-transform",
             isDragActive && "animate-bounce text-primary"
           )}
         />
       </div>
 
-      <div >
+      <div>
         <p className="text-base font-medium mb-1.5">
-          Drag & drop files here or <span className="text-primary font-semibold">click to upload</span>
+          Drag & drop files here or{" "}
+          <span className="text-primary font-semibold">click to upload</span>
         </p>
         <p className="text-muted-foreground text-xs">
-          {fileHint} (max. {maxSizeMB}MB)
+          {fileHint} (max. {maxSize}MB)
         </p>
       </div>
     </div>
   );
 }
 
-
-
+// RenderErrorState component
 export function RenderErrorState({
   error,
   onRetry,
@@ -88,7 +95,7 @@ export function RenderErrorState({
   );
 }
 
-
+// RenderSuccessState component
 export function RenderSuccessState({
   previewUrl,
   isDeleting,
@@ -141,8 +148,7 @@ export function RenderSuccessState({
   );
 }
 
-
-
+// uploading state component
 export function RenderUploadingState({
   fileName,
   filePreview,
@@ -156,7 +162,7 @@ export function RenderUploadingState({
 }) {
   return (
     <Card className="min-w-full sm:min-w-xl">
-      <CardContent className="flex items-center gap-4 h-full px-4 pr-8 py-2">
+      <CardContent className="flex items-center gap-4 h-full px-4 pr-4 py-2">
         {/* File Preview */}
         <div className="relative w-20 h-20 shrink-0 rounded-md overflow-hidden border bg-accent/10">
           {fileType === "video" ? (
@@ -179,15 +185,15 @@ export function RenderUploadingState({
               <FileTextIcon className="size-6" />
             </div>
           )}
-          <UploadIcon className="absolute top-2 right-2 text-muted-foreground size-4" />
         </div>
 
-        {/* File Info and Progress */}
-        <div className="flex flex-col justify-center flex-1 gap-1">
-          <div className="flex items-center justify-between">
-            <p className="text-base font-medium truncate max-w-[80%]">
+        {/* File Info + Upload Icon */}
+        <div className="flex flex-col flex-1 gap-1">
+          <div className="flex items-center justify-between w-full">
+            <p className="text-base font-medium truncate max-w-[90%]">
               {fileName}
             </p>
+            <UploadIcon className="text-muted-foreground size-4 shrink-0 ml-2" />
           </div>
 
           <p className="text-sm text-muted-foreground">

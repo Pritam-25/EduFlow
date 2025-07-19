@@ -200,7 +200,7 @@ export default function EditCourseForm({course}: EditCourseFormProps) {
                             <FormItem>
                                 <FormLabel>Thumbnail image</FormLabel>
                                 <FormControl>
-                                    <FileUploader onChange={field.onChange} value={field.value} />
+                                    <FileUploader onChange={field.onChange} value={field.value} fileTypeAccepted="image"/>
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>

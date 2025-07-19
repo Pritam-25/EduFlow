@@ -120,17 +120,17 @@ export function FileUploader({ value, onChange, fileTypeAccepted }: FileUploader
         URL.revokeObjectURL(fileState.objectUrl);
       }
 
-      setFileState({
-        id: null,
-        file: null,
-        uploading: false,
-        progress: 0,
-        error: false,
-        isDeleting: false,
-        fileType: "image",
-        key: undefined,
-        objectUrl: undefined,
-      });
+      setFileState((prev) => ({
+  id: null,
+  file: null,
+  uploading: false,
+  progress: 0,
+  error: false,
+  isDeleting: false,
+  fileType: fileTypeAccepted || prev.fileType, // ✅ retain correct type
+  key: undefined,
+  objectUrl: undefined,
+}));
 
       onChange?.("");
       toast.success("File deleted successfully!");
@@ -197,7 +197,7 @@ export function FileUploader({ value, onChange, fileTypeAccepted }: FileUploader
         fileTypeAccepted === "pdf" ? { "application/pdf": [".pdf"] } : undefined,
     maxFiles: 1,
     multiple: false,
-    maxSize: 5 * 1024 * 1024,
+    maxSize: fileTypeAccepted === "video" ? 500 * 1024 * 1024 : 5 * 1024 * 1024,  // 500MB for videos
     disabled: fileState.uploading || fileState.isDeleting || !!fileState.objectUrl,
   });
 
