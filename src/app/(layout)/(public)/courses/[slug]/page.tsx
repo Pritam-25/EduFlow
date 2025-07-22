@@ -5,9 +5,10 @@ import { RenderDescription } from "@/components/rich-text-editor/renderDescripti
 import { Badge } from "@/components/ui/badge";
 import { Collapsible, CollapsibleTrigger, CollapsibleContent } from "@/components/ui/collapsible";
 import { Card, CardContent } from "@/components/ui/card";
-import { BookOpen, SwatchBook, TimerIcon } from "lucide-react";
+import { BookOpen, CheckIcon, SwatchBook, TimerIcon } from "lucide-react";
 import { env } from "@/env";
 import { Separator } from "@radix-ui/react-dropdown-menu";
+import { Button } from "@/components/ui/button";
 
 
 type Params = Promise<{ slug: string }>;
@@ -136,7 +137,7 @@ export default async function SlugPage({ params }: { params: Params }) {
       </div>
       {/* Right Side: Enrollment Card */}
       <div className="order-2 lg:col-span-1 space-y-6">
-        <div className="sticky to-20">
+        <div className="sticky top-10">
           <Card >
             <CardContent>
               <div className=" flex items-center justify-between mb-6">
@@ -192,14 +193,13 @@ export default async function SlugPage({ params }: { params: Params }) {
                       <BookOpen className="size-4" />
                     </div>
                     <div>
-                      <p className=" font-medium">Total Lessons</p>
-                      <p className="text-sm text-muted-foreground"><div className="text-sm text-muted-foreground">
+                      <p className="font-medium">Total Lessons</p>
+                      <p className="text-sm text-muted-foreground">
                         {course.chapters.reduce(
                           (acc, chapter) => acc + chapter.lessons.length,
                           0
                         ) || 0}{" "}
-                        Lessons
-                      </div>
+                        lessons
                       </p>
                     </div>
                   </div>
@@ -207,6 +207,33 @@ export default async function SlugPage({ params }: { params: Params }) {
 
                 </div>
               </div>
+
+
+              <div className="mb-6 space-y-3">
+                <h4 className="font-semibold">This course includes:</h4>
+                <ul className="space-y-2">
+                  <li className="flex items-center gap-2 text-sm">
+                    <div className="rounded-full bg-green-500/10 p-1 text-green-500">
+                      <CheckIcon className="size-3" />
+                    </div>
+                    <span>Full Lifetime access</span>
+                  </li>
+                  <li className="flex items-center gap-2 text-sm">
+                    <div className="rounded-full bg-green-500/10 p-1 text-green-500">
+                      <CheckIcon className="size-3" />
+                    </div>
+                    <span>Access on mobile and desktop</span>
+                  </li>
+                  <li className="flex items-center gap-2 text-sm">
+                    <div className="rounded-full bg-green-500/10 p-1 text-green-500">
+                      <CheckIcon className="size-3" />
+                    </div>
+                    <span>Certificate of completion</span>
+                  </li>
+                </ul>
+              </div>
+              <Button className="w-full">Enroll Now!</Button>
+              <p className="mt-3 text-center text-xs text-muted-foreground"> 30-day money-back guarantee</p>
             </CardContent>
           </Card>
         </div>
