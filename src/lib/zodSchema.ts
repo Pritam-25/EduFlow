@@ -3,7 +3,7 @@ import { Category, CourseLevel, CourseStates } from "@/generated/prisma";
 
 export const CourseSchema = z.object({
   title: z.string().min(3, "Title is required").max(100),
-  description: z.string().min(10, "Description is required").max(2000),
+  description: z.string().min(10, "Description is required").max(5000),
   fileKey: z.string().min(1, "File key is required"),
   price: z.coerce.number().min(0, "Price must be a positive number"),
   duration: z.coerce.number().min(1, "Duration is required").max(500, "Duration must be less than 500 hours"),
