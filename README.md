@@ -179,6 +179,4 @@ vercel --prod
 
 **Built with ❤️ by Pritam using modern web technologies for the future of online education.**
 
-[![GitHub](https://img.shields.io/github/stars/yourusername/eduflow-lms?style=social)](https://github.com/yourusername/eduflow-lms/stargazers)
-
 </div>

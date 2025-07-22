@@ -5,7 +5,7 @@ import { RenderDescription } from "@/components/rich-text-editor/renderDescripti
 import { Badge } from "@/components/ui/badge";
 import { Collapsible, CollapsibleTrigger, CollapsibleContent } from "@/components/ui/collapsible";
 import { Card, CardContent } from "@/components/ui/card";
-import { TimerIcon } from "lucide-react";
+import { BookOpen, SwatchBook, TimerIcon } from "lucide-react";
 import { env } from "@/env";
 import { Separator } from "@radix-ui/react-dropdown-menu";
 
@@ -43,9 +43,14 @@ export default async function SlugPage({ params }: { params: Params }) {
           {/* Category Badge */}
           {
             course.category.map((cat) => (
-              <Badge variant="outline" key={cat} className="mr-2 border-blue-800 bg-blue-950 rounded-sm">
+              <Badge
+                variant="outline"
+                key={cat}
+                className="mr-2 rounded-md border-blue-800 bg-blue-100 text-blue-800 dark:border-blue-800 dark:bg-blue-950 dark:text-blue-100"
+              >
                 {cat}
               </Badge>
+
             ))
           }
 
@@ -55,7 +60,7 @@ export default async function SlugPage({ params }: { params: Params }) {
           <div className="space-y-6 w-full">
             <h2 className="text-3xl font-semibold tracking-tight">About this Course</h2>
           </div>
-          <Card className="px-6 bg-card/50 border-card/80">
+          <Card className="px-6 bg-card/50 border-border/50">
             <RenderDescription json={JSON.parse(course.description)} />
           </Card>
 
@@ -130,7 +135,82 @@ export default async function SlugPage({ params }: { params: Params }) {
 
       </div>
       {/* Right Side: Enrollment Card */}
-      
+      <div className="order-2 lg:col-span-1 space-y-6">
+        <div className="sticky to-20">
+          <Card >
+            <CardContent>
+              <div className=" flex items-center justify-between mb-6">
+                <span className="text-lg font-medium">price:</span>
+                <span className="text-2xl font-bold text-primary">{new Intl.NumberFormat('en-US', {
+                  style: "currency",
+                  currency: "USD",
+                }).format(course.price)}
+                </span>
+              </div>
+
+              <div className="mb-6 space-y-3 rounded-lg bg-muted p-4">
+                <h4 className="font-medium">What you will get:</h4>
+                <div className="flex flex-col gap-3">
+
+                  {/* course duration */}
+                  <div className="flex items-center gap-3">
+                    <div className="flex size-8 items-center justify-center rounded-full bg-primary/10 text-primary">
+                      <IconClock className="size-4" />
+                    </div>
+                    <div>
+                      <p className="font-medium">Course Duration</p>
+                      <p className="text-sm text-muted-foreground">{course.duration} hours
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* difficulty level */}
+                  <div className="flex items-center gap-3">
+                    <div className="flex size-8 items-center justify-center rounded-full bg-primary/10 text-primary">
+                      <IconChartBar className="size-4" />
+                    </div>
+                    <div>
+                      <p className="font-medium">Difficulty Level</p>
+                      <p className="text-sm text-muted-foreground">{course.level} </p>
+                    </div>
+                  </div>
+
+                  {/* total chapters */}
+                  <div className="flex items-center gap-3">
+                    <div className="flex size-8 items-center justify-center rounded-full bg-primary/10 text-primary">
+                      <SwatchBook className="size-4" />
+                    </div>
+                    <div>
+                      <p className=" font-medium">Total Chapters</p>
+                      <p className="text-sm text-muted-foreground"> {course.chapters.length} chapters</p>
+                    </div>
+                  </div>
+
+                  {/* total lessons */}
+                  <div className="flex items-center gap-3">
+                    <div className="flex size-8 items-center justify-center rounded-full bg-primary/10 text-primary">
+                      <BookOpen className="size-4" />
+                    </div>
+                    <div>
+                      <p className=" font-medium">Total Lessons</p>
+                      <p className="text-sm text-muted-foreground"><div className="text-sm text-muted-foreground">
+                        {course.chapters.reduce(
+                          (acc, chapter) => acc + chapter.lessons.length,
+                          0
+                        ) || 0}{" "}
+                        Lessons
+                      </div>
+                      </p>
+                    </div>
+                  </div>
+
+
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
     </div>
   );
 }
