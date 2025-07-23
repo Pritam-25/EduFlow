@@ -25,7 +25,7 @@ export default function PublicCourseCard({ course }: { course: publicCoursesType
         className="w-full h-full aspect-video object-cover rounded-t-md" />
 
       <CardContent className="p-4">
-        <Link href={`/courses/${course.slug}`} className="font-medium line-clamp-2 text-lg hover:underline group-hover:text-primary transition-colors">
+        <Link href={`/courses/${course.slug}`} className="font-medium line-clamp-1 text-lg hover:underline group-hover:text-primary transition-colors">
           {course.title}
         </Link>
 

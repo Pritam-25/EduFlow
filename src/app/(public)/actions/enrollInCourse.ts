@@ -10,6 +10,7 @@ export async function enrollInCourse(): Promise<ApiResponse>{
     }
     
   } catch (error) {
+    console.log("Error enrolling in course:", error);
     return {
       status: "error",
       message: "Failed to enroll in the course.",
