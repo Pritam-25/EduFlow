@@ -1,9 +1,7 @@
 import { buttonVariants } from "@/components/ui/button";
 import Link from "next/link";
-import { IconCirclePlusFilled, type Icon } from "@tabler/icons-react";
+import { IconCirclePlusFilled } from "@tabler/icons-react";
 import { adminGetCourses } from "../actions/getCourses";
-import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
 import AdminCourseCard, { AdminCourseCardSkeleton } from "./_components/adminCourseCard";
 import EmptyCoursePage from "@/components/general/emptyStateCourse";
 import { Suspense } from "react";

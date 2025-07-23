@@ -1,6 +1,7 @@
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
 
 export default function WelcomeCard({ name = "Andrew" }) {
   return (
@@ -8,7 +9,7 @@ export default function WelcomeCard({ name = "Andrew" }) {
       <Card className="relative  bg-muted/10 dark:bg-card overflow-hidden rounded-2xl  text-card-foreground border w-full">
         {/* 🎉 Confetti background */}
         <div className="absolute inset-0 pointer-events-none">
-          <img
+          <Image
             src="/star-shape.png"
             alt=""
             className="w-full h-full object-fit"
@@ -39,13 +40,13 @@ export default function WelcomeCard({ name = "Andrew" }) {
             {/* 🖼️ Learner Image (takes 1/4 space, hidden on small screens) */}
             <div className="hidden md:block col-span-1 absolute bottom-0 right-0 md:right-4 lg:right-6 z-0 w-56 sm:w-56">
               {/* Light Mode */}
-              <img
+              <Image
                 src="/academy-dashboard-light.svg"
                 alt="Learning dashboard"
                 className="block dark:hidden w-full h-auto object-contain"
               />
               {/* Dark Mode */}
-              <img
+              <Image
                 src="/academy-dashboard-dark.svg"
                 alt="Learning dashboard dark"
                 className="hidden dark:block w-full h-auto object-contain"

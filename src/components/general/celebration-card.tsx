@@ -6,12 +6,13 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
 
 export default function CelebrationCard() {
   return (
     <Card className="relative max-w-xl overflow-hidden bg-muted/10 dark:bg-card text-card-foreground rounded-xl border py-6">
       {/* Confetti background image */}
-      <img
+      <Image
         src="/star-shape.png"
         alt="confetti"
         className="pointer-events-none absolute inset-0 object-fit"

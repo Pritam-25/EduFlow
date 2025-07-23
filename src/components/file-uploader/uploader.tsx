@@ -52,8 +52,8 @@ export function FileUploader({ value, onChange, fileTypeAccepted }: FileUploader
     fileStateRef.current = fileState;
   }, [fileState]);
 
-  // ✅ Upload file
-  const uploadFile = async (file: File) => {
+  // ✅ Upload file - wrap in useCallback
+  const uploadFile = useCallback(async (file: File) => {
     if (!file) return;
 
     setFileState((prev) => ({ ...prev, uploading: true, progress: 0, error: false }));
@@ -103,7 +103,7 @@ export function FileUploader({ value, onChange, fileTypeAccepted }: FileUploader
         errorMessage: extracted,
       }));
     }
-  };
+  }, [fileTypeAccepted, onChange]); // Add dependencies that uploadFile uses
 
   // ✅ Delete file
   const deleteFile = async () => {
@@ -121,16 +121,16 @@ export function FileUploader({ value, onChange, fileTypeAccepted }: FileUploader
       }
 
       setFileState((prev) => ({
-  id: null,
-  file: null,
-  uploading: false,
-  progress: 0,
-  error: false,
-  isDeleting: false,
-  fileType: fileTypeAccepted || prev.fileType, // ✅ retain correct type
-  key: undefined,
-  objectUrl: undefined,
-}));
+        id: null,
+        file: null,
+        uploading: false,
+        progress: 0,
+        error: false,
+        isDeleting: false,
+        fileType: fileTypeAccepted || prev.fileType, // ✅ retain correct type
+        key: undefined,
+        objectUrl: undefined,
+      }));
 
       onChange?.("");
       toast.success("File deleted successfully!");
@@ -167,7 +167,7 @@ export function FileUploader({ value, onChange, fileTypeAccepted }: FileUploader
     });
 
     uploadFile(file);
-  }, [uploadFile]);
+  }, [uploadFile, fileTypeAccepted]); // ✅ Add fileTypeAccepted to dependency array
 
   // ❌ Drop rejection
   const onDropRejected = useCallback((fileRejections: FileRejection[]) => {

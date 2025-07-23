@@ -54,7 +54,7 @@ export async function adminCreateCourse(FormData: CourseSchemaType): Promise<Api
             };
         }
 
-        const courseData = await prisma.course.create({
+        await prisma.course.create({
             data: {
                 ...validation.data,
                 authorId: session?.user.id,
@@ -66,6 +66,7 @@ export async function adminCreateCourse(FormData: CourseSchemaType): Promise<Api
             message: "Course created successfully"
         }
     } catch (error) {
+        console.error("Error creating course:", error);
         return {
             status: "error",
             message: "Failed to create course"

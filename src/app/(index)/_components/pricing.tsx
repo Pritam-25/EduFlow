@@ -94,7 +94,6 @@ export const Pricing = () => {
 				<div className="grid grid-cols-1 md:grid-cols-3 gap-y-10 md:gap-6 max-w-5xl mx-auto">
 					{plans.map((plan, index) => {
 						const isPopular = plan.popular;
-						const isFree = plan.price.monthly === 0;
 						const isEnterprise = plan.name === "Enterprise";
 						const isMiddleCard = index === 1;
 

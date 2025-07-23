@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { GalleryVerticalEnd, LayoutDashboard, PenBox } from "lucide-react";
+import { GalleryVerticalEnd} from "lucide-react";
 import { ThemeToggle } from "@/components/ui/themeToggle";
 import { buttonVariants } from "@/components/ui/button";
 import { authClient } from "@/lib/auth-client";
@@ -36,7 +36,7 @@ export default function Navbar() {
           <div className="bg-primary text-primary-foreground flex size-8 items-center justify-center rounded-md">
             <GalleryVerticalEnd className="size-6 p-1" />
           </div>
-          <span className="font-bold">Acme Inc.</span>
+          <span className="font-bold">EduFlow</span>
         </Link>
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center space-x-4">

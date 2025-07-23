@@ -17,6 +17,11 @@
 /.next/
 /out/
 
+
+# IDEs and editor settings
+.idea/            # JetBrains IDEs like WebStorm
+.vscode/          # VSCode settings
+
 # production
 /build
 

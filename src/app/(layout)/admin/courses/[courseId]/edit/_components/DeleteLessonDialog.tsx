@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button"
 import { tryCatch } from "@/hooks/try-catch"
-import { Trash, Trash2 } from "lucide-react"
+import {  Trash2 } from "lucide-react"
 import { useState, useTransition } from "react"
 import { toast } from "sonner"
 

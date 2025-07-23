@@ -1,11 +1,10 @@
 "use client";
 
-import { ArrowLeft, Loader2, SparkleIcon } from "lucide-react";
-import Link from "next/link";
+import {  Loader2, SparkleIcon } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { CourseSchema, CourseSchemaType } from "@/lib/zodSchema";
-import { Category, CourseLevel, CourseStates, Role } from "@/generated/prisma";
+import { Category, CourseLevel, CourseStates } from "@/generated/prisma";
 import { Button } from "@/components/ui/button";
 import {
     Form,
@@ -40,7 +39,6 @@ import { tryCatch } from "@/hooks/try-catch";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { IconCirclePlusFilled } from "@tabler/icons-react";
-import { adminCreateCourse } from "@/app/(layout)/admin/actions/createCourse";
 import { adminEditCourse } from "@/app/(layout)/admin/actions/editCourse";
 import { AdminGetCourseType } from "@/app/(layout)/admin/actions/getCourse";
 

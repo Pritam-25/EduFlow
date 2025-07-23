@@ -6,7 +6,16 @@ import TextAlign from "@tiptap/extension-text-align";
 import { Menubar } from "./menubar";
 import Highlight from "@tiptap/extension-highlight";
 
-const Tiptap = ({ field }: { field: any }) => {
+interface TiptapProps {
+  field: {
+    value: string;
+    onChange: (value: string) => void;
+    onBlur?: () => void;
+    name?: string;
+  };
+}
+
+const Tiptap = ({ field }: TiptapProps) => {
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -22,7 +31,7 @@ const Tiptap = ({ field }: { field: any }) => {
       },
     },
     immediatelyRender: false,
-    
+
     content: field.value
       ? JSON.parse(field.value)
       : `<p>🚀 Enter your course description here...</p>

@@ -112,18 +112,18 @@ export function Menubar({ editor }: MenubarProps) {
           </Tooltip>
 
           {/* Headings */}
-          {[1, 2, 3].map((level) => (
+          {([1, 2, 3] as const).map((level) => (
             <Tooltip key={level}>
               <TooltipTrigger asChild>
                 <Toggle
                   size="sm"
                   pressed={editor.isActive("heading", { level })}
                   onPressedChange={() =>
-                    editor.chain().focus().toggleHeading({ level: level as any }).run()
+                    editor.chain().focus().toggleHeading({ level: level }).run()
                   }
                   className={cn(
                     editor.isActive("heading", { level }) &&
-                      "bg-muted text-muted-foreground"
+                    "bg-muted text-muted-foreground"
                   )}
                 >
                   {level === 1 ? (
@@ -150,7 +150,7 @@ export function Menubar({ editor }: MenubarProps) {
                 }
                 className={cn(
                   editor.isActive("bulletList") &&
-                    "bg-muted text-muted-foreground"
+                  "bg-muted text-muted-foreground"
                 )}
               >
                 <ListIcon />
@@ -170,7 +170,7 @@ export function Menubar({ editor }: MenubarProps) {
                 }
                 className={cn(
                   editor.isActive("orderedList") &&
-                    "bg-muted text-muted-foreground"
+                  "bg-muted text-muted-foreground"
                 )}
               >
                 <ListOrdered />
@@ -184,7 +184,7 @@ export function Menubar({ editor }: MenubarProps) {
 
         {/* Text Alignment */}
         <div className="flex flex-wrap gap-1">
-          {[ 
+          {[
             { align: "left", icon: <AlignLeft />, label: "Left Align" },
             { align: "center", icon: <AlignCenter />, label: "Center Align" },
             { align: "right", icon: <AlignRight />, label: "Right Align" },

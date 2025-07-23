@@ -28,7 +28,7 @@ interface MultiSelectorProps
 
 interface MultiSelectContextProps {
   value: string[];
-  onValueChange: (value: any) => void;
+  onValueChange: (value: string) => void;
   open: boolean;
   setOpen: (value: boolean) => void;
   inputValue: string;
@@ -236,7 +236,7 @@ const MultiSelectorTrigger = forwardRef<
         "flex-wrap gap-3 min-h-10",
         className
       )}
-      {...props}  
+      {...props}
     >
       {value.map((item, index) => (
         <Badge
@@ -279,14 +279,13 @@ const MultiSelectorInput = forwardRef<
     activeIndex,
     setActiveIndex,
     handleSelect,
-    ref: inputRef,
   } = useMultiSelect();
 
   return (
     <CommandPrimitive.Input
       {...props}
       tabIndex={0}
-      ref={inputRef}
+      ref={ref} // Use the forwarded ref instead of inputRef
       value={inputValue}
       onValueChange={activeIndex === -1 ? setInputValue : undefined}
       onSelect={handleSelect}

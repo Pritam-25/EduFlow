@@ -28,8 +28,6 @@ import {
   ChevronRight,
   FileText,
   GripVertical,
-  Target,
-  Trash2,
 } from "lucide-react";
 import {
   CollapsibleContent,
@@ -177,7 +175,7 @@ export default function CourseStructure({ data }: CourseStructureProps) {
       setItems(updatedChaptersForStates);
 
       if (courseId) {
-        const chapterToUpdate = updatedChaptersForStates.map((chapter, index) => ({
+        const chapterToUpdate = updatedChaptersForStates.map((chapter) => ({
           id: chapter.id,
           position: chapter.position,
         }));
@@ -246,7 +244,7 @@ export default function CourseStructure({ data }: CourseStructureProps) {
       setItems(newItems);
 
       if (courseId) {
-        const lessonToUpdate = updatedLessonsForStates.map((lesson, index) => ({
+        const lessonToUpdate = updatedLessonsForStates.map((lesson) => ({
           id: lesson.id,
           position: lesson.position,
           chapterId: chapterToUpdate.id,
@@ -296,7 +294,7 @@ export default function CourseStructure({ data }: CourseStructureProps) {
   );
 
   return (
-    <DndContext collisionDetection={rectIntersection} onDragEnd={handleDragEnd}>
+    <DndContext collisionDetection={rectIntersection} onDragEnd={handleDragEnd}  sensors={sensors} >
       <Card>
         <CardHeader className="flex flex-row items-center justify-between border-b border-border">
           <CardTitle>Chapters</CardTitle>

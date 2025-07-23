@@ -11,8 +11,7 @@ import { Input } from "@/components/ui/input";
 import { tryCatch } from "@/hooks/try-catch";
 import { LessonSchemaType, LessonSchema } from "@/lib/zodSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { log } from "console";
-import { ArrowLeft, Loader2, Router } from "lucide-react";
+import { ArrowLeft, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
@@ -105,7 +104,7 @@ export default function LessonForm({ lesson, courseId, chapterId }: LessonFormPr
                   <FormItem>
                     <FormLabel>Description</FormLabel>
                     <FormControl>
-                      <Tiptap field={field} {...field} />
+                      <Tiptap field={{ ...field, value: field.value ?? "" }} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

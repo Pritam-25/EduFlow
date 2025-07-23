@@ -11,7 +11,7 @@ const Footer = () => {
           <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-10">
             {/* Brand & Social */}
             <div className="col-span-2 space-y-4">
-              <h3 className="text-2xl font-bold text-primary">YourCompany</h3>
+              <h3 className="text-2xl font-bold text-primary">EduFlow</h3>
               <p className="text-sm text-muted-foreground max-w-xs">
                 Empowering your digital journey with modern tools and AI-driven insights.
               </p>

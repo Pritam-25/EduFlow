@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { CloudAlert, CloudUpload, FileTextIcon, ImageUpIcon, Loader2, Trash2, Upload, UploadIcon } from "lucide-react";
+import { CloudAlert, CloudUpload, FileTextIcon, Loader2, Trash2, Upload, UploadIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";

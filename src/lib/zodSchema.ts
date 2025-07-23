@@ -31,6 +31,13 @@ export const LessonSchema = z.object({
   chapterId: z.string().min(1, "Invalid chapter ID"),
 });
 
+export const uploadSchema = z.object({
+    fileName: z.string().min(1, "File name is required"),
+    size: z.number().max(5 * 1024 * 1024, "File size must be less than 5MB"),
+    contentType: z.string().min(1, "Content type is required"),
+    isImage: z.boolean().optional(),
+});
+
 export type CourseSchemaType = z.infer<typeof CourseSchema>;
 export type ChapterSchemaType = z.infer<typeof ChapterSchema>;
 export type LessonSchemaType = z.infer<typeof LessonSchema>;

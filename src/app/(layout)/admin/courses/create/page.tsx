@@ -12,7 +12,7 @@ import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { CourseSchema, CourseSchemaType } from "@/lib/zodSchema";
-import { Category, CourseLevel, CourseStates, Role } from "@/generated/prisma";
+import { Category, CourseLevel, CourseStates } from "@/generated/prisma";
 import { Button } from "@/components/ui/button";
 import {
   Form,

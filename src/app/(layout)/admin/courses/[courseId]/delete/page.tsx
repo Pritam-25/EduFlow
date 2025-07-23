@@ -75,7 +75,7 @@ export default function DeleteCoursePage() {
         <Card className="shadow-2xl border-destructive/20  px-10">
           <CardHeader className="text-center pb-8">
             <CardTitle className="text-2xl font-semibold text-foreground mb-6">
-              "{meta.name}"
+              &quot;{meta.name}&quot;
             </CardTitle>
 
             <div className="grid grid-cols-2 gap-6 mb-8">

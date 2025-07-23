@@ -1,20 +1,13 @@
 import { NextResponse } from "next/server";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
 import { PutObjectCommand } from "@aws-sdk/client-s3";
-import { z } from "zod";
-
 import { v4 as uuidv4 } from 'uuid';
 import { s3Client } from "@/lib/s3-client";
 import { aj, detectBot, fixedWindow } from "@/lib/arcjet";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 
-export const uploadSchema = z.object({
-    fileName: z.string().min(1, "File name is required"),
-    size: z.number().max(5 * 1024 * 1024, "File size must be less than 5MB"),
-    contentType: z.string().min(1, "Content type is required"),
-    isImage: z.boolean().optional(),
-});
+import { uploadSchema } from "@/lib/zodSchema";
 
 // implement arcjet for upload protection
 const arcjet = aj.withRule(
@@ -56,7 +49,7 @@ export async function POST(request: Request) {
             }, { status: 400 });
         }
 
-        const { fileName, contentType, isImage, } = validatedData.data;
+        const { fileName, contentType } = validatedData.data;
 
         const uniqueFileKey = `${Date.now()}-${uuidv4()}-${fileName}`;
         const command = new PutObjectCommand({
@@ -79,6 +72,7 @@ export async function POST(request: Request) {
         return NextResponse.json(responseData);
 
     } catch (error) {
+        console.error("Error generating presigned URL:", error);
         return NextResponse.json({
             error: "Failed to generate presigned URL",
         }, { status: 500 });

@@ -4,7 +4,7 @@ import { aj } from "@/lib/arcjet";
 import ip from "@arcjet/ip";
 
 
-import arcjet, {
+import{
     type ArcjetDecision,
     type BotOptions,
     type EmailOptions,
@@ -12,7 +12,6 @@ import arcjet, {
     type SlidingWindowRateLimitOptions,
     detectBot,
     protectSignup,
-    shield,
     slidingWindow,
 } from "@arcjet/next";
 import { NextRequest } from "next/server";

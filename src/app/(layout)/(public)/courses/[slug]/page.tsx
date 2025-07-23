@@ -5,7 +5,7 @@ import { RenderDescription } from "@/components/rich-text-editor/renderDescripti
 import { Badge } from "@/components/ui/badge";
 import { Collapsible, CollapsibleTrigger, CollapsibleContent } from "@/components/ui/collapsible";
 import { Card, CardContent } from "@/components/ui/card";
-import { BookOpen, CheckIcon, SwatchBook, TimerIcon } from "lucide-react";
+import { BookOpen, CheckIcon, SwatchBook } from "lucide-react";
 import { env } from "@/env";
 import { Separator } from "@radix-ui/react-dropdown-menu";
 import { Button } from "@/components/ui/button";

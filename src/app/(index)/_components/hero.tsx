@@ -35,7 +35,7 @@ export const Hero = () => {
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight mb-6 animate-fade-in leading-tight">
             <span className="block text-foreground">Transform Your Learning</span>
             <span className="block bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
-              with Modern LMS
+              with EduFlow LMS
             </span>
           </h1>
 

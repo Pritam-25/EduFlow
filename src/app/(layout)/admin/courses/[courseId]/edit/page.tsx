@@ -10,14 +10,9 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Edit } from "lucide-react";
 import EditCourseForm from "./_components/editCourseForm";
 import CourseStructure from "@/app/(layout)/admin/courses/[courseId]/edit/_components/courseStructure";
 
@@ -33,7 +28,7 @@ export default async function Page({ params }: { params: Params }) {
     <div>
       <h1 className="text-3xl font-bold mb-8">
         Edit Course:
-        <span className="text-primary">" "{course.title}</span>
+        <span className="text-primary"> {course.title}</span>
       </h1>
 
       <Tabs defaultValue="basic-info" className="w-full">

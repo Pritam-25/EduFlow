@@ -1,17 +1,10 @@
 import {
-  BoltIcon,
-  BookAIcon,
-  BookCopy,
-  BookOpen,
-  BookOpenCheck,
+
   BookOpenIcon,
   ChevronDownIcon,
   Home,
-  Layers2Icon,
   LayoutDashboardIcon,
   LogOutIcon,
-  PinIcon,
-  Settings,
   UserPenIcon,
 } from "lucide-react";
 
