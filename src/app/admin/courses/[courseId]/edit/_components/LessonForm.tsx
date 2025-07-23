@@ -1,7 +1,7 @@
 "use client";
 
-import { LessonType } from "@/app/(layout)/admin/actions/getLesson";
-import { updateLesson } from "@/app/(layout)/admin/actions/updateLesson";
+import { LessonType } from "@/app/admin/actions/getLesson";
+import { updateLesson } from "@/app/admin/actions/updateLesson";
 import { FileUploader } from "@/components/file-uploader/uploader";
 import Tiptap from "@/components/rich-text-editor/editor";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -145,8 +145,8 @@ export default function LessonForm({ lesson, courseId, chapterId }: LessonFormPr
               {/* Submit Button */}
               <Button type="submit" disabled={pending}>
                 {pending ? <>
-                <Loader2 className="animate-spin" /> 
-                Saving...
+                  <Loader2 className="animate-spin" />
+                  Saving...
                 </> : "Save Lesson"}
               </Button>
             </form>

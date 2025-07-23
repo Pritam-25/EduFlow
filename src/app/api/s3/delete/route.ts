@@ -1,13 +1,12 @@
 import { ajProtect } from "@/lib/arcjet-protect";
-import { auth } from "@/lib/auth";
+import { requireUser } from "@/lib/require_user";
 import { s3Client } from "@/lib/s3-client";
 import { DeleteObjectCommand } from "@aws-sdk/client-s3";
-import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 
 
 export async function DELETE(request: Request) {
-    const session = await auth.api.getSession({ headers: await headers() });
+    const session = await requireUser();
 
     try {
 

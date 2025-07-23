@@ -3,17 +3,15 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { v4 as uuidv4 } from 'uuid';
 import { s3Client } from "@/lib/s3-client";
-import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
-
 import { uploadSchema } from "@/lib/zodSchema";
 import { ajProtect } from "@/lib/arcjet-protect";
+import { requireUser } from "@/lib/require_user";
 
 
 
 export async function POST(request: Request) {
 
-    const session = await auth.api.getSession({ headers: await headers() });
+    const session = await requireUser();
 
     try {
         const decision = await ajProtect.protect(request, {

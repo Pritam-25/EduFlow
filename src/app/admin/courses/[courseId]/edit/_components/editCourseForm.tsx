@@ -1,6 +1,6 @@
 "use client";
 
-import {  Loader2, SparkleIcon } from "lucide-react";
+import { Loader2, SparkleIcon } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { CourseSchema, CourseSchemaType } from "@/lib/zodSchema";
@@ -39,8 +39,8 @@ import { tryCatch } from "@/hooks/try-catch";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { IconCirclePlusFilled } from "@tabler/icons-react";
-import { adminEditCourse } from "@/app/(layout)/admin/actions/editCourse";
-import { AdminGetCourseType } from "@/app/(layout)/admin/actions/getCourse";
+import { adminEditCourse } from "@/app/admin/actions/editCourse";
+import { AdminGetCourseType } from "@/app/admin/actions/getCourse";
 
 
 interface EditCourseFormProps {

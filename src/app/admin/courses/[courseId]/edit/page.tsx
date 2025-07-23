@@ -14,7 +14,7 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import EditCourseForm from "./_components/editCourseForm";
-import CourseStructure from "@/app/(layout)/admin/courses/[courseId]/edit/_components/courseStructure";
+import CourseStructure from "@/app/admin/courses/[courseId]/edit/_components/courseStructure";
 
 // get the courseId from the URL parameters
 type Params = Promise<{ courseId: string }>;

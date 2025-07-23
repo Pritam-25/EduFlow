@@ -4,7 +4,7 @@ import PublicCourseCard, { PublicCourseCardSkeleton } from "../components/course
 
 export default function Page() {
     return (
-        <>
+        <div >
             <div className="flex flex-col space-y-2 mb-10">
                 <h1 className="text-3xl md:text-4xl tracking-tighter font-bold"> Explore Courses</h1>
                 <p className="text-muted-foreground">Discover a variety of courses to enhance your skills and knowledge.</p>
@@ -13,7 +13,7 @@ export default function Page() {
             <Suspense fallback={<LoadingSkeleton />}>
                 <RenderCourses />
             </Suspense>
-        </>
+        </div>
     );
 }
 

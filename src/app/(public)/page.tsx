@@ -1,9 +1,9 @@
-import { DashboardPreview } from "./_components/dashboardPreview";
-import { Features } from "./_components/features";
-import  Footer  from "./_components/footer";
-import { Hero } from "./_components/hero";
-import { Pricing } from "./_components/pricing";
-import { Reviews } from "./_components/reviews";
+import { Hero } from "./(index)/_components/hero";
+import { DashboardPreview } from "./(index)/_components/dashboardPreview";
+import { Features } from "./(index)/_components/features";
+import { Reviews } from "./(index)/_components/reviews";
+import { Pricing } from "./(index)/_components/pricing";
+import Footer from "./(index)/_components/footer";
 
 export default function Home() {
   return (

@@ -1,21 +1,17 @@
 "use server"
 
 import { ajProtect } from "@/lib/arcjet-protect";
-
-import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+import { requireUser } from "@/lib/require_user";
 import { ApiResponse } from "@/lib/types";
 import { CourseSchema, CourseSchemaType } from "@/lib/zodSchema"
 import { request } from "@arcjet/next";
-import { headers } from "next/headers";
 
 
 
 export async function adminCreateCourse(FormData: CourseSchemaType): Promise<ApiResponse> {
 
-    const session = await auth.api.getSession({
-        headers: await headers(),
-    });
+    const session = await requireUser();
     try {
         const req = await request();
         const decision = await ajProtect.protect(req, {

@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/form"
 import { tryCatch } from "@/hooks/try-catch";
 import { toast } from "sonner";
-import { CreateLesson } from "@/app/(layout)/admin/actions/createLesson";
+import { CreateLesson } from "@/app/admin/actions/createLesson";
 
 
 export default function NewLessonModal({ courseId, chapterId }: { courseId: string, chapterId: string }) {
@@ -63,7 +63,7 @@ export default function NewLessonModal({ courseId, chapterId }: { courseId: stri
   }
 
   function handleOpenChange(open: boolean) {
-    if(!open){
+    if (!open) {
       form.reset(); // Reset the form when the modal is closed
     }
     setIsOpen(open);
@@ -72,7 +72,7 @@ export default function NewLessonModal({ courseId, chapterId }: { courseId: stri
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button variant="outline" className= "w-full">
+        <Button variant="outline" className="w-full">
           <Plus className="mr-2 h-4 w-4" />
           New Lesson
         </Button>

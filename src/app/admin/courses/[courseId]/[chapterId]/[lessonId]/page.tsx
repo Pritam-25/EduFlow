@@ -1,4 +1,4 @@
-import { getLesson } from "@/app/(layout)/admin/actions/getLesson";
+import { getLesson } from "@/app/admin/actions/getLesson";
 import LessonForm from "../../edit/_components/LessonForm";
 
 type Params = Promise<{ courseId: string; chapterId: string; lessonId: string }>;

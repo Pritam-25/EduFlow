@@ -20,7 +20,7 @@ import {
 import { ReactNode, useEffect, useState } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { AdminGetCourseType } from "@/app/(layout)/admin/actions/getCourse";
+import { AdminGetCourseType } from "@/app/admin/actions/getCourse";
 import { cn } from "@/lib/utils";
 import { Collapsible } from "@/components/ui/collapsible";
 import {
@@ -36,7 +36,7 @@ import {
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { toast } from "sonner";
-import { reorderChapters, reorderLessons } from "@/app/(layout)/admin/actions/editCourse";
+import { reorderChapters, reorderLessons } from "@/app/admin/actions/editCourse";
 
 import NewChapterModal from "./newChapterModal";
 import NewLessonModal from "./newLessonModel";
@@ -294,7 +294,7 @@ export default function CourseStructure({ data }: CourseStructureProps) {
   );
 
   return (
-    <DndContext collisionDetection={rectIntersection} onDragEnd={handleDragEnd}  sensors={sensors} >
+    <DndContext collisionDetection={rectIntersection} onDragEnd={handleDragEnd} sensors={sensors} >
       <Card>
         <CardHeader className="flex flex-row items-center justify-between border-b border-border">
           <CardTitle>Chapters</CardTitle>

@@ -15,7 +15,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { tryCatch } from "@/hooks/try-catch";
-import { createChapter } from "@/app/(layout)/admin/actions/createChapter";
+import { createChapter } from "@/app/admin/actions/createChapter";
 import { toast } from "sonner";
 
 
@@ -59,7 +59,7 @@ export default function NewChapterModal({ courseId }: { courseId: string }) {
   }
 
   function handleOpenChange(open: boolean) {
-     if(!open){
+    if (!open) {
       form.reset(); // Reset the form when the modal is closed
     }
     setIsOpen(open);

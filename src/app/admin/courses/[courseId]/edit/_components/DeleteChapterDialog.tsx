@@ -1,4 +1,4 @@
-import { deleteChapter } from "@/app/(layout)/admin/actions/deleteChapter"
+import { deleteChapter } from "@/app/admin/actions/deleteChapter"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -16,23 +16,23 @@ import { Trash2 } from "lucide-react"
 import { useState, useTransition } from "react"
 import { toast } from "sonner"
 
-export function DeleteChapterDialog({chapterId, courseId}:{chapterId: string, courseId: string}) {
+export function DeleteChapterDialog({ chapterId, courseId }: { chapterId: string, courseId: string }) {
   const [open, setOpen] = useState(false)
-  const[pending, startTransition] = useTransition();
+  const [pending, startTransition] = useTransition();
 
   async function handleDelete() {
     startTransition(async () => {
-      const {data: result, error} = await tryCatch(deleteChapter({chapterId, courseId}))
+      const { data: result, error } = await tryCatch(deleteChapter({ chapterId, courseId }))
 
-      if(error){
+      if (error) {
         toast.error(error.message)
       }
 
-      if(result?.status === "success") {
+      if (result?.status === "success") {
         toast.success(result.message)
         setOpen(false)
       }
-      if(result?.status === "error") {
+      if (result?.status === "error") {
         toast.error(result.message)
       }
     });
@@ -51,7 +51,7 @@ export function DeleteChapterDialog({chapterId, courseId}:{chapterId: string, co
           <AlertDialogDescription>
             This action cannot be undone. This will permanently delete this chapter.
           </AlertDialogDescription>
-        </AlertDialogHeader> 
+        </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction disabled={pending} onClick={handleDelete}>{pending ? "Deleting..." : "Delete"}</AlertDialogAction>

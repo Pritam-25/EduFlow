@@ -1,4 +1,4 @@
-import { deleteLesson } from "@/app/(layout)/admin/actions/deleteLesson"
+import { deleteLesson } from "@/app/admin/actions/deleteLesson"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -12,27 +12,27 @@ import {
 } from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button"
 import { tryCatch } from "@/hooks/try-catch"
-import {  Trash2 } from "lucide-react"
+import { Trash2 } from "lucide-react"
 import { useState, useTransition } from "react"
 import { toast } from "sonner"
 
-export function DeleteLessonDialog({ lessonId, chapterId, courseId }:{lessonId: string, chapterId: string, courseId: string}) {
+export function DeleteLessonDialog({ lessonId, chapterId, courseId }: { lessonId: string, chapterId: string, courseId: string }) {
   const [open, setOpen] = useState(false)
   const [pending, startTransition] = useTransition()
 
   async function handleDelete() {
     startTransition(async () => {
-      const {data: result, error} = await tryCatch(deleteLesson({lessonId, chapterId, courseId}))
+      const { data: result, error } = await tryCatch(deleteLesson({ lessonId, chapterId, courseId }))
 
-      if(error){
+      if (error) {
         toast.error(error.message)
       }
 
-      if(result?.status === "success") {
+      if (result?.status === "success") {
         toast.success(result.message)
         setOpen(false)
       }
-      if(result?.status === "error") {
+      if (result?.status === "error") {
         toast.error(result.message)
       }
 

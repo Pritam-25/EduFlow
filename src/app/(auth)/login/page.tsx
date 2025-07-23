@@ -1,16 +1,16 @@
 import { GalleryVerticalEnd } from "lucide-react";
-
-import { LoginForm } from "@/app/(auth)/login/_components/login-form";
 import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
+import { LoginForm } from "@/app/(auth)/login/_components/login-form";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import { headers } from "next/headers";
 
 export default async function LoginPage() {
   //* get user session
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+  const session =  await auth.api.getSession({
+      headers: await headers(),
+    });
+  
 
   //* if user have session, redirect to home page
   if (session) {
