@@ -3,7 +3,6 @@ import { toNextJsHandler } from "better-auth/next-js";
 import { aj } from "@/lib/arcjet";
 import ip from "@arcjet/ip";
 
-
 import{
     type ArcjetDecision,
     type BotOptions,

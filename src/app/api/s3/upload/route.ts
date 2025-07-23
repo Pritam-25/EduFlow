@@ -3,33 +3,20 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { v4 as uuidv4 } from 'uuid';
 import { s3Client } from "@/lib/s3-client";
-import { aj, detectBot, fixedWindow } from "@/lib/arcjet";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 
 import { uploadSchema } from "@/lib/zodSchema";
+import { ajProtect } from "@/lib/arcjet-protect";
 
-// implement arcjet for upload protection
-const arcjet = aj.withRule(
-    detectBot({
-        mode: "LIVE",
-        allow: [], // no bots allowed for uploads
-    })
-).withRule(
-    fixedWindow({
-        mode: "LIVE",
-        window: "1m", // 1 minute window
-        max: 10, // max 10 uploads per window
-    })
-);
+
 
 export async function POST(request: Request) {
 
     const session = await auth.api.getSession({ headers: await headers() });
 
     try {
-
-        const decision = await arcjet.protect(request, {
+        const decision = await ajProtect.protect(request, {
             fingerprint: session?.user.id as string || "anonymous",
         });
 

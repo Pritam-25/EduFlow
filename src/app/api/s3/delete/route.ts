@@ -1,4 +1,4 @@
-import { aj, detectBot, fixedWindow } from "@/lib/arcjet";
+import { ajProtect } from "@/lib/arcjet-protect";
 import { auth } from "@/lib/auth";
 import { s3Client } from "@/lib/s3-client";
 import { DeleteObjectCommand } from "@aws-sdk/client-s3";
@@ -6,27 +6,13 @@ import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 
 
-// implement arcjet for upload protection
-const arcjet = aj.withRule(
-    detectBot({
-        mode: "LIVE",
-        allow: [], // no bots allowed for uploads
-    })
-).withRule(
-    fixedWindow({
-        mode: "LIVE",
-        window: "1m", // 1 minute window
-        max: 10, // max 10 uploads per window
-    })
-);
-
 export async function DELETE(request: Request) {
     const session = await auth.api.getSession({ headers: await headers() });
 
     try {
 
         // Protect the request using Arcjet
-        const decision = await arcjet.protect(request, {
+        const decision = await ajProtect.protect(request, {
             fingerprint: session?.user.id as string || "anonymous",
         });
 

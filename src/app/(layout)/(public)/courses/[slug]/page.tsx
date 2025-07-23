@@ -83,7 +83,7 @@ export default async function SlugPage({ params }: { params: Params }) {
               {course.chapters.map((chapter, index) => (
                 <Collapsible key={chapter.id} defaultOpen={index === 0} >
                   <Card className="border-2 p-0 overflow-hidden transition-all duration-200 hover:shadow-md gap-0">
-                    <CollapsibleTrigger className="flex justify-between w-full py-2">
+                    <CollapsibleTrigger className="flex justify-between w-full">
                       <CardContent className="p-6 w-full hover:bg-muted/50 transition-colors">
                         <div className="flex items-center justify-between">
                           <div className="flex item-center gap-4">

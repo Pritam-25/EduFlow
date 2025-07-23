@@ -1,10 +1,26 @@
 import { NextRequest, NextResponse } from "next/server";
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth"; // adjust this path if needed
+import arcjet, { createMiddleware, detectBot } from "@arcjet/next";
 
-console.log("✅ Admin middleware loaded!");
 
-export async function middleware(request: NextRequest) {
+const aj = arcjet({
+  key: process.env.ARCJET_KEY!, // Get your site key from https://app.arcjet.com
+  rules: [
+    detectBot({
+      mode: "LIVE", // will block requests. Use "DRY_RUN" to log only
+      // Block all bots except the following
+      allow: [
+        "CATEGORY:SEARCH_ENGINE",
+        "CATEGORY:MONITOR", // Uptime monitoring services
+        "CATEGORY:PREVIEW", // Link previews e.g. Slack, Discord
+      ],
+    }),
+  ],
+});
+
+
+async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
   // Only protect /admin routes
@@ -12,25 +28,42 @@ export async function middleware(request: NextRequest) {
     const session = await auth.api.getSession({
       headers: await headers(),
     });
+    console.log(
+      "session: ", session
+    )
 
     if (!session) {
-      console.log("🔒 User not authenticated. Redirecting to /login");
+      if (process.env.NODE_ENV !== "production") {
+        console.log("🔒 User not authenticated. Redirecting to /login");
+      }
       return NextResponse.redirect(new URL("/login", request.url));
     }
 
     if (session.user.role !== "ADMIN") {
-      console.log(`⛔ Access denied for user ${session.user.email} with role ${session.user.role}`);
+      if (process.env.NODE_ENV !== "production") {
+        console.log(`⛔ Access denied for user ${session.user.email} with role ${session.user.role}`);
+      }
       return NextResponse.redirect(new URL("/unauthorized", request.url));
     }
 
-    console.log(`✅ Admin access granted: ${session.user.email}`);
+    if (process.env.NODE_ENV !== "production") {
+      console.log("✅ Admin access granted:", session.user.email);
+    }
   }
 
   return NextResponse.next();
 }
 
-// Enable Node.js middleware runtime
+
 export const config = {
-  runtime: "nodejs",
-  matcher: ["/admin/:path*"], // Only applies to admin routes
+  matcher: ["/((?!_next/static|_next/image|favicon.ico|api/auth).*)"],
 };
+
+// Pass any existing middleware with the optional existingMiddleware prop
+export default createMiddleware(aj, async (request: NextRequest) => {
+  if (request.nextUrl.pathname.startsWith("/admin")) {
+    return middleware(request);
+  }
+
+  return NextResponse.next();
+});
