@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { GalleryVerticalEnd, Gitlab } from "lucide-react";
+import {  Gitlab } from "lucide-react";
 import { ThemeToggle } from "@/components/ui/themeToggle";
 import { buttonVariants } from "@/components/ui/button";
 import { authClient } from "@/lib/auth-client";

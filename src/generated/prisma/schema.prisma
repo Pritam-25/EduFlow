@@ -1,0 +1,181 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String       @id
+  name          String
+  email         String
+  emailVerified Boolean
+  image         String?
+  role          Role         @default(USER)
+  courses       Course[]     @relation("CourseAuthor") // created courses
+  enrollments   Enrollment[] // one user can enroll in many courses
+  createdAt     DateTime
+  updatedAt     DateTime
+  sessions      Session[]
+  accounts      Account[]
+
+  stripCustomerId String? @unique // Stripe customer ID for payments
+  stripePriceId   String? // Stripe price ID for course payments
+
+  @@unique([email])
+  @@map("user")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  createdAt DateTime
+  updatedAt DateTime
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime
+  updatedAt             DateTime
+
+  @@map("account")
+}
+
+model Verification {
+  id         String    @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime?
+  updatedAt  DateTime?
+
+  @@map("verification")
+}
+
+model Course {
+  id               String       @id @default(cuid())
+  title            String
+  description      String
+  fileKey          String
+  price            Int
+  duration         Int
+  level            CourseLevel  @default(BEGINNER)
+  category         Category[]   @default([OTHER])
+  smallDescription String
+  slug             String       @unique
+  states           CourseStates @default(DRAFT)
+  authorId         String
+  author           User         @relation("CourseAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+  enrollments      Enrollment[]
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+  chapters         Chapter[]
+}
+
+model Enrollment {
+  id         String           @id @default(cuid())
+  amount     Int
+  userId     String
+  courseId   String
+  enrolledAt DateTime         @default(now())
+  status     EnrollmentStatus @default(PENDING)
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, courseId]) // prevent duplicate enrollments
+}
+
+enum EnrollmentStatus {
+  ACTIVE
+  PENDING
+  FAILED
+}
+
+enum CourseLevel {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+}
+
+enum CourseStates {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum Category {
+  PROGRAMMING
+  DESIGN
+  MARKETING
+  BUSINESS
+  PERSONAL_DEVELOPMENT
+  FINANCE
+  HEALTH_AND_FITNESS
+  ACADEMICS
+  DEVELOPMENT
+  MUSIC
+  OFFICE_PRODUCTIVITY
+  OTHER
+}
+
+model Chapter {
+  id String @id @default(cuid())
+
+  title     String
+  position  Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Course    Course?  @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  courseId  String?
+  lessons   Lesson[]
+}
+
+model Lesson {
+  id String @id @default(cuid())
+
+  title       String
+  description String?
+  position    Int
+
+  thumbnailkey String? // S3 key for the lesson file
+  videokey     String? // S3 key for the video file
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  chapterId String
+  chapter   Chapter @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+}
