@@ -8,7 +8,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import { BookOpen, CheckIcon, SwatchBook } from "lucide-react";
 import { env } from "@/env";
 import { Separator } from "@radix-ui/react-dropdown-menu";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
+import { checkIfCourseBought } from "../../actions/user_is_enroll";
+import Link from "next/link";
+import { EnrollmentButton } from "../../components/enrollmentButton";
 
 
 type Params = Promise<{ slug: string }>;
@@ -16,6 +19,7 @@ type Params = Promise<{ slug: string }>;
 export default async function SlugPage({ params }: { params: Params }) {
   const { slug } = await params;
   const course = await getIndividualCourse(slug);
+  const isEnrolled = await checkIfCourseBought(course.id);
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-6">
@@ -137,7 +141,7 @@ export default async function SlugPage({ params }: { params: Params }) {
       </div>
       {/* Right Side: Enrollment Card */}
       <div className="order-2 lg:col-span-1 space-y-6">
-        <div className="sticky top-10">
+        <div className="sticky top-22">
           <Card >
             <CardContent>
               <div className=" flex items-center justify-between mb-6">
@@ -232,7 +236,14 @@ export default async function SlugPage({ params }: { params: Params }) {
                   </li>
                 </ul>
               </div>
-              <Button className="w-full">Enroll Now!</Button>
+
+              {isEnrolled ? (
+                <Link href="/dashboard" className={buttonVariants({ variant: "default" }) + " w-full"}>
+                  Watch Course
+                </Link>
+              ) : (
+                <EnrollmentButton courseId={course.id} />
+              )}
               <p className="mt-3 text-center text-xs text-muted-foreground"> 30-day money-back guarantee</p>
             </CardContent>
           </Card>

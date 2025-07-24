@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { GalleryVerticalEnd} from "lucide-react";
+import { GalleryVerticalEnd, Gitlab } from "lucide-react";
 import { ThemeToggle } from "@/components/ui/themeToggle";
 import { buttonVariants } from "@/components/ui/button";
 import { authClient } from "@/lib/auth-client";
@@ -32,11 +32,11 @@ export default function Navbar() {
   return (
     <div className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
       <nav className="px-4 md:px-6 lg:px-8 min-h-16 container mx-auto flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2 mr-4 space-x-2">
-          <div className="bg-primary text-primary-foreground flex size-8 items-center justify-center rounded-md">
-            <GalleryVerticalEnd className="size-6 p-1" />
-          </div>
-          <span className="font-bold">EduFlow</span>
+        <Link href="/" className="flex items-center gap-2 mr-4">
+          <Gitlab className="size-8 p-0.5 text-primary" />
+          <span className="font-bold text-xl">
+            Edu<span className="text-primary">Flow</span>
+          </span>
         </Link>
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center space-x-4">
