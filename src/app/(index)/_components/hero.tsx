@@ -6,7 +6,6 @@ import { ArrowRight } from "lucide-react";
 
 export const Hero = () => {
   const router = useRouter();
-
   return (
     <section className="relative pt-24 top-0">
       {/* Animated, responsive background glow */}

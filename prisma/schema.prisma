@@ -28,8 +28,8 @@ model User {
   sessions      Session[]
   accounts      Account[]
 
-  stripCustomerId String? @unique// Stripe customer ID for payments
-  stripePriceId  String? // Stripe price ID for course payments
+  stripCustomerId String? @unique // Stripe customer ID for payments
+  stripePriceId   String? // Stripe price ID for course payments
 
   @@unique([email])
   @@map("user")
@@ -106,20 +106,21 @@ model Course {
 }
 
 model Enrollment {
-  id         String   @id @default(cuid())
-  amount Int
+  id         String           @id @default(cuid())
+  amount     Int
   userId     String
   courseId   String
-  enrolledAt DateTime @default(now())
+  enrolledAt DateTime         @default(now())
   status     EnrollmentStatus @default(PENDING)
 
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
-  @@unique([userId, courseId]) // prevent duplicate enrollments
+  // prevent duplicate enrollments
+  @@unique([userId, courseId])
 }
 
-enum EnrollmentStatus{
+enum EnrollmentStatus {
   ACTIVE
   PENDING
   FAILED

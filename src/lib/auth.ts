@@ -24,16 +24,20 @@ export const auth = betterAuth({
         additionalFields: {
             role: {
                 type: [Role.USER, Role.ADMIN],
+                defaultValue: Role.USER, // default role is USER
+                input: true, // allow user to set role - false with hide this field,
+                returned: true, // return this field in the user object
             }
         }
     },
     plugins: [
         emailOTP({
             async sendVerificationOTP({ email, otp }) {
+
                 await resend.emails.send({
-                    from: 'Acme <onboarding@resend.dev>',
+                    from: 'EduFlow <onboarding@resend.dev>',
                     to: [email],
-                    subject: 'LMS Platform - Verification Code',
+                    subject: 'EduFlow LMS - Verification Code',
                     html: `<p>Hi, your verification code is <strong>${otp}</strong></p>`,
                 });
             }
