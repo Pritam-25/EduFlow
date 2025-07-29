@@ -24,8 +24,11 @@
 
 </div>
 
+### 👁️ Live Preview:
+Open [https://eduflow25.vercel.app](https://eduflow25.vercel.app) to view the application.
+
 ---
-<img width="1905" height="995" alt="Screenshot 2025-07-23 000842" src="https://github.com/user-attachments/assets/71cd65e0-4ba9-42b1-80ea-ba90f9202ae5" />
+<img width="1915" height="992" alt="Screenshot 2025-07-30 032221" src="https://github.com/user-attachments/assets/9d31491c-d19b-44fd-a009-8657c5b4e41c" />
 <img width="1912" height="993" alt="Screenshot 2025-07-23 001032" src="https://github.com/user-attachments/assets/4bc8f9a4-ff03-4936-91a2-5f286233aa05" />
 
 ## ✨ Features
@@ -68,9 +71,6 @@ pnpm prisma db push
 # 5. Run the development server
 pnpm dev
 ```
-
-Open [http://localhost:3000](http://localhost:3000) to view the application.
-
 ---
 
 ## 📋 Environment Setup
