@@ -65,6 +65,7 @@ export default function Navbar() {
                   `https://avatar.vercel.sh/${session.user.email}`
                 }
                 name={session.user.name}
+                role={session.user.role}
               />
             </>
           ) : (

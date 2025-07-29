@@ -21,15 +21,31 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
 import { useSignOut } from "@/hooks/use-signOut";
+import { Role } from "@/generated/prisma/client";
 
 interface iAppProps {
   email: string;
   image: string;
   name: string;
+  role: Role;
 }
 
-export default function UserDropdown({ email, image, name }: iAppProps) {
+export default function UserDropdown({ email, image, name, role }: iAppProps) {
   const handleSignOut = useSignOut();
+
+  // Role-based navigation configuration
+  const navigationConfig = {
+    [Role.ADMIN]: {
+      courses: { url: "/admin/courses", label: "Manage Courses" },
+      dashboard: { url: "/admin/dashboard", label: "Admin Dashboard" },
+    },
+    [Role.USER]: {
+      courses: { url: "/courses", label: "Courses" },
+      dashboard: { url: "/dashboard", label: "Dashboard" },
+    },
+  };
+
+  const nav = navigationConfig[role];
 
   return (
     <DropdownMenu>
@@ -61,6 +77,9 @@ export default function UserDropdown({ email, image, name }: iAppProps) {
           <span className="text-muted-foreground truncate text-xs font-normal">
             {email}
           </span>
+          <span className="text-muted-foreground truncate text-xs font-normal italic">
+            {role === Role.ADMIN ? "Teacher" : "Student"}
+          </span>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
@@ -71,23 +90,23 @@ export default function UserDropdown({ email, image, name }: iAppProps) {
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link href="/courses">
+            <Link href={nav.courses.url}>
               <BookOpenIcon
                 size={16}
                 className="opacity-70"
                 aria-hidden="true"
               />
-              <span>Courses</span>
+              <span>{nav.courses.label}</span>
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link href="/dashboard">
+            <Link href={nav.dashboard.url}>
               <LayoutDashboardIcon
                 size={16}
                 className="opacity-70"
                 aria-hidden="true"
               />
-              <span>Dashboard</span>
+              <span>{nav.dashboard.label}</span>
             </Link>
           </DropdownMenuItem>
         </DropdownMenuGroup>

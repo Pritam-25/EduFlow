@@ -48,7 +48,13 @@ export default function VerifyEmailForm({ email, role = Role.USER }: VerifyEmail
               role: role,
             });
             // Redirect to the dashboard or home page after successful verification
-            router.push("/");
+
+            // Role-based redirection
+            if (role === Role.ADMIN) {
+              router.push("/admin/dashboard"); // Admin dashboard
+            } else {
+              router.push("/courses"); // Student dashboard
+            }
           },
           onError: (error) => {
             toast.error("Error verifying OTP: " + error.error.message);
