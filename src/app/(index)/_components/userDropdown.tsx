@@ -1,5 +1,4 @@
 import {
-
   BookOpenIcon,
   ChevronDownIcon,
   Home,
@@ -10,6 +9,7 @@ import {
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge"; // ✅ Add Badge import
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -50,6 +50,25 @@ export default function UserDropdown({ email, image, name, role }: iAppProps) {
 
   const nav = navigationConfig[safeRole];
 
+  // ✅ Beautiful role badge function
+  const getRoleBadge = () => {
+    if (safeRole === Role.ADMIN) {
+      return (
+        <Badge variant={"outline"} className="text-primary">
+
+          Teacher
+        </Badge>
+      );
+    } else {
+      return (
+        <Badge variant={"outline"} className="text-primary">
+
+          Student
+        </Badge>
+      );
+    }
+  };
+
   // ✅ Add error handling
   if (!nav) {
     console.error("Invalid role:", role);
@@ -86,9 +105,10 @@ export default function UserDropdown({ email, image, name, role }: iAppProps) {
           <span className="text-muted-foreground truncate text-xs font-normal">
             {email}
           </span>
-          <span className="text-muted-foreground truncate text-xs font-normal italic">
-            {safeRole === Role.ADMIN ? "Teacher" : "Student"}
-          </span>
+          {/* ✅ Replace plain span with beautiful badge */}
+          <div className="mt-2">
+            {getRoleBadge()}
+          </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
