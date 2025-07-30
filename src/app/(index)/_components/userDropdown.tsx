@@ -33,6 +33,9 @@ interface iAppProps {
 export default function UserDropdown({ email, image, name, role }: iAppProps) {
   const handleSignOut = useSignOut();
 
+  // ✅ Add fallback for invalid role
+  const safeRole = role || Role.USER;
+
   // Role-based navigation configuration
   const navigationConfig = {
     [Role.ADMIN]: {
@@ -45,7 +48,13 @@ export default function UserDropdown({ email, image, name, role }: iAppProps) {
     },
   };
 
-  const nav = navigationConfig[role];
+  const nav = navigationConfig[safeRole];
+
+  // ✅ Add error handling
+  if (!nav) {
+    console.error("Invalid role:", role);
+    return null;
+  }
 
   return (
     <DropdownMenu>
@@ -78,7 +87,7 @@ export default function UserDropdown({ email, image, name, role }: iAppProps) {
             {email}
           </span>
           <span className="text-muted-foreground truncate text-xs font-normal italic">
-            {role === Role.ADMIN ? "Teacher" : "Student"}
+            {safeRole === Role.ADMIN ? "Teacher" : "Student"}
           </span>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />

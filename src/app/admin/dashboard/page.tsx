@@ -4,6 +4,9 @@ import { SectionCards } from "@/components/sidebar/section-cards";
 import data from "../data.json";
 
 export default function DashboardPage() {
+
+  
+
   return (
     <>
       <SectionCards />

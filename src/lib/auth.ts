@@ -4,10 +4,11 @@ import { prisma } from "./db"
 import { emailOTP } from "better-auth/plugins"
 import { resend } from "./resend";
 import { Role } from "@/generated/prisma";
+import { env } from "@/env";
 
 export const auth = betterAuth({
     database: prismaAdapter(prisma, {
-        provider: "sqlite", // or "mysql", "postgresql", ...etc
+        provider: "postgresql", // your database provider
     }),
     // socialProviders: {
     //     github: {
@@ -41,5 +42,14 @@ export const auth = betterAuth({
                 });
             }
         })
-    ]
+    ],
+    // ✅ Fix: Add Vercel domain to trusted origins
+    trustedOrigins: [
+        "http://localhost:3000",
+        "https://edu-flow-six.vercel.app", // Add your Vercel domain
+    ],
+    // ✅ Fix: Set baseURL for production
+    baseURL: env.BETTER_AUTH_URL || "http://localhost:3000",
+    // ✅ Fix: Set secret for production
+    secret: env.BETTER_AUTH_SECRET,
 })
