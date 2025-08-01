@@ -8,7 +8,6 @@ export const env = createEnv({
         BETTER_AUTH_URL: z.string().min(1),
         AUTH_GITHUB_CLIENT_ID: z.string().min(1),
         AUTH_GITHUB_SECRET: z.string().min(1),
-        RESEND_API_KEY: z.string().min(1),
         AWS_ACCESS_KEY_ID: z.string().min(1),
         AWS_SECRET_ACCESS_KEY: z.string().min(1),
         AWS_ENDPOINT_URL_S3: z.string().url(),
@@ -16,6 +15,8 @@ export const env = createEnv({
         AWS_REGION: z.string().min(1),
         ARCJET_KEY: z.string().min(1),
         STRIPE_SECRET_KEY: z.string().min(1),
+        GMAIL_USER: z.string().min(1),
+        GMAIL_APP_PASSWORD: z.string().min(1),
     },
 
     client: {
