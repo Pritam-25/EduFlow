@@ -13,10 +13,9 @@ import { toast } from "sonner";
 
 interface VerifyEmailFormProps {
   email?: string;
-  role?: Role;
 }
 
-export default function VerifyEmailForm({ email, role = Role.USER }: VerifyEmailFormProps) {
+export default function VerifyEmailForm({ email }: VerifyEmailFormProps) {
 
   const [otp, setOtp] = useState<string>("");
   const [emailPending, startTransition] = useTransition();
@@ -45,16 +44,10 @@ export default function VerifyEmailForm({ email, role = Role.USER }: VerifyEmail
             // Update user role after successful verification
             await authClient.updateUser({
               name: email.split("@")[0], // Use email prefix as name
-              role: role,
             });
             // Redirect to the dashboard or home page after successful verification
 
-            // Role-based redirection
-            if (role === Role.ADMIN) {
-              router.push("/admin/dashboard"); // Admin dashboard
-            } else {
-              router.push("/courses"); // Student dashboard
-            }
+            router.push("/");
           },
           onError: (error) => {
             toast.error("Error verifying OTP: " + error.error.message);

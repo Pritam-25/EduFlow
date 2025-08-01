@@ -61,7 +61,7 @@ export default function EditCourseForm({ course }: EditCourseFormProps) {
             price: course.price || 0,
             duration: course.duration || 0,
             level: course.level || CourseLevel.BEGINNER,
-            category: [Category.OTHER],
+            category: course.category || [Category.OTHER],
             smallDescription: course.smallDescription || "",
             slug: course.slug || "",
             states: course.states || CourseStates.DRAFT,

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth"; // adjust this path if needed
 import arcjet, { createMiddleware, detectBot } from "@arcjet/next";
+import { Role } from "./generated/prisma";
 
 
 const aj = arcjet({
@@ -37,7 +38,7 @@ async function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL("/login", request.url));
     }
 
-    if (session.user.role !== "ADMIN") {
+    if (session.user.role !== Role.CREATOR) {
       if (process.env.NODE_ENV !== "production") {
         console.log(`⛔ Access denied for user ${session.user.email} with role ${session.user.role}`);
       }

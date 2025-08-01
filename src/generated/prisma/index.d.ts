@@ -60,6 +60,7 @@ export type Lesson = $Result.DefaultSelection<Prisma.$LessonPayload>
 export namespace $Enums {
   export const Role: {
   USER: 'USER',
+  CREATOR: 'CREATOR',
   ADMIN: 'ADMIN'
 };
 

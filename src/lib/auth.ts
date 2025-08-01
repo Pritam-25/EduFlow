@@ -10,22 +10,22 @@ export const auth = betterAuth({
     database: prismaAdapter(prisma, {
         provider: "postgresql", // your database provider
     }),
-    // socialProviders: {
-    //     github: {
-    //         clientId: env.AUTH_GITHUB_CLIENT_ID,
-    //         clientSecret: env.AUTH_GITHUB_SECRET,
-    //     },
-    //     google: {
-    //         clientId: "",
-    //         clientSecret: ""
-    //     }
-    // },
+    socialProviders: {
+        github: {
+            clientId: env.AUTH_GITHUB_CLIENT_ID,
+            clientSecret: env.AUTH_GITHUB_SECRET,
+        },
+        google: {
+            clientId: "",
+            clientSecret: ""
+        }
+    },
     user: {
         additionalFields: {
             role: {
-                type: [Role.USER, Role.ADMIN],
+                type: [Role.USER, Role.ADMIN, Role.CREATOR],
                 defaultValue: Role.USER, // default role is USER
-                input: true, // allow user to set role - false with hide this field,
+                input: false, // hide this field from user input
                 returned: true, // return this field in the user object
             }
         }
@@ -43,13 +43,4 @@ export const auth = betterAuth({
             }
         })
     ],
-    // ✅ Fix: Add Vercel domain to trusted origins
-    trustedOrigins: [
-        "http://localhost:3000",
-        "https://edu-flow-six.vercel.app", // Add your Vercel domain
-    ],
-    // ✅ Fix: Set baseURL for production
-    baseURL: env.BETTER_AUTH_URL || "http://localhost:3000",
-    // ✅ Fix: Set secret for production
-    secret: env.BETTER_AUTH_SECRET,
 })

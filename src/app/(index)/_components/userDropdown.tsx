@@ -9,7 +9,7 @@ import {
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge"; // ✅ Add Badge import
+import { Badge } from "@/components/ui/badge";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -30,39 +30,49 @@ interface iAppProps {
   role: Role;
 }
 
+// ✅ Define navigation config type that only includes roles we handle
+type NavigationConfig = {
+  [Role.USER]: {
+    courses: { url: string; label: string };
+    dashboard: { url: string; label: string };
+  };
+  [Role.CREATOR]: {
+    courses: { url: string; label: string };
+    dashboard: { url: string; label: string };
+  };
+};
+
 export default function UserDropdown({ email, image, name, role }: iAppProps) {
   const handleSignOut = useSignOut();
 
   // ✅ Add fallback for invalid role
   const safeRole = role || Role.USER;
 
-  // Role-based navigation configuration
-  const navigationConfig = {
-    [Role.ADMIN]: {
-      courses: { url: "/admin/courses", label: "Manage Courses" },
-      dashboard: { url: "/admin/dashboard", label: "Admin Dashboard" },
-    },
+  // ✅ Role-based navigation configuration (removed ADMIN)
+  const navigationConfig: NavigationConfig = {
     [Role.USER]: {
       courses: { url: "/courses", label: "Courses" },
       dashboard: { url: "/dashboard", label: "Dashboard" },
     },
+    [Role.CREATOR]: {
+      courses: { url: "/admin/courses", label: "My Courses" }, // ✅ Using admin URLs for creators
+      dashboard: { url: "/admin/dashboard", label: "Creator Dashboard" },
+    },
   };
 
-  const nav = navigationConfig[safeRole];
+  const nav = navigationConfig[safeRole as keyof NavigationConfig];
 
-  // ✅ Beautiful role badge function
+  // ✅ Beautiful role badge function (removed ADMIN handling)
   const getRoleBadge = () => {
-    if (safeRole === Role.ADMIN) {
+    if (safeRole === Role.CREATOR) {
       return (
-        <Badge variant={"outline"} className="text-primary">
-
+        <Badge className="bg-blue-100 text-blue-800 border-blue-200 hover:bg-blue-200">
           Teacher
         </Badge>
       );
     } else {
       return (
-        <Badge variant={"outline"} className="text-primary">
-
+        <Badge className="bg-green-100 text-green-800 border-green-200 hover:bg-green-200">
           Student
         </Badge>
       );
@@ -105,7 +115,7 @@ export default function UserDropdown({ email, image, name, role }: iAppProps) {
           <span className="text-muted-foreground truncate text-xs font-normal">
             {email}
           </span>
-          {/* ✅ Replace plain span with beautiful badge */}
+          {/* ✅ Beautiful role badge */}
           <div className="mt-2">
             {getRoleBadge()}
           </div>

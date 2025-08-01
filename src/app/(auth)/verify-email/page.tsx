@@ -18,7 +18,6 @@ export default async function VerifyEmailPage({ searchParams }: PageProps) {
       <Suspense fallback={<VerifyEmailSkeleton />}>
         <VerifyEmailForm
           email={params.email}
-          role={params.role as Role}
         />
       </Suspense>
     </div>

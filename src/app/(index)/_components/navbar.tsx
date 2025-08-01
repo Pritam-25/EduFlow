@@ -1,33 +1,39 @@
 "use client";
 import Link from "next/link";
-import {  Gitlab } from "lucide-react";
+import { Gitlab } from "lucide-react";
 import { ThemeToggle } from "@/components/ui/themeToggle";
 import { buttonVariants } from "@/components/ui/button";
 import { authClient } from "@/lib/auth-client";
 import UserDropdown from "./userDropdown";
-
-const navigationItems = [
-  {
-    name: "Home",
-    href: "/",
-  },
-  {
-    name: "Dashboard",
-    href: "/dashboard",
-  },
-  {
-    name: "Courses",
-    href: "/courses",
-  },
-  {
-    name: "Contact Us",
-    href: "/contact",
-  },
-];
+import { useMemo } from "react";
 
 export default function Navbar() {
   //* fetch user session
   const { data: session, isPending } = authClient.useSession();
+
+  // Dynamic navigation items based on user role
+  const navigationItems = useMemo(() => {
+    const isCreator = session?.user?.role === "CREATOR";
+
+    return [
+      {
+        name: "Home",
+        href: "/",
+      },
+      {
+        name: "Dashboard",
+        href: isCreator ? "/admin/dashboard" : "/dashboard",
+      },
+      {
+        name: "Courses",
+        href: isCreator ? "/admin/courses" : "/courses",
+      },
+      {
+        name: "Contact Us",
+        href: "/contact",
+      },
+    ];
+  }, [session?.user?.role]);
 
   return (
     <div className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
@@ -38,6 +44,7 @@ export default function Navbar() {
             Edu<span className="text-primary">Flow</span>
           </span>
         </Link>
+
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center space-x-4">
           <div>
@@ -45,7 +52,7 @@ export default function Navbar() {
               <Link
                 key={item.name}
                 href={item.href}
-                className="text-sm font-medium  hover:font-bold hover:text-primary px-3 py-2 rounded-md"
+                className="text-sm font-medium hover:font-bold hover:text-primary px-3 py-2 rounded-md"
               >
                 {item.name}
               </Link>
@@ -77,7 +84,7 @@ export default function Navbar() {
                 Login
               </Link>
               <Link
-                href="/login"
+                href="/signup"
                 className={buttonVariants({ variant: "secondary" })}
               >
                 Get Started
