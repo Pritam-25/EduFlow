@@ -15,7 +15,6 @@ import { toast } from "sonner";
 import { authClient } from "@/lib/auth-client";
 import React, { useTransition } from "react";
 import { Loader } from "lucide-react";
-import { Role } from "@/generated/prisma/client";
 import { useRouter } from "next/navigation";
 
 export function LoginForm({

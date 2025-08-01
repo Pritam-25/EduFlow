@@ -76,7 +76,7 @@ export default function ContactPage() {
     },
     {
       label: "View Pricing",
-      link: "/pricing", 
+      link: "/pricing",
       icon: <CreditCard className="h-5 w-5" />
     },
     {
@@ -92,7 +92,7 @@ export default function ContactPage() {
       a: "Simply sign up for a free account and choose your role. Start exploring or creating courses immediately."
     },
     {
-      q: "Is there a free plan?", 
+      q: "Is there a free plan?",
       a: "Yes! Our starter plan includes 3 courses, 50 students, and basic analytics at no cost."
     },
     {
@@ -120,7 +120,7 @@ export default function ContactPage() {
             Get In Touch
           </h1>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            Have questions about EduFlow LMS? I'm here to help you succeed with personalized support and guidance.
+            Have questions about EduFlow LMS? I&apos;m here to help you succeed with personalized support and guidance.
           </p>
         </div>
       </section>
@@ -134,9 +134,9 @@ export default function ContactPage() {
             <div className="space-y-8">
               {/* Contact Header */}
               <div className="text-center lg:text-left">
-                <h2 className="text-3xl font-bold mb-4">Let's Connect</h2>
+                <h2 className="text-3xl font-bold mb-4">Let&apos;s Connect</h2>
                 <p className="text-muted-foreground text-lg leading-relaxed">
-                  I'm <span className="font-semibold text-primary">Pritam Maity</span>, creator of EduFlow LMS.
+                  I&apos;m <span className="font-semibold text-primary">Pritam Maity</span>, creator of EduFlow LMS.
                   Ready to help with any questions or support you need.
                 </p>
               </div>
@@ -214,7 +214,7 @@ export default function ContactPage() {
                 </div>
                 <CardTitle className="text-2xl font-bold">Send Message</CardTitle>
                 <CardDescription>
-                  Fill out the form below and I'll respond as soon as possible.
+                  Fill out the form below and I&apos;ll respond as soon as possible.
                 </CardDescription>
               </CardHeader>
 
@@ -356,7 +356,7 @@ export default function ContactPage() {
                 <div>
                   <h3 className="text-2xl font-bold mb-2">Still have questions?</h3>
                   <p className="text-muted-foreground">
-                    I'm here to help you make the most of EduFlow LMS.
+                    I&apos;m here to help you make the most of EduFlow LMS.
                   </p>
                 </div>
                 <Button asChild size="lg" className="px-8">

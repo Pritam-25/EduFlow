@@ -64,7 +64,6 @@ export const Hero = () => {
   const isCreator = session?.user?.role === Role.CREATOR;
   const primaryAction = isCreator ? handleCreateCourse : handleBecomeInstructor;
   const primaryButtonText = isCreator ? "Create New Course" : "Become an Instructor";
-  const primaryButtonIcon = isCreator ? Plus : ArrowRight;
 
   // ✅ Determine explore courses URL
   const exploreCoursesUrl = isCreator ? "/admin/courses" : "/courses";

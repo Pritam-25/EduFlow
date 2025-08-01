@@ -1,7 +1,7 @@
 import { Gitlab } from "lucide-react";
 import { auth } from "@/lib/auth";
 import { LoginForm } from "@/app/(auth)/login/_components/login-form";
-import { redirect, useSearchParams } from "next/navigation";
+import { redirect } from "next/navigation";
 import Link from "next/link";
 import { headers } from "next/headers";
 

@@ -7,11 +7,9 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner";
 import { becameInstructor } from "../actions/became-instroctor";
 import { tryCatch } from "@/hooks/try-catch";
-import { set } from "zod";
 
 const plans = [
   {
@@ -82,8 +80,6 @@ export default function Pricing({ showInstructorFlow = false }: PricingProps) {
   const [clickedPlan, setClickedPlan] = useState<string | null>(null);
   const router = useRouter();
 
-  // ✅ Use the hook at component level
-  const { data: session } = authClient.useSession();
 
   // ✅ Handle card selection (visual selection)
   const handleCardClick = (planId: string) => {

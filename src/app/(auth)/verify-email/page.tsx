@@ -1,4 +1,3 @@
-import { Role } from "@/generated/prisma/client"; // Fix: Add /client
 import { Suspense } from "react";
 import VerifyEmailForm from "./components/verify-email-form";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";

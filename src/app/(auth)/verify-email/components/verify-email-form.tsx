@@ -3,7 +3,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
-import { Role } from "@/generated/prisma";
 import { authClient } from "@/lib/auth-client";
 import { Loader2, Mail } from "lucide-react";
 import { useRouter } from "next/navigation";
