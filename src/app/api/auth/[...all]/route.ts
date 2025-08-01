@@ -1,3 +1,4 @@
+
 import { auth } from "@/lib/auth"; // path to your auth file
 import { toNextJsHandler } from "better-auth/next-js";
 import { aj } from "@/lib/arcjet";
@@ -47,15 +48,16 @@ const signupOptions = {
 } satisfies ProtectSignupOptions<[]>;
 
 async function protect(req: NextRequest): Promise<ArcjetDecision> {
+   
     const session = await auth.api.getSession({
-        headers: req.headers,
-    });
+        headers: req.headers
+    })
 
     // If the user is logged in we'll use their ID as the identifier. This
     // allows limits to be applied across all devices and sessions (you could
     // also use the session ID). Otherwise, fall back to the IP address.
     let userId: string;
-    if (session?.user.id) {
+    if (session?.user?.id) {
         userId = session.user.id;
     } else {
         userId = ip(req) || "127.0.0.1"; // Fall back to local IP if none

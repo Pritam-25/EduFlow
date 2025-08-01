@@ -16,7 +16,7 @@ import { Loader, Eye, EyeOff } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { LoginSchema, type LoginSchemaType } from "@/lib/zodSchema";
+import { SignUpSchema, type SignUpSchemaType } from "@/lib/zodSchema";
 import {
   Form,
   FormControl,
@@ -26,7 +26,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-export function LoginForm({
+export function SignUpForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
@@ -35,13 +35,14 @@ export function LoginForm({
   // State management
   const [githubPending, startGithubTransition] = useTransition();
   const [googlePending, startGoogleTransition] = useTransition();
-  const [loginPending, startLoginTransition] = useTransition();
+  const [signUpPending, startSignUpTransition] = useTransition();
   const [showPassword, setShowPassword] = useState(false);
 
   // Form setup
-  const form = useForm<LoginSchemaType>({
-    resolver: zodResolver(LoginSchema),
+  const form = useForm<SignUpSchemaType>({
+    resolver: zodResolver(SignUpSchema),
     defaultValues: {
+      name: "",
       email: "",
       password: "",
     },
@@ -85,24 +86,26 @@ export function LoginForm({
     });
   }
 
-  // Email and Password Login
-  async function onLoginSubmit(data: LoginSchemaType) {
-    startLoginTransition(async () => {
+  // Sign up with email and password
+  async function onSignUpSubmit(data: SignUpSchemaType) {
+    startSignUpTransition(async () => {
       try {
-        const { error } = await authClient.signIn.email({
+        await authClient.signUp.email({
+          name: data.name.trim(),
           email: data.email.trim(),
           password: data.password,
           callbackURL: "/",
+          fetchOptions: {
+            onSuccess: async () => {
+              toast.success("Account created successfully! Welcome to EduFlow!");
+              router.push("/");
+            },
+            onError: (ctx) => {
+              console.error("Signup error:", ctx.error);
+              toast.error(ctx.error.message || "Failed to create account");
+            },
+          },
         });
-
-        if (error) {
-          console.error("Login error:", error);
-          toast.error(error.message || "Invalid email or password");
-          return;
-        }
-
-        toast.success("Successfully logged in!");
-        router.push("/");
       } catch (error) {
         console.error("Auth error:", error);
         toast.error("An unexpected error occurred. Please try again.");
@@ -110,23 +113,13 @@ export function LoginForm({
     });
   }
 
-  // Handle forgot password
-  function handleForgotPassword() {
-    const email = form.getValues("email");
-    if (email) {
-      router.push(`/forgot-password?email=${encodeURIComponent(email)}`);
-    } else {
-      router.push("/forgot-password");
-    }
-  }
-
   return (
-    <div className={cn("flex flex-col gap-6", className)} {...props}>
+    <div className={cn("flex flex-col gap-4", className)} {...props}>
       <Card>
         <CardHeader className="text-center">
-          <CardTitle className="text-xl">Welcome back</CardTitle>
+          <CardTitle className="text-xl">Create your account</CardTitle>
           <CardDescription>
-            Sign in to continue your learning journey
+            Sign up to start your learning journey
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -200,12 +193,29 @@ export function LoginForm({
               </span>
             </div>
 
-            {/* Email and Password Login Form */}
+            {/* Sign Up Form */}
             <Form {...form}>
               <form
-                onSubmit={form.handleSubmit(onLoginSubmit)}
+                onSubmit={form.handleSubmit(onSignUpSubmit)}
                 className="space-y-4"
               >
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Full Name</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Enter your full name"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
                 <FormField
                   control={form.control}
                   name="email"
@@ -234,14 +244,14 @@ export function LoginForm({
                         <div className="relative">
                           <Input
                             type={showPassword ? "text" : "password"}
-                            placeholder="Enter your password"
+                            placeholder="Create a password"
                             {...field}
                           />
                           <Button
                             type="button"
                             variant="ghost"
                             size="sm"
-                            className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                            className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent dark:hover:bg-transparent"
                             onClick={() => setShowPassword(!showPassword)}
                           >
                             {showPassword ? (
@@ -257,30 +267,18 @@ export function LoginForm({
                   )}
                 />
 
-                {/* Forgot Password Link */}
-                <div className="text-right">
-                  <Button
-                    type="button"
-                    variant="link"
-                    className="p-0 h-auto font-normal text-sm text-muted-foreground hover:text-primary"
-                    onClick={handleForgotPassword}
-                  >
-                    Forgot your password?
-                  </Button>
-                </div>
-
                 <Button
                   type="submit"
                   className="w-full"
-                  disabled={loginPending}
+                  disabled={signUpPending}
                 >
-                  {loginPending ? (
+                  {signUpPending ? (
                     <>
                       <Loader className="size-4 animate-spin mr-2" />
-                      Signing in...
+                      Creating account...
                     </>
                   ) : (
-                    "Sign In"
+                    "Create Account"
                   )}
                 </Button>
               </form>
@@ -289,36 +287,18 @@ export function LoginForm({
         </CardContent>
       </Card>
 
-      {/* Sign Up Link */}
+      {/* Login Link */}
       <div className="text-center">
         <p className="text-sm text-muted-foreground">
-          Don&rsquo;t have an account?{" "}
+          Already have an account?{" "}
           <Button
             variant="link"
             className="p-0 h-auto font-normal text-primary hover:underline"
-            onClick={() => router.push("/signup")}
+            onClick={() => router.push("/login")}
           >
-            Sign up
+            Sign in
           </Button>
         </p>
-      </div>
-
-      <div className="text-muted-foreground text-center text-xs text-balance">
-        By clicking continue, you agree to our{" "}
-        <a
-          href="#"
-          className="underline underline-offset-4 hover:text-primary"
-        >
-          Terms of Service
-        </a>{" "}
-        and{" "}
-        <a
-          href="#"
-          className="underline underline-offset-4 hover:text-primary"
-        >
-          Privacy Policy
-        </a>
-        .
       </div>
     </div>
   );

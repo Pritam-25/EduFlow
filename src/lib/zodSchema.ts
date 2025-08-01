@@ -32,12 +32,37 @@ export const LessonSchema = z.object({
 });
 
 export const uploadSchema = z.object({
-    fileName: z.string().min(1, "File name is required"),
-    size: z.number().max(5 * 1024 * 1024, "File size must be less than 5MB"),
-    contentType: z.string().min(1, "Content type is required"),
-    isImage: z.boolean().optional(),
+  fileName: z.string().min(1, "File name is required"),
+  size: z.number().max(5 * 1024 * 1024, "File size must be less than 5MB"),
+  contentType: z.string().min(1, "Content type is required"),
+  isImage: z.boolean().optional(),
 });
 
+export const SignUpSchema = z.object({
+  name: z.string()
+    .min(2, "Name must be at least 2 characters")
+    .max(50, "Name must be less than 50 characters")
+    .regex(/^[a-zA-Z\s]+$/, "Name can only contain letters and spaces"),
+  email: z.string()
+    .email("Please enter a valid email address")
+    .toLowerCase(),
+  password: z.string()
+    .min(8, "Password must be at least 8 characters")
+    .max(20, "Password must be less than 20 characters")
+    .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, "Password must contain at least one lowercase letter, one uppercase letter, and one number"),
+});
+
+export const LoginSchema = z.object({
+  email: z.string()
+    .email("Please enter a valid email address")
+    .toLowerCase(),
+  password: z.string()
+    .min(1, "Password is required"),
+});
+
+export type LoginSchemaType = z.infer<typeof LoginSchema>;
 export type CourseSchemaType = z.infer<typeof CourseSchema>;
 export type ChapterSchemaType = z.infer<typeof ChapterSchema>;
 export type LessonSchemaType = z.infer<typeof LessonSchema>;
+export type UploadSchemaType = z.infer<typeof uploadSchema>;
+export type SignUpSchemaType = z.infer<typeof SignUpSchema>;
