@@ -14,11 +14,15 @@ export const gmailTransporter = nodemailer.createTransport({
     }
 });
 
-// Test the connection
-gmailTransporter.verify((error) => {
-    if (error) {
-        console.error('❌ Gmail transporter error:', error);
-    } else {
-        console.log('✅ Gmail transporter is ready to send emails');
-    }
-});
+
+
+if (process.env.NODE_ENV !== "production") {
+    // Test the connection
+    gmailTransporter.verify((error) => {
+        if (error) {
+            console.error('❌ Gmail transporter error:', error);
+        } else {
+            console.log('✅ Gmail transporter is ready to send emails');
+        }
+    });
+}
