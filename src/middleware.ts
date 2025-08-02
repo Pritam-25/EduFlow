@@ -1,6 +1,6 @@
+// src/middleware.ts
 import { NextRequest, NextResponse } from "next/server";
-import { headers } from "next/headers";
-import { auth } from "@/lib/auth"; // adjust this path if needed
+import { auth } from "@/lib/auth";
 import arcjet, { createMiddleware, detectBot } from "@arcjet/next";
 
 
@@ -20,41 +20,40 @@ const aj = arcjet({
 });
 
 
-async function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
   // Only protect /admin routes
   if (pathname.startsWith("/admin")) {
-    const session = await auth.api.getSession({
-      headers: await headers(),
-    });
-    
+    try {
+      const session = await auth.api.getSession({
+        headers: request.headers,
+      });
 
-    if (!session) {
-      if (process.env.NODE_ENV !== "production") {
+      if (!session?.user) {
         console.log("🔒 User not authenticated. Redirecting to /login");
+        return NextResponse.redirect(new URL("/login", request.url));
       }
-      return NextResponse.redirect(new URL("/login", request.url));
-    }
 
-    if (session.user.role !== "CREATOR") {
-      if (process.env.NODE_ENV !== "production") {
+      if (session.user.role !== "CREATOR") {
         console.log(`⛔ Access denied for user ${session.user.email} with role ${session.user.role}`);
+        return NextResponse.redirect(new URL("/unauthorized", request.url));
       }
-      return NextResponse.redirect(new URL("/unauthorized", request.url));
-    }
 
-    if (process.env.NODE_ENV !== "production") {
       console.log("✅ Admin access granted:", session.user.email);
+    } catch (error) {
+      console.error("Auth error in middleware:", error);
+      return NextResponse.redirect(new URL("/login", request.url));
     }
   }
 
   return NextResponse.next();
 }
 
-
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico|api/auth).*)"],
+  matcher: [
+    "/admin/:path*", // Only protect admin routes
+  ],
 };
 
 // Pass any existing middleware with the optional existingMiddleware prop
