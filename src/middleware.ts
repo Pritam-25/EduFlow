@@ -2,6 +2,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import arcjet, { createMiddleware, detectBot } from "@arcjet/next";
+import { headers } from "next/headers";
 
 
 const aj = arcjet({
@@ -27,7 +28,7 @@ export async function middleware(request: NextRequest) {
   if (pathname.startsWith("/admin")) {
     try {
       const session = await auth.api.getSession({
-        headers: request.headers,
+        headers: await headers(),
       });
 
       if (!session?.user) {

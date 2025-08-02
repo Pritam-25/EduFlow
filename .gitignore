@@ -19,8 +19,8 @@
 
 
 # IDEs and editor settings
-.idea/            # JetBrains IDEs like WebStorm
-.vscode/          # VSCode settings
+.idea/           
+.vscode/       
 
 # production
 /build
@@ -37,6 +37,7 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+
 
 # vercel
 .vercel
