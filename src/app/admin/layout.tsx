@@ -1,8 +1,32 @@
+"use server"
 import { AppSidebar } from "@/components/sidebar/app-sidebar";
 import { SiteHeader } from "@/components/sidebar/site-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
+import { auth } from "@/lib/auth";
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+export default async function Layout({ children }: { children: React.ReactNode }) {
+
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  })
+
+
+  if (!session?.user) {
+    console.log("🔒 User not authenticated. Redirecting to /login");
+    redirect("/login");
+  }
+
+  if (session.user.role !== "CREATOR") {
+    console.log(`⛔ Access denied for user ${session.user.email} with role ${session.user.role}`);
+    redirect("/unauthorized");
+  }
+
+  console.log("✅ Admin access granted:", session.user.email);
+
+
+
   return (
     <section>
       <SidebarProvider

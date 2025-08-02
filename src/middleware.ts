@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/lib/auth";
 import arcjet, { createMiddleware, detectBot } from "@arcjet/next";
-import { headers } from "next/headers";
 import { env } from "./env";
-
+import { getSessionCookie } from "better-auth/cookies"
 
 const aj = arcjet({
   key: env.ARCJET_KEY!, // Get your site key from https://app.arcjet.com
@@ -22,47 +20,23 @@ const aj = arcjet({
 
 
 export async function middleware(request: NextRequest) {
-  const pathname = request.nextUrl.pathname;
+  const sessionCookie = getSessionCookie(request);
 
-  // Only protect /admin routes
-  if (pathname.startsWith("/admin")) {
-    try {
-      const session = await auth.api.getSession({
-        headers: await headers(),
-      });
-
-      if (!session?.user) {
-        console.log("🔒 User not authenticated. Redirecting to /login");
-        return NextResponse.redirect(new URL("/login", request.url));
-      }
-
-      if (session.user.role !== "CREATOR") {
-        console.log(`⛔ Access denied for user ${session.user.email} with role ${session.user.role}`);
-        return NextResponse.redirect(new URL("/unauthorized", request.url));
-      }
-
-      console.log("✅ Admin access granted:", session.user.email);
-    } catch (error) {
-      console.error("Auth error in middleware:", error);
-      return NextResponse.redirect(new URL("/login", request.url));
-    }
+  if (!sessionCookie) {
+    return NextResponse.redirect(new URL("/login", request.url));
   }
 
   return NextResponse.next();
 }
 
 export const config = {
-  runtime: "nodejs", // Use Node.js runtime for middleware
-  matcher: [
-    "/admin/:path*", // Only protect admin routes
-  ],
+  matcher: ["/((?!_next/static|_next/image|favicon.ico|api/auth).*)"],
 };
 
-// Pass any existing middleware with the optional existingMiddleware prop
 export default createMiddleware(aj, async (request: NextRequest) => {
   if (request.nextUrl.pathname.startsWith("/admin")) {
     return middleware(request);
   }
 
   return NextResponse.next();
-});
+})
