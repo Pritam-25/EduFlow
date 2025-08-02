@@ -1,21 +1,21 @@
 "use server";
 
+import { env } from "@/env";
 import { gmailTransporter } from "@/lib/gmailTransporter";
 
 export async function sendVerificationEmailAction(email: string, otp: string) {
   try {
-    console.log(`📧 Sending verification email to: ${email}`);
 
     if (!email || !otp) {
       throw new Error('Email and OTP are required');
     }
 
-    if (!process.env.GMAIL_USER || !process.env.GMAIL_APP_PASSWORD) {
+    if (!env.GMAIL_USER || !env.GMAIL_APP_PASSWORD) {
       throw new Error('Email service not configured');
     }
 
     await gmailTransporter.sendMail({
-      from: `"EduFlow LMS" <${process.env.GMAIL_USER}>`,
+      from: `"EduFlow LMS" <${env.GMAIL_USER}>`,
       to: email,
       subject: 'EduFlow LMS - Email Verification Code',
       text: `
@@ -141,8 +141,8 @@ export async function sendVerificationEmailAction(email: string, otp: string) {
                                         <td class="footer" style="background-color: #F9FAFB; padding: 25px 20px; text-align: center; border-top: 1px solid #E5E7EB;">
                                             <p style="color: #9CA3AF; margin: 0 0 10px 0; font-size: 14px;">
                                                 Need help? Contact us at 
-                                                <a href="mailto:${process.env.GMAIL_USER}" style="color: #4F46E5; text-decoration: none; font-weight: 500;">
-                                                    ${process.env.GMAIL_USER}
+                                                <a href="mailto:${env.GMAIL_USER}" style="color: #4F46E5; text-decoration: none; font-weight: 500;">
+                                                    ${env.GMAIL_USER}
                                                 </a>
                                             </p>
                                             <p style="color: #9CA3AF; margin: 0; font-size: 12px;">

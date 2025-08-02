@@ -1,12 +1,12 @@
-// src/middleware.ts
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import arcjet, { createMiddleware, detectBot } from "@arcjet/next";
 import { headers } from "next/headers";
+import { env } from "./env";
 
 
 const aj = arcjet({
-  key: process.env.ARCJET_KEY!, // Get your site key from https://app.arcjet.com
+  key: env.ARCJET_KEY!, // Get your site key from https://app.arcjet.com
   rules: [
     detectBot({
       mode: "LIVE", // will block requests. Use "DRY_RUN" to log only
@@ -52,6 +52,7 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
+  runtime: "nodejs", // Use Node.js runtime for middleware
   matcher: [
     "/admin/:path*", // Only protect admin routes
   ],

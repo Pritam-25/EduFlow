@@ -1,3 +1,4 @@
+"use server";
 import { CourseStates } from "@/generated/prisma";
 import { prisma } from "@/lib/db";
 
