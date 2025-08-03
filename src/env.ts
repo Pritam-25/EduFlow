@@ -18,6 +18,8 @@ export const env = createEnv({
         GMAIL_USER: z.string().min(1),
         GMAIL_APP_PASSWORD: z.string().min(1),
         STRIPE_WEBHOOK_SECRET: z.string().min(1),
+        AUTH_GOOGLE_CLIENT_ID: z.string().min(1),
+        AUTH_GOOGLE_SECRET: z.string().min(1)
     },
 
     client: {

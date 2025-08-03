@@ -60,8 +60,8 @@ export function LoginForm({
             // await handleRoleUpdate(selectedRole);
             toast.success("Successfully logged in with Google");
           },
-          onError: () => {
-            toast.error("Currently this feature is not available");
+          onError: (error) => {
+            toast.error(error.error.message);
           },
         },
       });
