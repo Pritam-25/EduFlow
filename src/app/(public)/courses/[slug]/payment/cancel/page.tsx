@@ -17,7 +17,7 @@ export default function PaymentCancelled() {
               Your payment has been cancelled. No worries, you won&apos;t be charged.
             </p>
 
-            <Link href="/" className={buttonVariants({variant:"outline", className: "w-full mt-4"})}>
+            <Link href="/" className={buttonVariants({variant:"default", className: "w-full mt-4"})}>
             <ArrowLeft className="mr-2 size-4" />
               Go back to home
             </Link>

@@ -1745,8 +1745,7 @@ export namespace Prisma {
     role: $Enums.Role | null
     createdAt: Date | null
     updatedAt: Date | null
-    stripCustomerId: string | null
-    stripePriceId: string | null
+    stripeCustomerId: string | null
   }
 
   export type UserMaxAggregateOutputType = {
@@ -1758,8 +1757,7 @@ export namespace Prisma {
     role: $Enums.Role | null
     createdAt: Date | null
     updatedAt: Date | null
-    stripCustomerId: string | null
-    stripePriceId: string | null
+    stripeCustomerId: string | null
   }
 
   export type UserCountAggregateOutputType = {
@@ -1771,8 +1769,7 @@ export namespace Prisma {
     role: number
     createdAt: number
     updatedAt: number
-    stripCustomerId: number
-    stripePriceId: number
+    stripeCustomerId: number
     _all: number
   }
 
@@ -1786,8 +1783,7 @@ export namespace Prisma {
     role?: true
     createdAt?: true
     updatedAt?: true
-    stripCustomerId?: true
-    stripePriceId?: true
+    stripeCustomerId?: true
   }
 
   export type UserMaxAggregateInputType = {
@@ -1799,8 +1795,7 @@ export namespace Prisma {
     role?: true
     createdAt?: true
     updatedAt?: true
-    stripCustomerId?: true
-    stripePriceId?: true
+    stripeCustomerId?: true
   }
 
   export type UserCountAggregateInputType = {
@@ -1812,8 +1807,7 @@ export namespace Prisma {
     role?: true
     createdAt?: true
     updatedAt?: true
-    stripCustomerId?: true
-    stripePriceId?: true
+    stripeCustomerId?: true
     _all?: true
   }
 
@@ -1898,8 +1892,7 @@ export namespace Prisma {
     role: $Enums.Role
     createdAt: Date
     updatedAt: Date
-    stripCustomerId: string | null
-    stripePriceId: string | null
+    stripeCustomerId: string | null
     _count: UserCountAggregateOutputType | null
     _min: UserMinAggregateOutputType | null
     _max: UserMaxAggregateOutputType | null
@@ -1928,8 +1921,7 @@ export namespace Prisma {
     role?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    stripCustomerId?: boolean
-    stripePriceId?: boolean
+    stripeCustomerId?: boolean
     courses?: boolean | User$coursesArgs<ExtArgs>
     enrollments?: boolean | User$enrollmentsArgs<ExtArgs>
     sessions?: boolean | User$sessionsArgs<ExtArgs>
@@ -1946,8 +1938,7 @@ export namespace Prisma {
     role?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    stripCustomerId?: boolean
-    stripePriceId?: boolean
+    stripeCustomerId?: boolean
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -1959,8 +1950,7 @@ export namespace Prisma {
     role?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    stripCustomerId?: boolean
-    stripePriceId?: boolean
+    stripeCustomerId?: boolean
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectScalar = {
@@ -1972,11 +1962,10 @@ export namespace Prisma {
     role?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    stripCustomerId?: boolean
-    stripePriceId?: boolean
+    stripeCustomerId?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "role" | "createdAt" | "updatedAt" | "stripCustomerId" | "stripePriceId", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "emailVerified" | "image" | "role" | "createdAt" | "updatedAt" | "stripeCustomerId", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     courses?: boolean | User$coursesArgs<ExtArgs>
     enrollments?: boolean | User$enrollmentsArgs<ExtArgs>
@@ -2004,8 +1993,7 @@ export namespace Prisma {
       role: $Enums.Role
       createdAt: Date
       updatedAt: Date
-      stripCustomerId: string | null
-      stripePriceId: string | null
+      stripeCustomerId: string | null
     }, ExtArgs["result"]["user"]>
     composites: {}
   }
@@ -2441,8 +2429,7 @@ export namespace Prisma {
     readonly role: FieldRef<"User", 'Role'>
     readonly createdAt: FieldRef<"User", 'DateTime'>
     readonly updatedAt: FieldRef<"User", 'DateTime'>
-    readonly stripCustomerId: FieldRef<"User", 'String'>
-    readonly stripePriceId: FieldRef<"User", 'String'>
+    readonly stripeCustomerId: FieldRef<"User", 'String'>
   }
     
 
@@ -6246,6 +6233,8 @@ export namespace Prisma {
     slug: string | null
     states: $Enums.CourseStates | null
     authorId: string | null
+    stripeProductId: string | null
+    stripePriceId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -6262,6 +6251,8 @@ export namespace Prisma {
     slug: string | null
     states: $Enums.CourseStates | null
     authorId: string | null
+    stripeProductId: string | null
+    stripePriceId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -6279,6 +6270,8 @@ export namespace Prisma {
     slug: number
     states: number
     authorId: number
+    stripeProductId: number
+    stripePriceId: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -6307,6 +6300,8 @@ export namespace Prisma {
     slug?: true
     states?: true
     authorId?: true
+    stripeProductId?: true
+    stripePriceId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -6323,6 +6318,8 @@ export namespace Prisma {
     slug?: true
     states?: true
     authorId?: true
+    stripeProductId?: true
+    stripePriceId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -6340,6 +6337,8 @@ export namespace Prisma {
     slug?: true
     states?: true
     authorId?: true
+    stripeProductId?: true
+    stripePriceId?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -6444,6 +6443,8 @@ export namespace Prisma {
     slug: string
     states: $Enums.CourseStates
     authorId: string
+    stripeProductId: string | null
+    stripePriceId: string | null
     createdAt: Date
     updatedAt: Date
     _count: CourseCountAggregateOutputType | null
@@ -6480,6 +6481,8 @@ export namespace Prisma {
     slug?: boolean
     states?: boolean
     authorId?: boolean
+    stripeProductId?: boolean
+    stripePriceId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     author?: boolean | UserDefaultArgs<ExtArgs>
@@ -6501,6 +6504,8 @@ export namespace Prisma {
     slug?: boolean
     states?: boolean
     authorId?: boolean
+    stripeProductId?: boolean
+    stripePriceId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     author?: boolean | UserDefaultArgs<ExtArgs>
@@ -6519,6 +6524,8 @@ export namespace Prisma {
     slug?: boolean
     states?: boolean
     authorId?: boolean
+    stripeProductId?: boolean
+    stripePriceId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     author?: boolean | UserDefaultArgs<ExtArgs>
@@ -6537,11 +6544,13 @@ export namespace Prisma {
     slug?: boolean
     states?: boolean
     authorId?: boolean
+    stripeProductId?: boolean
+    stripePriceId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type CourseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "fileKey" | "price" | "duration" | "level" | "category" | "smallDescription" | "slug" | "states" | "authorId" | "createdAt" | "updatedAt", ExtArgs["result"]["course"]>
+  export type CourseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "fileKey" | "price" | "duration" | "level" | "category" | "smallDescription" | "slug" | "states" | "authorId" | "stripeProductId" | "stripePriceId" | "createdAt" | "updatedAt", ExtArgs["result"]["course"]>
   export type CourseInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     author?: boolean | UserDefaultArgs<ExtArgs>
     enrollments?: boolean | Course$enrollmentsArgs<ExtArgs>
@@ -6575,6 +6584,8 @@ export namespace Prisma {
       slug: string
       states: $Enums.CourseStates
       authorId: string
+      stripeProductId: string | null
+      stripePriceId: string | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["course"]>
@@ -7015,6 +7026,8 @@ export namespace Prisma {
     readonly slug: FieldRef<"Course", 'String'>
     readonly states: FieldRef<"Course", 'CourseStates'>
     readonly authorId: FieldRef<"Course", 'String'>
+    readonly stripeProductId: FieldRef<"Course", 'String'>
+    readonly stripePriceId: FieldRef<"Course", 'String'>
     readonly createdAt: FieldRef<"Course", 'DateTime'>
     readonly updatedAt: FieldRef<"Course", 'DateTime'>
   }
@@ -10913,8 +10926,7 @@ export namespace Prisma {
     role: 'role',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
-    stripCustomerId: 'stripCustomerId',
-    stripePriceId: 'stripePriceId'
+    stripeCustomerId: 'stripeCustomerId'
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -10978,6 +10990,8 @@ export namespace Prisma {
     slug: 'slug',
     states: 'states',
     authorId: 'authorId',
+    stripeProductId: 'stripeProductId',
+    stripePriceId: 'stripePriceId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -11201,8 +11215,7 @@ export namespace Prisma {
     role?: EnumRoleFilter<"User"> | $Enums.Role
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
-    stripCustomerId?: StringNullableFilter<"User"> | string | null
-    stripePriceId?: StringNullableFilter<"User"> | string | null
+    stripeCustomerId?: StringNullableFilter<"User"> | string | null
     courses?: CourseListRelationFilter
     enrollments?: EnrollmentListRelationFilter
     sessions?: SessionListRelationFilter
@@ -11218,8 +11231,7 @@ export namespace Prisma {
     role?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    stripCustomerId?: SortOrderInput | SortOrder
-    stripePriceId?: SortOrderInput | SortOrder
+    stripeCustomerId?: SortOrderInput | SortOrder
     courses?: CourseOrderByRelationAggregateInput
     enrollments?: EnrollmentOrderByRelationAggregateInput
     sessions?: SessionOrderByRelationAggregateInput
@@ -11229,7 +11241,7 @@ export namespace Prisma {
   export type UserWhereUniqueInput = Prisma.AtLeast<{
     id?: string
     email?: string
-    stripCustomerId?: string
+    stripeCustomerId?: string
     AND?: UserWhereInput | UserWhereInput[]
     OR?: UserWhereInput[]
     NOT?: UserWhereInput | UserWhereInput[]
@@ -11239,12 +11251,11 @@ export namespace Prisma {
     role?: EnumRoleFilter<"User"> | $Enums.Role
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
-    stripePriceId?: StringNullableFilter<"User"> | string | null
     courses?: CourseListRelationFilter
     enrollments?: EnrollmentListRelationFilter
     sessions?: SessionListRelationFilter
     accounts?: AccountListRelationFilter
-  }, "id" | "stripCustomerId" | "email">
+  }, "id" | "stripeCustomerId" | "email">
 
   export type UserOrderByWithAggregationInput = {
     id?: SortOrder
@@ -11255,8 +11266,7 @@ export namespace Prisma {
     role?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    stripCustomerId?: SortOrderInput | SortOrder
-    stripePriceId?: SortOrderInput | SortOrder
+    stripeCustomerId?: SortOrderInput | SortOrder
     _count?: UserCountOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
     _min?: UserMinOrderByAggregateInput
@@ -11274,8 +11284,7 @@ export namespace Prisma {
     role?: EnumRoleWithAggregatesFilter<"User"> | $Enums.Role
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
-    stripCustomerId?: StringNullableWithAggregatesFilter<"User"> | string | null
-    stripePriceId?: StringNullableWithAggregatesFilter<"User"> | string | null
+    stripeCustomerId?: StringNullableWithAggregatesFilter<"User"> | string | null
   }
 
   export type SessionWhereInput = {
@@ -11516,6 +11525,8 @@ export namespace Prisma {
     slug?: StringFilter<"Course"> | string
     states?: EnumCourseStatesFilter<"Course"> | $Enums.CourseStates
     authorId?: StringFilter<"Course"> | string
+    stripeProductId?: StringNullableFilter<"Course"> | string | null
+    stripePriceId?: StringNullableFilter<"Course"> | string | null
     createdAt?: DateTimeFilter<"Course"> | Date | string
     updatedAt?: DateTimeFilter<"Course"> | Date | string
     author?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -11536,6 +11547,8 @@ export namespace Prisma {
     slug?: SortOrder
     states?: SortOrder
     authorId?: SortOrder
+    stripeProductId?: SortOrderInput | SortOrder
+    stripePriceId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     author?: UserOrderByWithRelationInput
@@ -11559,6 +11572,8 @@ export namespace Prisma {
     smallDescription?: StringFilter<"Course"> | string
     states?: EnumCourseStatesFilter<"Course"> | $Enums.CourseStates
     authorId?: StringFilter<"Course"> | string
+    stripeProductId?: StringNullableFilter<"Course"> | string | null
+    stripePriceId?: StringNullableFilter<"Course"> | string | null
     createdAt?: DateTimeFilter<"Course"> | Date | string
     updatedAt?: DateTimeFilter<"Course"> | Date | string
     author?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -11579,6 +11594,8 @@ export namespace Prisma {
     slug?: SortOrder
     states?: SortOrder
     authorId?: SortOrder
+    stripeProductId?: SortOrderInput | SortOrder
+    stripePriceId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: CourseCountOrderByAggregateInput
@@ -11604,6 +11621,8 @@ export namespace Prisma {
     slug?: StringWithAggregatesFilter<"Course"> | string
     states?: EnumCourseStatesWithAggregatesFilter<"Course"> | $Enums.CourseStates
     authorId?: StringWithAggregatesFilter<"Course"> | string
+    stripeProductId?: StringNullableWithAggregatesFilter<"Course"> | string | null
+    stripePriceId?: StringNullableWithAggregatesFilter<"Course"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Course"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Course"> | Date | string
   }
@@ -11825,8 +11844,7 @@ export namespace Prisma {
     role?: $Enums.Role
     createdAt: Date | string
     updatedAt: Date | string
-    stripCustomerId?: string | null
-    stripePriceId?: string | null
+    stripeCustomerId?: string | null
     courses?: CourseCreateNestedManyWithoutAuthorInput
     enrollments?: EnrollmentCreateNestedManyWithoutUserInput
     sessions?: SessionCreateNestedManyWithoutUserInput
@@ -11842,8 +11860,7 @@ export namespace Prisma {
     role?: $Enums.Role
     createdAt: Date | string
     updatedAt: Date | string
-    stripCustomerId?: string | null
-    stripePriceId?: string | null
+    stripeCustomerId?: string | null
     courses?: CourseUncheckedCreateNestedManyWithoutAuthorInput
     enrollments?: EnrollmentUncheckedCreateNestedManyWithoutUserInput
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
@@ -11859,8 +11876,7 @@ export namespace Prisma {
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    stripCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
-    stripePriceId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
     courses?: CourseUpdateManyWithoutAuthorNestedInput
     enrollments?: EnrollmentUpdateManyWithoutUserNestedInput
     sessions?: SessionUpdateManyWithoutUserNestedInput
@@ -11876,8 +11892,7 @@ export namespace Prisma {
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    stripCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
-    stripePriceId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
     courses?: CourseUncheckedUpdateManyWithoutAuthorNestedInput
     enrollments?: EnrollmentUncheckedUpdateManyWithoutUserNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -11893,8 +11908,7 @@ export namespace Prisma {
     role?: $Enums.Role
     createdAt: Date | string
     updatedAt: Date | string
-    stripCustomerId?: string | null
-    stripePriceId?: string | null
+    stripeCustomerId?: string | null
   }
 
   export type UserUpdateManyMutationInput = {
@@ -11906,8 +11920,7 @@ export namespace Prisma {
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    stripCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
-    stripePriceId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type UserUncheckedUpdateManyInput = {
@@ -11919,8 +11932,7 @@ export namespace Prisma {
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    stripCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
-    stripePriceId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type SessionCreateInput = {
@@ -12185,6 +12197,8 @@ export namespace Prisma {
     smallDescription: string
     slug: string
     states?: $Enums.CourseStates
+    stripeProductId?: string | null
+    stripePriceId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     author: UserCreateNestedOneWithoutCoursesInput
@@ -12205,6 +12219,8 @@ export namespace Prisma {
     slug: string
     states?: $Enums.CourseStates
     authorId: string
+    stripeProductId?: string | null
+    stripePriceId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     enrollments?: EnrollmentUncheckedCreateNestedManyWithoutCourseInput
@@ -12223,6 +12239,8 @@ export namespace Prisma {
     smallDescription?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     states?: EnumCourseStatesFieldUpdateOperationsInput | $Enums.CourseStates
+    stripeProductId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripePriceId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     author?: UserUpdateOneRequiredWithoutCoursesNestedInput
@@ -12243,6 +12261,8 @@ export namespace Prisma {
     slug?: StringFieldUpdateOperationsInput | string
     states?: EnumCourseStatesFieldUpdateOperationsInput | $Enums.CourseStates
     authorId?: StringFieldUpdateOperationsInput | string
+    stripeProductId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripePriceId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     enrollments?: EnrollmentUncheckedUpdateManyWithoutCourseNestedInput
@@ -12262,6 +12282,8 @@ export namespace Prisma {
     slug: string
     states?: $Enums.CourseStates
     authorId: string
+    stripeProductId?: string | null
+    stripePriceId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -12278,6 +12300,8 @@ export namespace Prisma {
     smallDescription?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     states?: EnumCourseStatesFieldUpdateOperationsInput | $Enums.CourseStates
+    stripeProductId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripePriceId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -12295,6 +12319,8 @@ export namespace Prisma {
     slug?: StringFieldUpdateOperationsInput | string
     states?: EnumCourseStatesFieldUpdateOperationsInput | $Enums.CourseStates
     authorId?: StringFieldUpdateOperationsInput | string
+    stripeProductId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripePriceId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -12616,8 +12642,7 @@ export namespace Prisma {
     role?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    stripCustomerId?: SortOrder
-    stripePriceId?: SortOrder
+    stripeCustomerId?: SortOrder
   }
 
   export type UserMaxOrderByAggregateInput = {
@@ -12629,8 +12654,7 @@ export namespace Prisma {
     role?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    stripCustomerId?: SortOrder
-    stripePriceId?: SortOrder
+    stripeCustomerId?: SortOrder
   }
 
   export type UserMinOrderByAggregateInput = {
@@ -12642,8 +12666,7 @@ export namespace Prisma {
     role?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    stripCustomerId?: SortOrder
-    stripePriceId?: SortOrder
+    stripeCustomerId?: SortOrder
   }
 
   export type StringWithAggregatesFilter<$PrismaModel = never> = {
@@ -12908,6 +12931,8 @@ export namespace Prisma {
     slug?: SortOrder
     states?: SortOrder
     authorId?: SortOrder
+    stripeProductId?: SortOrder
+    stripePriceId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -12929,6 +12954,8 @@ export namespace Prisma {
     slug?: SortOrder
     states?: SortOrder
     authorId?: SortOrder
+    stripeProductId?: SortOrder
+    stripePriceId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -12945,6 +12972,8 @@ export namespace Prisma {
     slug?: SortOrder
     states?: SortOrder
     authorId?: SortOrder
+    stripeProductId?: SortOrder
+    stripePriceId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -13852,6 +13881,8 @@ export namespace Prisma {
     smallDescription: string
     slug: string
     states?: $Enums.CourseStates
+    stripeProductId?: string | null
+    stripePriceId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     enrollments?: EnrollmentCreateNestedManyWithoutCourseInput
@@ -13870,6 +13901,8 @@ export namespace Prisma {
     smallDescription: string
     slug: string
     states?: $Enums.CourseStates
+    stripeProductId?: string | null
+    stripePriceId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     enrollments?: EnrollmentUncheckedCreateNestedManyWithoutCourseInput
@@ -14014,6 +14047,8 @@ export namespace Prisma {
     slug?: StringFilter<"Course"> | string
     states?: EnumCourseStatesFilter<"Course"> | $Enums.CourseStates
     authorId?: StringFilter<"Course"> | string
+    stripeProductId?: StringNullableFilter<"Course"> | string | null
+    stripePriceId?: StringNullableFilter<"Course"> | string | null
     createdAt?: DateTimeFilter<"Course"> | Date | string
     updatedAt?: DateTimeFilter<"Course"> | Date | string
   }
@@ -14120,8 +14155,7 @@ export namespace Prisma {
     role?: $Enums.Role
     createdAt: Date | string
     updatedAt: Date | string
-    stripCustomerId?: string | null
-    stripePriceId?: string | null
+    stripeCustomerId?: string | null
     courses?: CourseCreateNestedManyWithoutAuthorInput
     enrollments?: EnrollmentCreateNestedManyWithoutUserInput
     accounts?: AccountCreateNestedManyWithoutUserInput
@@ -14136,8 +14170,7 @@ export namespace Prisma {
     role?: $Enums.Role
     createdAt: Date | string
     updatedAt: Date | string
-    stripCustomerId?: string | null
-    stripePriceId?: string | null
+    stripeCustomerId?: string | null
     courses?: CourseUncheckedCreateNestedManyWithoutAuthorInput
     enrollments?: EnrollmentUncheckedCreateNestedManyWithoutUserInput
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
@@ -14168,8 +14201,7 @@ export namespace Prisma {
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    stripCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
-    stripePriceId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
     courses?: CourseUpdateManyWithoutAuthorNestedInput
     enrollments?: EnrollmentUpdateManyWithoutUserNestedInput
     accounts?: AccountUpdateManyWithoutUserNestedInput
@@ -14184,8 +14216,7 @@ export namespace Prisma {
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    stripCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
-    stripePriceId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
     courses?: CourseUncheckedUpdateManyWithoutAuthorNestedInput
     enrollments?: EnrollmentUncheckedUpdateManyWithoutUserNestedInput
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
@@ -14200,8 +14231,7 @@ export namespace Prisma {
     role?: $Enums.Role
     createdAt: Date | string
     updatedAt: Date | string
-    stripCustomerId?: string | null
-    stripePriceId?: string | null
+    stripeCustomerId?: string | null
     courses?: CourseCreateNestedManyWithoutAuthorInput
     enrollments?: EnrollmentCreateNestedManyWithoutUserInput
     sessions?: SessionCreateNestedManyWithoutUserInput
@@ -14216,8 +14246,7 @@ export namespace Prisma {
     role?: $Enums.Role
     createdAt: Date | string
     updatedAt: Date | string
-    stripCustomerId?: string | null
-    stripePriceId?: string | null
+    stripeCustomerId?: string | null
     courses?: CourseUncheckedCreateNestedManyWithoutAuthorInput
     enrollments?: EnrollmentUncheckedCreateNestedManyWithoutUserInput
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
@@ -14248,8 +14277,7 @@ export namespace Prisma {
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    stripCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
-    stripePriceId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
     courses?: CourseUpdateManyWithoutAuthorNestedInput
     enrollments?: EnrollmentUpdateManyWithoutUserNestedInput
     sessions?: SessionUpdateManyWithoutUserNestedInput
@@ -14264,8 +14292,7 @@ export namespace Prisma {
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    stripCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
-    stripePriceId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
     courses?: CourseUncheckedUpdateManyWithoutAuthorNestedInput
     enrollments?: EnrollmentUncheckedUpdateManyWithoutUserNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
@@ -14280,8 +14307,7 @@ export namespace Prisma {
     role?: $Enums.Role
     createdAt: Date | string
     updatedAt: Date | string
-    stripCustomerId?: string | null
-    stripePriceId?: string | null
+    stripeCustomerId?: string | null
     enrollments?: EnrollmentCreateNestedManyWithoutUserInput
     sessions?: SessionCreateNestedManyWithoutUserInput
     accounts?: AccountCreateNestedManyWithoutUserInput
@@ -14296,8 +14322,7 @@ export namespace Prisma {
     role?: $Enums.Role
     createdAt: Date | string
     updatedAt: Date | string
-    stripCustomerId?: string | null
-    stripePriceId?: string | null
+    stripeCustomerId?: string | null
     enrollments?: EnrollmentUncheckedCreateNestedManyWithoutUserInput
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
@@ -14382,8 +14407,7 @@ export namespace Prisma {
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    stripCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
-    stripePriceId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
     enrollments?: EnrollmentUpdateManyWithoutUserNestedInput
     sessions?: SessionUpdateManyWithoutUserNestedInput
     accounts?: AccountUpdateManyWithoutUserNestedInput
@@ -14398,8 +14422,7 @@ export namespace Prisma {
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    stripCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
-    stripePriceId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
     enrollments?: EnrollmentUncheckedUpdateManyWithoutUserNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
@@ -14458,8 +14481,7 @@ export namespace Prisma {
     role?: $Enums.Role
     createdAt: Date | string
     updatedAt: Date | string
-    stripCustomerId?: string | null
-    stripePriceId?: string | null
+    stripeCustomerId?: string | null
     courses?: CourseCreateNestedManyWithoutAuthorInput
     sessions?: SessionCreateNestedManyWithoutUserInput
     accounts?: AccountCreateNestedManyWithoutUserInput
@@ -14474,8 +14496,7 @@ export namespace Prisma {
     role?: $Enums.Role
     createdAt: Date | string
     updatedAt: Date | string
-    stripCustomerId?: string | null
-    stripePriceId?: string | null
+    stripeCustomerId?: string | null
     courses?: CourseUncheckedCreateNestedManyWithoutAuthorInput
     sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
     accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
@@ -14498,6 +14519,8 @@ export namespace Prisma {
     smallDescription: string
     slug: string
     states?: $Enums.CourseStates
+    stripeProductId?: string | null
+    stripePriceId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     author: UserCreateNestedOneWithoutCoursesInput
@@ -14517,6 +14540,8 @@ export namespace Prisma {
     slug: string
     states?: $Enums.CourseStates
     authorId: string
+    stripeProductId?: string | null
+    stripePriceId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     chapters?: ChapterUncheckedCreateNestedManyWithoutCourseInput
@@ -14547,8 +14572,7 @@ export namespace Prisma {
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    stripCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
-    stripePriceId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
     courses?: CourseUpdateManyWithoutAuthorNestedInput
     sessions?: SessionUpdateManyWithoutUserNestedInput
     accounts?: AccountUpdateManyWithoutUserNestedInput
@@ -14563,8 +14587,7 @@ export namespace Prisma {
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    stripCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
-    stripePriceId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripeCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
     courses?: CourseUncheckedUpdateManyWithoutAuthorNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
@@ -14593,6 +14616,8 @@ export namespace Prisma {
     smallDescription?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     states?: EnumCourseStatesFieldUpdateOperationsInput | $Enums.CourseStates
+    stripeProductId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripePriceId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     author?: UserUpdateOneRequiredWithoutCoursesNestedInput
@@ -14612,6 +14637,8 @@ export namespace Prisma {
     slug?: StringFieldUpdateOperationsInput | string
     states?: EnumCourseStatesFieldUpdateOperationsInput | $Enums.CourseStates
     authorId?: StringFieldUpdateOperationsInput | string
+    stripeProductId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripePriceId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     chapters?: ChapterUncheckedUpdateManyWithoutCourseNestedInput
@@ -14629,6 +14656,8 @@ export namespace Prisma {
     smallDescription: string
     slug: string
     states?: $Enums.CourseStates
+    stripeProductId?: string | null
+    stripePriceId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     author: UserCreateNestedOneWithoutCoursesInput
@@ -14648,6 +14677,8 @@ export namespace Prisma {
     slug: string
     states?: $Enums.CourseStates
     authorId: string
+    stripeProductId?: string | null
+    stripePriceId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     enrollments?: EnrollmentUncheckedCreateNestedManyWithoutCourseInput
@@ -14713,6 +14744,8 @@ export namespace Prisma {
     smallDescription?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     states?: EnumCourseStatesFieldUpdateOperationsInput | $Enums.CourseStates
+    stripeProductId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripePriceId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     author?: UserUpdateOneRequiredWithoutCoursesNestedInput
@@ -14732,6 +14765,8 @@ export namespace Prisma {
     slug?: StringFieldUpdateOperationsInput | string
     states?: EnumCourseStatesFieldUpdateOperationsInput | $Enums.CourseStates
     authorId?: StringFieldUpdateOperationsInput | string
+    stripeProductId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripePriceId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     enrollments?: EnrollmentUncheckedUpdateManyWithoutCourseNestedInput
@@ -14832,6 +14867,8 @@ export namespace Prisma {
     smallDescription: string
     slug: string
     states?: $Enums.CourseStates
+    stripeProductId?: string | null
+    stripePriceId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -14881,6 +14918,8 @@ export namespace Prisma {
     smallDescription?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     states?: EnumCourseStatesFieldUpdateOperationsInput | $Enums.CourseStates
+    stripeProductId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripePriceId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     enrollments?: EnrollmentUpdateManyWithoutCourseNestedInput
@@ -14899,6 +14938,8 @@ export namespace Prisma {
     smallDescription?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     states?: EnumCourseStatesFieldUpdateOperationsInput | $Enums.CourseStates
+    stripeProductId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripePriceId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     enrollments?: EnrollmentUncheckedUpdateManyWithoutCourseNestedInput
@@ -14917,6 +14958,8 @@ export namespace Prisma {
     smallDescription?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     states?: EnumCourseStatesFieldUpdateOperationsInput | $Enums.CourseStates
+    stripeProductId?: NullableStringFieldUpdateOperationsInput | string | null
+    stripePriceId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

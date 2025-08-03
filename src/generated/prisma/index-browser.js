@@ -129,8 +129,7 @@ exports.Prisma.UserScalarFieldEnum = {
   role: 'role',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  stripCustomerId: 'stripCustomerId',
-  stripePriceId: 'stripePriceId'
+  stripeCustomerId: 'stripeCustomerId'
 };
 
 exports.Prisma.SessionScalarFieldEnum = {
@@ -182,6 +181,8 @@ exports.Prisma.CourseScalarFieldEnum = {
   slug: 'slug',
   states: 'states',
   authorId: 'authorId',
+  stripeProductId: 'stripeProductId',
+  stripePriceId: 'stripePriceId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };

@@ -35,8 +35,8 @@ export default async function LoginPage({ searchParams }: PageProps) {
     <div className="flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
       <div className="flex w-full max-w-sm flex-col gap-6">
         <Link href="/" className="flex items-center gap-2 self-center font-medium">
-          <Gitlab className="size-4 text-primary" />
-          <span >
+          <Gitlab className="size-6 font-bold text-primary" />
+          <span className="text-lg font-semibold">
             Edu<span className="text-primary">Flow</span>
           </span>
         </Link>

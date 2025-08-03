@@ -9,43 +9,26 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+
 import { toast } from "sonner";
 import { authClient } from "@/lib/auth-client";
-import React, { useTransition, useState } from "react";
-import { Loader, Eye, EyeOff } from "lucide-react";
+import React, { useTransition } from "react";
+import { Loader } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { LoginSchema, type LoginSchemaType } from "@/lib/zodSchema";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
-  const router = useRouter();
-
   // State management
   const [githubPending, startGithubTransition] = useTransition();
   const [googlePending, startGoogleTransition] = useTransition();
-  const [loginPending, startLoginTransition] = useTransition();
-  const [showPassword, setShowPassword] = useState(false);
+  const [emailPending, startEmailTransition] = useTransition();
 
-  // Form setup
-  const form = useForm<LoginSchemaType>({
-    resolver: zodResolver(LoginSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-    },
-  });
+  const [email, setEmail] = React.useState<string>("");
+
+  const router = useRouter();
 
   // GitHub login
   async function signInWithGithub() {
@@ -55,11 +38,11 @@ export function LoginForm({
         callbackURL: "/",
         fetchOptions: {
           onSuccess: async () => {
+            // await handleRoleUpdate(selectedRole);
             toast.success("Successfully logged in with GitHub");
-            router.push("/");
           },
           onError: (error) => {
-            toast.error(error.error.message || "GitHub login failed");
+            toast.error(error.error.message);
           },
         },
       });
@@ -74,8 +57,8 @@ export function LoginForm({
         callbackURL: "/",
         fetchOptions: {
           onSuccess: async () => {
+            // await handleRoleUpdate(selectedRole);
             toast.success("Successfully logged in with Google");
-            router.push("/");
           },
           onError: () => {
             toast.error("Currently this feature is not available");
@@ -85,39 +68,36 @@ export function LoginForm({
     });
   }
 
-  // Email and Password Login
-  async function onLoginSubmit(data: LoginSchemaType) {
-    startLoginTransition(async () => {
+  // Email login (OTP-based)
+  async function signInWithEmail(e: React.FormEvent) {
+    e.preventDefault();
+
+    if (!email) {
+      toast.error("Please enter your email");
+      return;
+    }
+
+    startEmailTransition(async () => {
       try {
-        const { error } = await authClient.signIn.email({
-          email: data.email.trim(),
-          password: data.password,
-          callbackURL: "/",
+        // Use emailOTP sign in instead of email/password
+        await authClient.emailOtp.sendVerificationOtp({
+          email: email,
+          type: 'sign-in',
+          fetchOptions: {
+            onSuccess: async () => {
+              toast.success(`Verification code sent to ${email}`);
+              router.push(`/verify-email?email=${encodeURIComponent(email)}`);
+            },
+            onError: (error) => {
+              toast.error(error.error.message);
+            },
+          },
         });
-
-        if (error) {
-          console.error("Login error:", error);
-          toast.error(error.message || "Invalid email or password");
-          return;
-        }
-
-        toast.success("Successfully logged in!");
-        router.push("/");
       } catch (error) {
-        console.error("Auth error:", error);
-        toast.error("An unexpected error occurred. Please try again.");
+        console.error("Error sending verification code:", error);
+        toast.error("An unexpected error occurred");
       }
     });
-  }
-
-  // Handle forgot password
-  function handleForgotPassword() {
-    const email = form.getValues("email");
-    if (email) {
-      router.push(`/forgot-password?email=${encodeURIComponent(email)}`);
-    } else {
-      router.push("/forgot-password");
-    }
   }
 
   return (
@@ -126,182 +106,118 @@ export function LoginForm({
         <CardHeader className="text-center">
           <CardTitle className="text-xl">Welcome back</CardTitle>
           <CardDescription>
-            Sign in to continue your learning journey
+            Choose your role and login to continue
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid gap-6">
-            {/* Social Logins */}
-            <div className="flex gap-4">
-              {/* Google login */}
-              <Button
-                type="button"
-                variant="outline"
-                className="flex-1 justify-center gap-2"
-                onClick={signInWithGoogle}
-                disabled={googlePending}
-              >
-                {googlePending ? (
-                  <>
-                    <Loader className="size-4 animate-spin" />
-                    <span>Signing in...</span>
-                  </>
-                ) : (
-                  <>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      className="size-4"
-                    >
-                      <path
-                        d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z"
-                        fill="currentColor"
-                      />
-                    </svg>
-                    Google
-                  </>
-                )}
-              </Button>
+          <form onSubmit={signInWithEmail}>
+            <div className="grid gap-6">
 
-              {/* GitHub login */}
-              <Button
-                type="button"
-                variant="outline"
-                className="flex-1 justify-center gap-2"
-                onClick={signInWithGithub}
-                disabled={githubPending}
-              >
-                {githubPending ? (
-                  <>
-                    <Loader className="size-4 animate-spin" />
-                    <span>Signing in...</span>
-                  </>
-                ) : (
-                  <>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      className="size-4"
-                    >
-                      <path
-                        d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"
-                        fill="currentColor"
-                      />
-                    </svg>
-                    GitHub
-                  </>
-                )}
-              </Button>
-            </div>
 
-            <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
-              <span className="relative z-10 bg-card px-2 text-muted-foreground">
-                Or continue with email
-              </span>
-            </div>
-
-            {/* Email and Password Login Form */}
-            <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(onLoginSubmit)}
-                className="space-y-4"
-              >
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Email</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="email"
-                          placeholder="Enter your email address"
-                          {...field}
+              {/* Social Logins */}
+              <div className="flex gap-4">
+                {/* Google login */}
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="flex-1 justify-center gap-2"
+                  onClick={signInWithGoogle}
+                  disabled={googlePending }
+                >
+                  {googlePending ? (
+                    <>
+                      <Loader className="size-4 animate-spin" />
+                      <span>Signing in...</span>
+                    </>
+                  ) : (
+                    <>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        className="size-4"
+                      >
+                        <path
+                          d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z"
+                          fill="currentColor"
                         />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
+                      </svg>
+                      Google
+                    </>
                   )}
-                />
+                </Button>
 
-                <FormField
-                  control={form.control}
-                  name="password"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Password</FormLabel>
-                      <FormControl>
-                        <div className="relative">
-                          <Input
-                            type={showPassword ? "text" : "password"}
-                            placeholder="Enter your password"
-                            {...field}
-                          />
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="sm"
-                            className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                            onClick={() => setShowPassword(!showPassword)}
-                          >
-                            {showPassword ? (
-                              <EyeOff className="h-4 w-4 text-muted-foreground" />
-                            ) : (
-                              <Eye className="h-4 w-4 text-muted-foreground" />
-                            )}
-                          </Button>
-                        </div>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
+                {/* GitHub login */}
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="flex-1 justify-center gap-2"
+                  onClick={signInWithGithub}
+                  disabled={githubPending}
+                >
+                  {githubPending ? (
+                    <>
+                      <Loader className="size-4 animate-spin" />
+                      <span>Signing in...</span>
+                    </>
+                  ) : (
+                    <>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        className="size-4"
+                      >
+                        <path
+                          d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"
+                          fill="currentColor"
+                        />
+                      </svg>
+                      GitHub
+                    </>
                   )}
-                />
+                </Button>
+              </div>
 
-                {/* Forgot Password Link */}
-                <div className="text-right">
-                  <Button
-                    type="button"
-                    variant="link"
-                    className="p-0 h-auto font-normal text-sm text-muted-foreground hover:text-primary"
-                    onClick={handleForgotPassword}
-                  >
-                    Forgot your password?
-                  </Button>
+              <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
+                <span className="bg-card text-muted-foreground relative z-10 px-2">
+                  Or continue with email
+                </span>
+              </div>
+
+
+              {/* Email OTP Login */}
+              <div className="grid gap-3">
+                <div className="grid gap-2">
+                  <Label htmlFor="email">Email</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="Enter your email address"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                  />
                 </div>
 
                 <Button
                   type="submit"
                   className="w-full"
-                  disabled={loginPending}
+                  disabled={emailPending }
+                  onClick={signInWithEmail}
                 >
-                  {loginPending ? (
+                  {emailPending ? (
                     <>
                       <Loader className="size-4 animate-spin mr-2" />
-                      Signing in...
+                      Sending OTP...
                     </>
                   ) : (
-                    "Sign In"
+                    "Continue with Email"
                   )}
                 </Button>
-              </form>
-            </Form>
-          </div>
+              </div>
+            </div>
+          </form>
         </CardContent>
       </Card>
-
-      {/* Sign Up Link */}
-      <div className="text-center">
-        <p className="text-sm text-muted-foreground">
-          Don&rsquo;t have an account?{" "}
-          <Button
-            variant="link"
-            className="p-0 h-auto font-normal text-primary hover:underline"
-            onClick={() => router.push("/signup")}
-          >
-            Sign up
-          </Button>
-        </p>
-      </div>
 
       <div className="text-muted-foreground text-center text-xs text-balance">
         By clicking continue, you agree to our{" "}

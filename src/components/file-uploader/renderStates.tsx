@@ -161,7 +161,7 @@ export function RenderUploadingState({
   fileType: "image" | "video" | "pdf";
 }) {
   return (
-    <Card className="min-w-full sm:min-w-xl">
+    <Card className="min-w-full sm:min-w-xl overflow-hidden">
       <CardContent className="flex items-center gap-4 h-full px-4 pr-4 py-2">
         {/* File Preview */}
         <div className="relative w-20 h-20 shrink-0 rounded-md overflow-hidden border bg-accent/10">

@@ -1,8 +1,10 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { prisma } from "./db";
+import { emailOTP } from "better-auth/plugins";
 import { Role } from "@/generated/prisma";
 import { env } from "@/env";
+import { sendVerificationEmailAction } from "./email-action";
 
 export const auth = betterAuth({
     database: prismaAdapter(prisma, {
@@ -28,7 +30,12 @@ export const auth = betterAuth({
             }
         }
     },
-    emailAndPassword: {
-        enabled: true,
-    },
+    plugins: [
+        emailOTP({
+            async sendVerificationOTP({ email, otp }) {
+                 // Use server action instead of fetch
+                await sendVerificationEmailAction(email, otp);
+            }
+        })
+    ],
 });

@@ -84,7 +84,7 @@ export default function Navbar() {
                 Login
               </Link>
               <Link
-                href="/signup"
+                href="/login"
                 className={buttonVariants({ variant: "secondary" })}
               >
                 Get Started
