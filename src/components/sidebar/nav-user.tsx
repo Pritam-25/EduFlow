@@ -112,21 +112,21 @@ export function NavUser() {
 
             <DropdownMenuGroup>
               <DropdownMenuItem asChild className="gap-2">
-                <Link href="/account">
+                <Link href="#">
                   <IconUserCircle className="size-4" />
                   Account
                 </Link>
               </DropdownMenuItem>
 
               <DropdownMenuItem asChild className="gap-2">
-                <Link href="/billing">
+                <Link href="/pricing">
                   <IconCreditCard className="size-4" />
                   Billing
                 </Link>
               </DropdownMenuItem>
 
               <DropdownMenuItem asChild className="gap-2">
-                <Link href="/notifications">
+                <Link href="#">
                   <IconNotification className="size-4" />
                   Notifications
                 </Link>

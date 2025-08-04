@@ -38,7 +38,12 @@ async function RenderCourses() {
           ))}
           </div>
         ) : (
-          <EmptyCoursePage />
+          <EmptyCoursePage
+            title="No Courses Found"
+            description="You haven't created any courses yet. Create your first course to get started."
+            buttonText="Create Course"
+            href="/admin/courses/create"
+          />
         )}
     </>
   )

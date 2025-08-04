@@ -5,17 +5,11 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { redirect } from "next/navigation";
 import { requireUser } from "@/lib/require_user";
 
-export default async function AdminLayout({ children }: { children: React.ReactNode }) {
-
+export default async function StudentDashboardLayout({ children }: { children: React.ReactNode }) {
+  
   const session = await requireUser()
 
-  if (session.user.role !== "CREATOR") {
-    console.log(`⛔ Access denied for user ${session.user.email} with role ${session.user.role}`);
-    redirect("/unauthorized");
-  }
-
-  console.log("✅ Admin access granted:", session.user.email);
-
+  console.log("✅ Access granted:", session.user.email);
 
 
   return (

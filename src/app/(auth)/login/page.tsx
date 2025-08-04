@@ -1,11 +1,11 @@
-import { Gitlab } from "lucide-react";
+import { Codesandbox } from "lucide-react";
 import { auth } from "@/lib/auth";
 import { LoginForm } from "@/app/(auth)/login/_components/login-form";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { headers } from "next/headers";
 
-interface PageProps {
+  interface PageProps {
   searchParams: Promise<{ "become-instructor": string }>; // Fix: Make it a Promise for Next.js 15
 }
 
@@ -35,7 +35,7 @@ export default async function LoginPage({ searchParams }: PageProps) {
     <div className="flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
       <div className="flex w-full max-w-sm flex-col gap-6">
         <Link href="/" className="flex items-center gap-2 self-center font-medium">
-          <Gitlab className="size-6 font-bold text-primary" />
+          <Codesandbox className="size-6 font-bold text-primary" />
           <span className="text-lg font-semibold">
             Edu<span className="text-primary">Flow</span>
           </span>

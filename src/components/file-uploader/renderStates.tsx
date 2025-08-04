@@ -7,7 +7,7 @@ import { Progress } from "@/components/ui/progress";
 
 const FileTypeHints: Record<string, string> = {
   image: "SVG, PNG, JPG or GIF",
-  video: "MP4, MOV or AVI",
+  video: "MP4, WEBM or OGG",
   pdf: "PDF only",
 };
 
