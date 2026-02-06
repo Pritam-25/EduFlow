@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { Codesandbox, Gitlab } from "lucide-react";
+import { Codesandbox } from "lucide-react";
 import { ThemeToggle } from "@/components/ui/themeToggle";
 import { buttonVariants } from "@/components/ui/button";
 import { authClient } from "@/lib/auth-client";
@@ -22,11 +22,11 @@ export default function Navbar() {
       },
       {
         name: "Dashboard",
-        href: isCreator ? "/admin/dashboard" : "/dashboard",
+        href: isCreator ? "/admin/courses" : "/dashboard/enrolled-courses",
       },
       {
         name: "Courses",
-        href: isCreator ? "/admin/courses" : "/courses",
+        href: "/courses",
       },
       {
         name: "Contact Us",
@@ -82,12 +82,6 @@ export default function Navbar() {
                 className={buttonVariants({ variant: "default" })}
               >
                 Login
-              </Link>
-              <Link
-                href="/login"
-                className={buttonVariants({ variant: "secondary" })}
-              >
-                Get Started
               </Link>
             </>
           )}

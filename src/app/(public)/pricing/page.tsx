@@ -109,7 +109,7 @@ export default function Pricing({ showInstructorFlow = false }: PricingProps) {
       if (data?.status === "success") {
         toast.success(data.message);
         // Redirect to dashboard or wherever appropriate
-        router.push("/admin/dashboard");
+        router.push("/admin/courses");
       } else {
         toast.error(data?.message || "Something went wrong. Please try again.");
       }

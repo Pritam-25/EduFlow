@@ -2,7 +2,6 @@
 import { AppSidebar } from "@/components/sidebar/app-sidebar";
 import { SiteHeader } from "@/components/sidebar/site-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import { redirect } from "next/navigation";
 import { requireUser } from "@/lib/require_user";
 
 export default async function StudentDashboardLayout({ children }: { children: React.ReactNode }) {

@@ -52,11 +52,11 @@ export default function UserDropdown({ email, image, name, role }: iAppProps) {
   const navigationConfig: NavigationConfig = {
     [Role.USER]: {
       courses: { url: "/courses", label: "Courses" },
-      dashboard: { url: "/dashboard", label: "Dashboard" },
+      dashboard: { url: "/dashboard/enrolled-courses", label: "Dashboard" },
     },
     [Role.CREATOR]: {
-      courses: { url: "/admin/courses", label: "My Courses" }, // ✅ Using admin URLs for creators
-      dashboard: { url: "/admin/dashboard", label: "Creator Dashboard" },
+      courses: { url: "courses", label: "My Courses" }, // ✅ Using admin URLs for creators
+      dashboard: { url: "/admin/courses", label: "Creator Dashboard" },
     },
   };
 

@@ -54,7 +54,7 @@ export async function enrollInCourse(courseId: string): Promise<ApiResponse> {
         slug: true,
         price: true, // This is in cents (Int)
         states: true, // Check if course is published
-      }
+      },
     });
 
     if (!course) {
@@ -94,7 +94,7 @@ export async function enrollInCourse(courseId: string): Promise<ApiResponse> {
               userId_courseId: {
                 userId: user.id,
                 courseId: course.id,
-              }
+              },
             },
           });
 
@@ -147,7 +147,7 @@ export async function enrollInCourse(courseId: string): Promise<ApiResponse> {
     console.log("🔍 Checking user's Stripe customer ID...");
     const userWithStripeCustomerId = await prisma.user.findUnique({
       where: { id: user.id },
-      select: { stripeCustomerId: true }
+      select: { stripeCustomerId: true },
     });
 
     if (!userWithStripeCustomerId) {
@@ -169,7 +169,8 @@ export async function enrollInCourse(courseId: string): Promise<ApiResponse> {
       console.log("🔍 Verifying existing Stripe customer:", savedCustomerId);
 
       try {
-        const existingCustomer = await stripe.customers.retrieve(savedCustomerId);
+        const existingCustomer =
+          await stripe.customers.retrieve(savedCustomerId);
 
         if (existingCustomer.deleted) {
           console.log("⚠️ Stripe customer was deleted, will create new one");
@@ -200,7 +201,7 @@ export async function enrollInCourse(courseId: string): Promise<ApiResponse> {
           name: user.name,
           metadata: {
             userId: user.id,
-          }
+          },
         });
 
         stripeCustomerId = customer.id;
@@ -213,10 +214,9 @@ export async function enrollInCourse(courseId: string): Promise<ApiResponse> {
         console.log("💾 Updating user with new Stripe customer ID...");
         await prisma.user.update({
           where: { id: user.id },
-          data: { stripeCustomerId: stripeCustomerId }
+          data: { stripeCustomerId: stripeCustomerId },
         });
         console.log("✅ User updated with new Stripe customer ID");
-
       } catch (customerError) {
         console.error("❌ Failed to create Stripe customer:", customerError);
         return {
@@ -234,7 +234,7 @@ export async function enrollInCourse(courseId: string): Promise<ApiResponse> {
           userId_courseId: {
             userId: user.id,
             courseId: course.id,
-          }
+          },
         },
         select: {
           id: true,
@@ -317,7 +317,7 @@ export async function enrollInCourse(courseId: string): Promise<ApiResponse> {
               unit_amount: course.price, // Already in cents - no conversion needed
             },
             quantity: 1,
-          }
+          },
         ],
         mode: "payment",
         success_url: `${env.BETTER_AUTH_URL}/courses/${course.slug}/payment/success?session_id={CHECKOUT_SESSION_ID}&enrollmentId=${enrollment.id}`,
@@ -357,7 +357,6 @@ export async function enrollInCourse(courseId: string): Promise<ApiResponse> {
       checkoutUrl,
       enrollmentId: result.enrollment?.id,
     });
-
   } catch (error) {
     console.error("❌ ENROLLMENT ERROR:", {
       error: error instanceof Error ? error.message : error,

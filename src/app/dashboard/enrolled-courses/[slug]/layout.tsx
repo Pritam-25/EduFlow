@@ -1,7 +1,6 @@
 import { ReactNode } from "react";
 import { CourseSidebar } from "../../_components/courseSidebar";
 import { getCourseSidebarData } from "../../actions/get-course-sidebar-data";
-import LessonItemPage from "./[lessonId]/page";
 
 interface courseSidebarLayoutProps {
   params: Promise<{ slug: string }>

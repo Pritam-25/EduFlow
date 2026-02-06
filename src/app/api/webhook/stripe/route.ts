@@ -4,6 +4,7 @@ import { stripe } from "@/lib/stripe";
 import { headers } from "next/headers";
 import Stripe from "stripe";
 
+
 export async function POST(req: Request) {
   console.log("🎯 WEBHOOK ENDPOINT HIT!", new Date().toISOString());
 
@@ -27,7 +28,7 @@ export async function POST(req: Request) {
     event = stripe.webhooks.constructEvent(
       body,
       signature,
-      env.STRIPE_WEBHOOK_SECRET as string
+      env.STRIPE_WEBHOOK_SECRET as string,
     );
     console.log("✅ Webhook signature verified successfully");
   } catch (err) {
@@ -41,7 +42,7 @@ export async function POST(req: Request) {
   if (event.type === "checkout.session.completed") {
     const session = event.data.object as Stripe.Checkout.Session;
 
-    console.log("💳 Processing checkout session:", {
+    console.log("💳 Processing completed checkout session:", {
       sessionId: session.id,
       customerId: session.customer,
       metadata: session.metadata,
@@ -67,9 +68,11 @@ export async function POST(req: Request) {
         courseId,
         customerId,
         enrollmentId,
-        userId
+        userId,
       });
-      return new Response("Missing required data in session metadata", { status: 400 });
+      return new Response("Missing required data in session metadata", {
+        status: 400,
+      });
     }
 
     try {
@@ -93,7 +96,9 @@ export async function POST(req: Request) {
           });
 
           if (userByEmail) {
-            console.log("✅ Found user by email, updating with Stripe customer ID");
+            console.log(
+              "✅ Found user by email, updating with Stripe customer ID",
+            );
             await prisma.user.update({
               where: { id: userByEmail.id },
               data: { stripeCustomerId: customerId },
@@ -101,8 +106,15 @@ export async function POST(req: Request) {
 
             // Continue with this user
             const updatedUser = userByEmail;
-            await updateEnrollment(updatedUser, enrollmentId, courseId, session);
-            return new Response("Webhook processed successfully", { status: 200 });
+            await updateEnrollment(
+              updatedUser,
+              enrollmentId,
+              courseId,
+              session,
+            );
+            return new Response("Webhook processed successfully", {
+              status: 200,
+            });
           }
         }
 
@@ -111,7 +123,6 @@ export async function POST(req: Request) {
 
       console.log("✅ User found:", { userId: user.id, email: user.email });
       await updateEnrollment(user, enrollmentId, courseId, session);
-
     } catch (error) {
       console.error("❌ Database error:", error);
       return new Response("Database error", { status: 500 });
@@ -122,7 +133,12 @@ export async function POST(req: Request) {
   return new Response("Webhook received", { status: 200 });
 }
 
-async function updateEnrollment(user: { id: string; email: string }, enrollmentId: string, courseId: string, session: Stripe.Checkout.Session) {
+async function updateEnrollment(
+  user: { id: string; email: string },
+  enrollmentId: string,
+  courseId: string,
+  session: Stripe.Checkout.Session,
+) {
   console.log("🔄 Starting enrollment update...");
 
   // Check if enrollment exists

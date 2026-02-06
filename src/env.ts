@@ -11,15 +11,14 @@ export const env = createEnv({
         AWS_ACCESS_KEY_ID: z.string().min(1),
         AWS_SECRET_ACCESS_KEY: z.string().min(1),
         AWS_ENDPOINT_URL_S3: z.string().url(),
-        AWS_ENDPOINT_URL_IAM: z.string().url(),
         AWS_REGION: z.string().min(1),
         ARCJET_KEY: z.string().min(1),
         STRIPE_SECRET_KEY: z.string().min(1),
         GMAIL_USER: z.string().min(1),
         GMAIL_APP_PASSWORD: z.string().min(1),
         STRIPE_WEBHOOK_SECRET: z.string().min(1),
-        AUTH_GOOGLE_CLIENT_ID: z.string().min(1),
-        AUTH_GOOGLE_SECRET: z.string().min(1)
+        AUTH_GOOGLE_CLIENT_ID: z.string().min(1).optional(),
+        AUTH_GOOGLE_SECRET: z.string().min(1).optional()
     },
 
     client: {

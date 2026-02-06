@@ -6,6 +6,8 @@ import { Role } from "@/generated/prisma";
 import { env } from "@/env";
 import { sendVerificationEmailAction } from "./email-action";
 
+const hasGoogleAuth = Boolean(env.AUTH_GOOGLE_CLIENT_ID && env.AUTH_GOOGLE_SECRET);
+
 export const auth = betterAuth({
     database: prismaAdapter(prisma, {
         provider: "postgresql",
@@ -15,10 +17,14 @@ export const auth = betterAuth({
             clientId: env.AUTH_GITHUB_CLIENT_ID,
             clientSecret: env.AUTH_GITHUB_SECRET,
         },
-        google: {
-            clientId: env.AUTH_GOOGLE_CLIENT_ID,
-            clientSecret: env.AUTH_GOOGLE_SECRET
-        }
+        ...(hasGoogleAuth
+            ? {
+                google: {
+                    clientId: env.AUTH_GOOGLE_CLIENT_ID!,
+                    clientSecret: env.AUTH_GOOGLE_SECRET!,
+                }
+            }
+            : {})
     },
     user: {
         additionalFields: {

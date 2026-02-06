@@ -3,31 +3,33 @@ import EmptyCoursePage from "@/components/general/emptyStateCourse";
 import EnrollCourseCard, { EnrollCourseCardSkeleton } from "../_components/enroll_course_card";
 import { Suspense } from "react";
 
-export default function EnrolledCoursesPage() {
+export default async function EnrolledCoursesPage() {
+  const enrolledCourses = await getEnrollCourses();
 
   return (
     <div >
+      {enrolledCourses.length > 0 && (
       <div className="flex flex-col gap-2">
         <h1 className="text-3xl font-bold">Enrolled Courses</h1>
         <p className="text-muted-foreground">Here you can see all the courses you are enrolled in</p>
       </div>
+      )}
 
       <Suspense fallback={<AdminCourseCardSkeletonLayout />}>
-        <RenderCourses />
+        <RenderCourses courses={enrolledCourses} />
       </Suspense>
     </div>
   );
 }
 
 
-async function RenderCourses() {
-  const enrolledCourses = await getEnrollCourses();
+async function RenderCourses({courses}: {courses: any[]}) {
 
   return (
     <>
-      {enrolledCourses.length > 0 ? (
+      {courses.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-6">
-          {enrolledCourses.map((course) => (
+          {courses.map((course) => (
             <EnrollCourseCard key={course.id} course={course} />
 
           ))}

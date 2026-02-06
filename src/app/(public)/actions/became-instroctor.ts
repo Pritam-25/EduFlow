@@ -9,13 +9,16 @@ import { redirect } from "next/navigation"
 
 export async function becameInstructor(planId: string): Promise<ApiResponse> {
   try {
+    const requestHeaders = await headers()
+    const origin = requestHeaders.get("origin") ?? process.env.BETTER_AUTH_URL ?? "http://localhost:3000"
+
     const session = await auth.api.getSession({
-      headers: await headers(),
+      headers: requestHeaders,
     })
 
     // ✅ Better session validation
     if (!session?.user?.id) {
-      redirect(`/login?redirect=pricing&plan=${planId}`)
+      redirect(`${origin}/login?redirect=pricing&plan=${planId}`)
     }
 
     // ✅ Check if user is already an instructor

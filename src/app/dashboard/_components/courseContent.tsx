@@ -1,4 +1,4 @@
-import { BookIcon, CheckCircle, Dice1 } from "lucide-react";
+import { BookIcon, CheckCircle } from "lucide-react";
 import { LessonContentType } from "../actions/get-lesson-content";
 import { Button } from "@/components/ui/button";
 import { RenderDescription } from "@/components/rich-text-editor/renderDescription";

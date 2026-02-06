@@ -2,15 +2,10 @@
 
 import * as React from "react";
 import {
-  IconDashboard,
-  IconHelp,
-  IconListDetails,
-  IconSearch,
-  IconSettings,
+IconListDetails,
 } from "@tabler/icons-react";
 
 import { NavMain } from "@/components/sidebar/nav-main";
-import { NavSecondary } from "@/components/sidebar/nav-secondary";
 import { NavUser } from "@/components/sidebar/nav-user";
 import {
   Sidebar,
@@ -33,32 +28,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     // Dynamic navigation based on pathname
     navMain: [
       {
-        title: "Dashboard",
-        url: isAdmin ? "/admin/dashboard" : "/dashboard",
-        icon: IconDashboard,
-      },
-      {
         title: isAdmin ? "My Courses" : "Enrolled Courses",
         url: isAdmin ? "/admin/courses" : "/dashboard/enrolled-courses",
         icon: IconListDetails,
-      },
-    ],
-
-    navSecondary: [
-      {
-        title: "Settings",
-        url: "#",
-        icon: IconSettings,
-      },
-      {
-        title: "Get Help",
-        url: "#",
-        icon: IconHelp,
-      },
-      {
-        title: "Search",
-        url: "#",
-        icon: IconSearch,
       },
     ],
   };
@@ -84,7 +56,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
         <NavUser />
