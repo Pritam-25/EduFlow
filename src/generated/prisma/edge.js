@@ -263,7 +263,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "D:\\dev\\EduFlow\\src\\generated\\prisma",
+      "value": "C:\\Users\\Admin\\Downloads\\EduFlow\\src\\generated\\prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -285,7 +285,7 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "D:\\dev\\EduFlow\\prisma\\schema.prisma",
+    "sourceFilePath": "C:\\Users\\Admin\\Downloads\\EduFlow\\prisma\\schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
