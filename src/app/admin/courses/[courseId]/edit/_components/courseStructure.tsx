@@ -36,7 +36,10 @@ import {
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { toast } from "sonner";
-import { reorderChapters, reorderLessons } from "@/app/admin/actions/editCourse";
+import {
+  reorderChapters,
+  reorderLessons,
+} from "@/app/admin/actions/editCourse";
 
 import NewChapterModal from "./newChapterModal";
 import NewLessonModal from "./newLessonModel";
@@ -58,7 +61,6 @@ interface SortableItemProps {
 }
 
 export default function CourseStructure({ data }: CourseStructureProps) {
-
   // Add null check and provide a default empty array
   const initialChapters =
     data?.chapters?.map((chapter) => ({
@@ -85,15 +87,17 @@ export default function CourseStructure({ data }: CourseStructureProps) {
         id: chapter.id,
         title: chapter.title,
         position: chapter.position,
-        isOpen: prevItems.find((item) => item.id === chapter.id)?.isOpen || false, // default chapter to open
-        lessons: chapter.lessons?.map((lesson) => ({
-          id: lesson.id,
-          title: lesson.title,
-          position: lesson.position,
-          thumbnailkey: lesson.thumbnailkey,
-          videokey: lesson.videokey,
-          description: lesson.description,
-        })) || [],
+        isOpen:
+          prevItems.find((item) => item.id === chapter.id)?.isOpen || false, // default chapter to open
+        lessons:
+          chapter.lessons?.map((lesson) => ({
+            id: lesson.id,
+            title: lesson.title,
+            position: lesson.position,
+            thumbnailkey: lesson.thumbnailkey,
+            videokey: lesson.videokey,
+            description: lesson.description,
+          })) || [],
       }));
       return updatedItems;
     });
@@ -156,7 +160,9 @@ export default function CourseStructure({ data }: CourseStructureProps) {
       }
 
       const oldIndex = items.findIndex((chapter) => chapter.id === activeId);
-      const newIndex = items.findIndex((chapter) => chapter.id === targetChapterId);
+      const newIndex = items.findIndex(
+        (chapter) => chapter.id === targetChapterId,
+      );
 
       if (oldIndex === -1 || newIndex === -1) {
         console.error("Invalid indices for reordering chapters");
@@ -165,10 +171,12 @@ export default function CourseStructure({ data }: CourseStructureProps) {
 
       const reorderedLocalChapters = arrayMove(items, oldIndex, newIndex);
 
-      const updatedChaptersForStates = reorderedLocalChapters.map((chapter, index) => ({
-        ...chapter,
-        position: index + 1, // Update position based on new order
-      }));
+      const updatedChaptersForStates = reorderedLocalChapters.map(
+        (chapter, index) => ({
+          ...chapter,
+          position: index + 1, // Update position based on new order
+        }),
+      );
 
       const previousChapters = [...items];
 
@@ -181,7 +189,8 @@ export default function CourseStructure({ data }: CourseStructureProps) {
         }));
 
         // Call API to update chapters
-        const reorderChaptersPromise = () => reorderChapters(courseId, chapterToUpdate);
+        const reorderChaptersPromise = () =>
+          reorderChapters(courseId, chapterToUpdate);
 
         toast.promise(reorderChaptersPromise(), {
           loading: "Reordering chapters...",
@@ -209,7 +218,9 @@ export default function CourseStructure({ data }: CourseStructureProps) {
         return;
       }
 
-      const chapterIndex = items.findIndex((chapter) => chapter.id === activeChapterId);
+      const chapterIndex = items.findIndex(
+        (chapter) => chapter.id === activeChapterId,
+      );
       if (chapterIndex === -1) {
         console.error("Invalid chapter index for reordering lessons");
         return;
@@ -218,7 +229,9 @@ export default function CourseStructure({ data }: CourseStructureProps) {
       const chapterToUpdate = items[chapterIndex];
       const lessonItems = chapterToUpdate.lessons;
 
-      const oldIndex = lessonItems.findIndex((lesson) => lesson.id === active.id);
+      const oldIndex = lessonItems.findIndex(
+        (lesson) => lesson.id === active.id,
+      );
       const newIndex = lessonItems.findIndex((lesson) => lesson.id === over.id);
 
       if (oldIndex === -1 || newIndex === -1) {
@@ -228,11 +241,12 @@ export default function CourseStructure({ data }: CourseStructureProps) {
 
       const reorderedLocalLessons = arrayMove(lessonItems, oldIndex, newIndex);
 
-      const updatedLessonsForStates = reorderedLocalLessons.map((lesson, index) => ({
-        ...lesson,
-        position: index + 1, // Update position based on new order
-      }));
-
+      const updatedLessonsForStates = reorderedLocalLessons.map(
+        (lesson, index) => ({
+          ...lesson,
+          position: index + 1, // Update position based on new order
+        }),
+      );
 
       const newItems = [...items];
       newItems[chapterIndex] = {
@@ -251,11 +265,8 @@ export default function CourseStructure({ data }: CourseStructureProps) {
         }));
 
         // Call API to update lessons
-        const reorderLessonsPromise = () => reorderLessons(
-          courseId,
-          chapterToUpdate.id,
-          lessonToUpdate
-        );
+        const reorderLessonsPromise = () =>
+          reorderLessons(courseId, chapterToUpdate.id, lessonToUpdate);
 
         toast.promise(reorderLessonsPromise(), {
           loading: "Reordering lessons...",
@@ -268,7 +279,7 @@ export default function CourseStructure({ data }: CourseStructureProps) {
           error: () => {
             setItems(previousItems);
             return "Failed to reorder lessons";
-          }
+          },
         });
       }
 
@@ -281,8 +292,8 @@ export default function CourseStructure({ data }: CourseStructureProps) {
       prevItems.map((chapter) =>
         chapter.id === chapterId
           ? { ...chapter, isOpen: !chapter.isOpen }
-          : chapter
-      )
+          : chapter,
+      ),
     );
   };
 
@@ -290,11 +301,15 @@ export default function CourseStructure({ data }: CourseStructureProps) {
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
-    })
+    }),
   );
 
   return (
-    <DndContext collisionDetection={rectIntersection} onDragEnd={handleDragEnd} sensors={sensors} >
+    <DndContext
+      collisionDetection={rectIntersection}
+      onDragEnd={handleDragEnd}
+      sensors={sensors}
+    >
       <Card>
         <CardHeader className="flex flex-row items-center justify-between border-b border-border">
           <CardTitle>Chapters</CardTitle>
@@ -336,7 +351,10 @@ export default function CourseStructure({ data }: CourseStructureProps) {
                             {item.title}
                           </p>
                         </div>
-                        <DeleteChapterDialog courseId={data.id} chapterId={item.id} />
+                        <DeleteChapterDialog
+                          courseId={data.id}
+                          chapterId={item.id}
+                        />
                       </div>
 
                       <CollapsibleContent>
@@ -371,7 +389,11 @@ export default function CourseStructure({ data }: CourseStructureProps) {
                                         {lesson.title}
                                       </Link>
                                     </div>
-                                    <DeleteLessonDialog lessonId={lesson.id} chapterId={item.id} courseId={data.id} />
+                                    <DeleteLessonDialog
+                                      lessonId={lesson.id}
+                                      chapterId={item.id}
+                                      courseId={data.id}
+                                    />
                                   </div>
                                 )}
                               </SortableItem>
@@ -379,7 +401,10 @@ export default function CourseStructure({ data }: CourseStructureProps) {
                           </SortableContext>
                           {/* create new lesson button */}
                           <div className="w-full mt-4">
-                            <NewLessonModal courseId={data.id} chapterId={item.id} />
+                            <NewLessonModal
+                              courseId={data.id}
+                              chapterId={item.id}
+                            />
                           </div>
                         </div>
                       </CollapsibleContent>
